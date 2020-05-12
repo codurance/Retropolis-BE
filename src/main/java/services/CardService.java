@@ -16,6 +16,10 @@ public class CardService {
     }
 
     public List<Card> getCards() {
-        return cardRepository.getAllCards();
+        return cardRepository.getAll();
+    }
+
+    public void addCard(String body) {
+        cardRepository.save(new Card(body));
     }
 }

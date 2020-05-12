@@ -5,5 +5,7 @@ import models.Card;
 import java.util.List;
 
 public interface CardRepository {
-    List<Card> getAllCards();
+    List<Card> getAll();
+
+    void save(Card body);
 }

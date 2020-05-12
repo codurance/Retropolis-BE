@@ -2,11 +2,21 @@ package repositories;
 
 import models.Card;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryCardRepository implements CardRepository {
-    @Override
-    public List<Card> getAllCards() {
-        throw new UnsupportedOperationException();
+    private List<Card> cards;
+
+    public InMemoryCardRepository() {
+        this.cards = new ArrayList<>();
+    }
+
+    public List<Card> getAll() {
+        return cards;
+    }
+
+    public void save(Card card) {
+        cards.add(card);
     }
 }
