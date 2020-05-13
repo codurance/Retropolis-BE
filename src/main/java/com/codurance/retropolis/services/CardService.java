@@ -22,7 +22,7 @@ public class CardService {
         return cardRepository.getAll();
     }
 
-    public void addCard(NewCardRequestObject requestObject) {
+    public Card addCard(NewCardRequestObject requestObject) {
         throw new UnsupportedOperationException();
     }
 }

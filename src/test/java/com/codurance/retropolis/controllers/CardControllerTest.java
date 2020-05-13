@@ -67,10 +67,11 @@ public class CardControllerTest {
     @Test
     void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
         String cardText = "hello";
+        NewCardRequestObject requestObject = new NewCardRequestObject(cardText);
         given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardText, 1));
 
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
-                .content(cardText)
+                .content(asJsonString(requestObject))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated()).andReturn();
@@ -82,5 +83,13 @@ public class CardControllerTest {
 
         assertEquals(cardText, cardResponse.getBody());
         assertEquals(1, cardResponse.id);
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
