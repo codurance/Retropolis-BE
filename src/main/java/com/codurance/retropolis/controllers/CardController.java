@@ -3,9 +3,9 @@ package com.codurance.retropolis.controllers;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,7 +21,13 @@ public class CardController {
     }
 
     @GetMapping
-    public List<Card> getCards(){
+    public List<Card> getCards() {
         return cardService.getCards();
+    }
+
+    @PostMapping
+    public ResponseEntity postCard(@RequestBody String request) {
+        cardService.addCard(request);
+        return new ResponseEntity(null, HttpStatus.CREATED);
     }
 }
