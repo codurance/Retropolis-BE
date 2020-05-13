@@ -1,6 +1,8 @@
-package repositories;
+package com.codurance.retropolis.repositories;
 
-import models.Card;
+import com.codurance.retropolis.models.Card;
+import com.codurance.retropolis.repositories.CardRepository;
+import com.codurance.retropolis.repositories.InMemoryCardRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

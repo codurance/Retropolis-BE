@@ -1,4 +1,4 @@
-package models;
+package com.codurance.retropolis.models;
 
 public class Card {
     private String body;

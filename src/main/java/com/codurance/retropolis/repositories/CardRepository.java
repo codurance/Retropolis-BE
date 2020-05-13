@@ -1,6 +1,6 @@
-package repositories;
+package com.codurance.retropolis.repositories;
 
-import models.Card;
+import com.codurance.retropolis.models.Card;
 
 import java.util.List;
 

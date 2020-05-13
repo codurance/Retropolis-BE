@@ -1,4 +1,4 @@
-package demo;
+package com.codurance.retropolis.demo;
 
 import org.junit.jupiter.api.Test;
 

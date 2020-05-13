@@ -1,6 +1,7 @@
-package services;
+package com.codurance.retropolis.services;
 
-import models.Card;
+import com.codurance.retropolis.models.Card;
+import com.codurance.retropolis.services.CardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,7 +9,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import repositories.CardRepository;
+import com.codurance.retropolis.repositories.CardRepository;
 
 import java.util.Collections;
 import java.util.List;

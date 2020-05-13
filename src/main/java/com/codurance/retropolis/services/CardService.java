@@ -1,8 +1,9 @@
-package services;
+package com.codurance.retropolis.services;
 
-import models.Card;
+import com.codurance.retropolis.models.Card;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repositories.CardRepository;
+import com.codurance.retropolis.repositories.CardRepository;
 
 import java.util.List;
 
