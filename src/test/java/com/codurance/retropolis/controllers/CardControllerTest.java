@@ -1,16 +1,16 @@
 package com.codurance.retropolis.controllers;
 
-import com.codurance.retropolis.controllers.CardController;
+import com.codurance.retropolis.models.Card;
+import com.codurance.retropolis.services.CardService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.codurance.retropolis.models.Card;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import com.codurance.retropolis.services.CardService;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +25,8 @@ public class CardControllerTest {
     private static final String DOMAIN_BASE_URL = "/cards";
     @Autowired
     private MockMvc mockMvc;
-    
-    @Autowired
+
+    @MockBean
     private CardService cardService;
 
     @Autowired

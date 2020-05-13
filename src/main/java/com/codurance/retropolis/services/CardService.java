@@ -1,9 +1,9 @@
 package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.models.Card;
+import com.codurance.retropolis.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.codurance.retropolis.repositories.CardRepository;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ public class CardService {
 
     private final CardRepository cardRepository;
 
+    @Autowired
     public CardService(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
     }
