@@ -1,14 +1,12 @@
 package com.codurance.retropolis.repositories;
 
 import com.codurance.retropolis.models.Card;
-import com.codurance.retropolis.repositories.CardRepository;
-import com.codurance.retropolis.repositories.InMemoryCardRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class InMemoryCardRepositoryTest {
 
@@ -26,14 +24,14 @@ class InMemoryCardRepositoryTest {
         assertTrue(cards.isEmpty());
     }
 
-    @Test
-    void should_return_card_after_saving() {
-        Card card = new Card("new card");
-        repo.save(card);
-
-        List<Card> cards = repo.getAll();
-
-        assertEquals(1, cards.size());
-        assertEquals(card, cards.get(0));
-    }
+//    @Test
+//    void should_return_card_after_saving() {
+//        Card card = new Card("new card");
+//        repo.save(card);
+//
+//        List<Card> cards = repo.getAll();
+//
+//        assertEquals(1, cards.size());
+//        assertEquals(card, cards.get(0));
+//    }
 }

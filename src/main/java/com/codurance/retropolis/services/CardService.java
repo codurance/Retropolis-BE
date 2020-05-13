@@ -2,6 +2,7 @@ package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
+import com.codurance.retropolis.requests.NewCardRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class CardService {
         return cardRepository.getAll();
     }
 
-    public void addCard(String body) {
-        cardRepository.save(new Card(body));
+    public void addCard(NewCardRequestObject requestObject) {
+        throw new UnsupportedOperationException();
     }
 }
