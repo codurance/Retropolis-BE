@@ -13,7 +13,7 @@ import java.util.List;
 public class CardService {
 
     private final CardRepository cardRepository;
-    private CardFactory cardFactory;
+    private final CardFactory cardFactory;
 
     @Autowired
     public CardService(CardRepository cardRepository, CardFactory cardFactory) {

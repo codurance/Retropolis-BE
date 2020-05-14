@@ -23,15 +23,4 @@ class InMemoryCardRepositoryTest {
 
         assertTrue(cards.isEmpty());
     }
-
-//    @Test
-//    void should_return_card_after_saving() {
-//        Card card = new Card("new card");
-//        repo.save(card);
-//
-//        List<Card> cards = repo.getAll();
-//
-//        assertEquals(1, cards.size());
-//        assertEquals(card, cards.get(0));
-//    }
 }

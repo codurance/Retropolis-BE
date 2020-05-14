@@ -16,14 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CardAcceptanceTest {
 
-    private CardRepository cardRepository;
     private CardService cardService;
-    private CardFactory cardFactory;
 
     @BeforeEach
     void setUp() {
-        cardRepository = new InMemoryCardRepository();
-        cardFactory = new CardFactory();
+        CardRepository cardRepository = new InMemoryCardRepository();
+        CardFactory cardFactory = new CardFactory();
         cardService = new CardService(cardRepository, cardFactory);
     }
 
