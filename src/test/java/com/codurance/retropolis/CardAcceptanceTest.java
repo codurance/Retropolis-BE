@@ -3,23 +3,28 @@ package com.codurance.retropolis;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.repositories.InMemoryCardRepository;
+import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.services.CardFactory;
 import com.codurance.retropolis.services.CardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CardAcceptanceTest {
 
     private CardRepository cardRepository;
     private CardService cardService;
+    private CardFactory cardFactory;
 
     @BeforeEach
     void setUp() {
         cardRepository = new InMemoryCardRepository();
-        cardService = new CardService(cardRepository);
+        cardFactory = new CardFactory(cardRepository);
+        cardService = new CardService(cardRepository, cardFactory);
     }
 
     @Test
@@ -28,13 +33,13 @@ public class CardAcceptanceTest {
         assertTrue(cards.isEmpty());
     }
 
-//    @Test
-//    void should_return_list_with_card_after_adding() {
-//        String body = "new card";
-//        cardService.addCard(body);
-//        List<Card> cards = cardService.getCards();
-//
-//        assertEquals(1, cards.size());
-//        assertEquals(body, cards.get(0).getBody());
-//    }
+    @Test
+    void should_return_card_when_created() {
+        String body = "new card";
+        NewCardRequestObject requestObject = new NewCardRequestObject(body);
+        Card card = cardService.addCard(requestObject);
+
+        assertEquals(body, card.getBody());
+        assertEquals(1, card.id);
+    }
 }

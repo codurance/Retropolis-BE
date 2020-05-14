@@ -18,7 +18,8 @@ public class InMemoryCardRepository implements CardRepository {
         return cards;
     }
 
-    public void save(Card card) {
+    public Card save(Card card) {
         cards.add(card);
+        return card;
     }
 }

@@ -2,6 +2,7 @@ package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
+import com.codurance.retropolis.requests.NewCardRequestObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,15 +22,15 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class CardServiceTest {
 
-    @Mock
-    private CardRepository cardRepository;
-    @Captor
-    private ArgumentCaptor<Card> captor;
+    @Mock private CardRepository cardRepository;
+    @Mock private CardFactory cardFactory;
+    @Captor private ArgumentCaptor<Card> captor;
+
     private CardService cardService;
 
     @BeforeEach
     void setUp() {
-        cardService = new CardService(cardRepository);
+        cardService = new CardService(cardRepository, cardFactory);
     }
 
     @Test
@@ -54,12 +55,15 @@ public class CardServiceTest {
         assertEquals(cardId, cards.get(0).id);
     }
 
-//    @Test
-//    void should_add_a_card_to_repo() {
-//        String body = "new card";
-//        cardService.addCard(body);
-//        verify(cardRepository).save(captor.capture());
-//        Card card = captor.getValue();
-//        assertEquals(body, card.getBody());
-//    }
+    @Test
+    void should_add_and_return_new_card() {
+        String body = "new card";
+        NewCardRequestObject requestObject = new NewCardRequestObject(body);
+        Card card = new Card(body, 1);
+
+        when(cardFactory.create(requestObject)).thenReturn(card);
+        when(cardRepository.save(card)).thenReturn(card);
+
+        assertEquals(card, cardService.addCard(requestObject));
+    }
 }

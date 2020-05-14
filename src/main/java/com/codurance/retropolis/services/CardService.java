@@ -12,10 +12,12 @@ import java.util.List;
 public class CardService {
 
     private final CardRepository cardRepository;
+    private CardFactory cardFactory;
 
     @Autowired
-    public CardService(CardRepository cardRepository) {
+    public CardService(CardRepository cardRepository, CardFactory cardFactory) {
         this.cardRepository = cardRepository;
+        this.cardFactory = cardFactory;
     }
 
     public List<Card> getCards() {
@@ -23,6 +25,7 @@ public class CardService {
     }
 
     public Card addCard(NewCardRequestObject requestObject) {
-        throw new UnsupportedOperationException();
+        Card card = cardFactory.create(requestObject);
+        return cardRepository.save(card);
     }
 }
