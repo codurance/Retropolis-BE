@@ -4,7 +4,7 @@ import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.repositories.InMemoryCardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
-import com.codurance.retropolis.services.CardFactory;
+import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.services.CardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public class CardAcceptanceTest {
     @BeforeEach
     void setUp() {
         cardRepository = new InMemoryCardRepository();
-        cardFactory = new CardFactory(cardRepository);
+        cardFactory = new CardFactory();
         cardService = new CardService(cardRepository, cardFactory);
     }
 
