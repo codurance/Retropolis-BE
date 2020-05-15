@@ -49,15 +49,15 @@ public class CardServiceTest {
 
         List<Card> cards = cardService.getCards();
         assertEquals(1, cards.size());
-        assertEquals(cardText, cards.get(0).getBody());
+        assertEquals(cardText, cards.get(0).getText());
         assertEquals(cardId, cards.get(0).id);
     }
 
     @Test
     void should_add_and_return_new_card() {
-        String body = "new card";
-        NewCardRequestObject requestObject = new NewCardRequestObject(body);
-        Card card = new Card(body, 1);
+        String text = "new card";
+        NewCardRequestObject requestObject = new NewCardRequestObject(text);
+        Card card = new Card(text, 1);
 
         when(cardFactory.create(requestObject)).thenReturn(card);
         when(cardRepository.save(card)).thenReturn(card);
