@@ -2,14 +2,14 @@ package com.codurance.retropolis.models;
 
 public class Card {
     public final int id;
-    private String body;
+    private String text;
 
-    public Card(String body, int id) {
+    public Card(String text, int id) {
         this.id = id;
-        this.body = body;
+        this.text = text;
     }
 
-    public String getBody() {
-        return body;
+    public String getText() {
+        return text;
     }
 }

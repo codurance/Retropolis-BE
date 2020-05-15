@@ -33,11 +33,11 @@ public class CardAcceptanceTest {
 
     @Test
     void should_return_card_when_created() {
-        String body = "new card";
-        NewCardRequestObject requestObject = new NewCardRequestObject(body);
+        String text = "new card";
+        NewCardRequestObject requestObject = new NewCardRequestObject(text);
         Card card = cardService.addCard(requestObject);
 
-        assertEquals(body, card.getBody());
+        assertEquals(text, card.getText());
         assertEquals(1, card.id);
     }
 }
