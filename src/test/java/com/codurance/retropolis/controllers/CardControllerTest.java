@@ -1,5 +1,6 @@
 package com.codurance.retropolis.controllers;
 
+import static com.codurance.retropolis.utils.Utils.asJsonString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -84,11 +85,4 @@ public class CardControllerTest {
     assertEquals(1, cardResponse.getId());
   }
 
-  public static String asJsonString(final Object obj) {
-    try {
-      return new ObjectMapper().writeValueAsString(obj);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
 }

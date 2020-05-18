@@ -1,12 +1,12 @@
 package com.codurance.retropolis.acceptance.board;
 
+import static com.codurance.retropolis.utils.Utils.asJsonString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.SpringIntegrationTest;
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Column;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -17,13 +17,6 @@ import org.springframework.http.HttpStatus;
 
 public class StepDefsIntegrationTest extends SpringIntegrationTest {
 
-  public static String asJsonString(final Object obj) {
-    try {
-      return new ObjectMapper().writeValueAsString(obj);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
 
   @When("^the client calls /board$")
   public void theClientCallsBoard() {
