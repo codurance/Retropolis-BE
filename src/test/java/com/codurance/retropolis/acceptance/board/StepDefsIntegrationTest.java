@@ -7,16 +7,15 @@ import static org.hamcrest.Matchers.is;
 import com.codurance.retropolis.acceptance.SpringIntegrationTest;
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Column;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 
 public class StepDefsIntegrationTest extends SpringIntegrationTest {
-
 
   @When("^the client calls /board$")
   public void theClientCallsBoard() {

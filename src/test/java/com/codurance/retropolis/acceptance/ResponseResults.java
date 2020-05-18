@@ -13,7 +13,7 @@ public class ResponseResults {
   private final ClientHttpResponse theResponse;
   private final String body;
 
-  ResponseResults(ClientHttpResponse response) throws IOException {
+  ResponseResults(final ClientHttpResponse response) throws IOException {
     this.theResponse = response;
     final InputStream bodyInputStream = response.getBody();
     this.body = new BufferedReader(new InputStreamReader(bodyInputStream, StandardCharsets.UTF_8)).lines()

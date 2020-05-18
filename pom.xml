@@ -1,91 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>com.codurance.retropolis.backend</artifactId>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.0.RELEASE</version>
-        <relativePath/>
-    </parent>
-    <groupId>com.codurance</groupId>
-    <artifactId>com.codurance.retropolis.backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>retropolis-backend</name>
-    <description>Spring Boot Backend for Retropolis</description>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>9</source>
+          <target>9</target>
+        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <artifactId>spring-web</artifactId>
+      <groupId>org.springframework</groupId>
+      <version>5.2.6.RELEASE</version>
+    </dependency>
 
-    <properties>
-        <java.version>1.11</java.version>
-        <spring-web.version>5.2.2.RELEASE</spring-web.version>
-    </properties>
+    <dependency>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
 
-    <dependencies>
-        <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-web</artifactId>
-          <version>5.2.6.RELEASE</version>
-        </dependency>
+    <dependency>
+      <artifactId>cucumber-java</artifactId>
+      <groupId>io.cucumber</groupId>
+      <version>5.7.0</version>
+    </dependency>
 
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-      </dependency>
+    <dependency>
+      <artifactId>cucumber-junit</artifactId>
+      <groupId>io.cucumber</groupId>
+      <scope>test</scope>
+      <version>5.7.0</version>
+    </dependency>
 
-      <dependency>
-        <artifactId>cucumber-junit</artifactId>
-        <groupId>info.cukes</groupId>
-        <scope>test</scope>
-        <version>1.2.4</version>
-      </dependency>
+    <dependency>
+      <artifactId>cucumber-spring</artifactId>
+      <groupId>io.cucumber</groupId>
+      <scope>test</scope>
+      <version>5.7.0</version>
+    </dependency>
 
-      <dependency>
-        <artifactId>cucumber-spring</artifactId>
-        <groupId>info.cukes</groupId>
-        <scope>test</scope>
-        <version>1.2.4</version>
-      </dependency>
 
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
-        <exclusions>
-          <exclusion>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-          </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>4.3.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>1.3</version>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit-jupiter-engine</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+      </exclusions>
+      <groupId>org.springframework.boot</groupId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <artifactId>rest-assured</artifactId>
+      <groupId>io.rest-assured</groupId>
+      <scope>test</scope>
+      <version>4.3.0</version>
+    </dependency>
+    <dependency>
+      <artifactId>hamcrest-all</artifactId>
+      <groupId>org.hamcrest</groupId>
+      <scope>test</scope>
+      <version>1.3</version>
+    </dependency>
 
-    </dependencies>
+  </dependencies>
+  <description>Spring Boot Backend for Retropolis</description>
+  <groupId>com.codurance</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <name>retropolis-backend</name>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>9</source>
-                    <target>9</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <parent>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <relativePath/>
+    <version>2.3.0.RELEASE</version>
+  </parent>
+
+  <properties>
+    <java.version>1.11</java.version>
+    <spring-web.version>5.2.2.RELEASE</spring-web.version>
+  </properties>
+
+  <version>0.0.1-SNAPSHOT</version>
 
 </project>
