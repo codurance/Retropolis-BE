@@ -8,13 +8,13 @@ public class Column {
 
     private List<Card> cards;
 
+    public Column() {
+    }
+
     public Column(int id, String title, List<Card> cards) {
         this.id = id;
         this.title = title;
         this.cards = cards;
-    }
-
-    public Column() {
     }
 
     public int getId() {

@@ -5,11 +5,11 @@ import java.util.List;
 public class Board {
     private List<Column> columns;
 
-    public Board(List<Column> columns) {
-        this.columns = columns;
+    public Board() {
     }
 
-    public Board() {
+    public Board(List<Column> columns) {
+        this.columns = columns;
     }
 
     public List<Column> getColumns() {
