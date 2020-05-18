@@ -38,6 +38,6 @@ public class CardAcceptanceTest {
         Card card = cardService.addCard(requestObject);
 
         assertEquals(text, card.getText());
-        assertEquals(1, card.id);
+        assertEquals(1, card.getId());
     }
 }

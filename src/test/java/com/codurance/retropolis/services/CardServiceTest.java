@@ -50,7 +50,7 @@ public class CardServiceTest {
         List<Card> cards = cardService.getCards();
         assertEquals(1, cards.size());
         assertEquals(cardText, cards.get(0).getText());
-        assertEquals(cardId, cards.get(0).id);
+        assertEquals(cardId, cards.get(0).getId());
     }
 
     @Test

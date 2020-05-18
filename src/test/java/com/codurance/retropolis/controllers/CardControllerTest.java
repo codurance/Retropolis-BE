@@ -61,7 +61,7 @@ public class CardControllerTest {
 
     assertEquals(1, response.size());
     assertEquals(cardText, response.get(0).getText());
-    assertEquals(1, response.get(0).id);
+    assertEquals(1, response.get(0).getId());
   }
 
   @Test
@@ -81,7 +81,7 @@ public class CardControllerTest {
     });
 
     assertEquals(cardText, cardResponse.getText());
-    assertEquals(1, cardResponse.id);
+    assertEquals(1, cardResponse.getId());
   }
 
   public static String asJsonString(final Object obj) {
