@@ -21,22 +21,20 @@ public class BoardServiceTest {
   @Mock
   private BoardRepository boardRepository;
 
-  private BoardService boardService;
-
   @Test
-  void should_return_a_board_with_three_columns() {
-    boardService = new BoardService(boardRepository);
+  void should_return_a_board() {
+    BoardService boardService = new BoardService(boardRepository);
 
     when(boardRepository.getBoard()).thenReturn(
         new Board(List.of(
-            new Column(1, "Start", Collections.emptyList()),
-            new Column(2, "Stop", Collections.emptyList()),
-            new Column(3, "Continue", Collections.emptyList()))));
+            new Column(1, "Start", Collections.emptyList()))));
 
     Board board = boardService.getBoard();
-    verify(boardRepository).getBoard();
 
-    assertEquals(3, board.getColumns().size());
+    verify(boardRepository).getBoard();
+    assertEquals(1, board.getColumns().get(0).getId());
+    assertEquals("Start", board.getColumns().get(0).getTitle());
+    assertEquals(0, board.getColumns().get(0).getCards().size());
   }
 
 }
