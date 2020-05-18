@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Column;
-import com.codurance.retropolis.repositories.BoardRepository;
+import com.codurance.retropolis.repositories.InMemoryBoardRepository;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ public class BoardServiceTest {
 
 
   @Mock
-  private BoardRepository boardRepository;
+  private InMemoryBoardRepository boardRepository;
 
   @Test
   void should_return_a_board() {

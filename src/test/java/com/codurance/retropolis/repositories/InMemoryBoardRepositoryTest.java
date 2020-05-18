@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 class InMemoryBoardRepositoryTest {
 
 
-  private BoardRepository boardRepository;
+  private InMemoryBoardRepository boardRepository;
 
   @BeforeEach
   void setUp() {
-    boardRepository = new BoardRepository();
+    boardRepository = new InMemoryBoardRepository();
   }
 
   @Test

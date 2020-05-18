@@ -1,7 +1,7 @@
 package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.models.Board;
-import com.codurance.retropolis.repositories.BoardRepository;
+import com.codurance.retropolis.repositories.InMemoryBoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 public class BoardService {
 
 
-  private BoardRepository boardRepository;
+  private InMemoryBoardRepository boardRepository;
 
   @Autowired
-  public BoardService(BoardRepository boardRepository) {
+  public BoardService(InMemoryBoardRepository boardRepository) {
     this.boardRepository = boardRepository;
   }
 
