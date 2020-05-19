@@ -33,8 +33,9 @@ public class InMemoryBoardRepository implements BoardRepository {
         .filter(column -> card.getColumnId() == column.getId())
         .findAny();
     if (!columnOptional.isPresent()) {
-      throw new ColumnNotFoundException();
+      throw new ColumnNotFoundException("Column Id is not valid");
     }
     columnOptional.get().getCards().add(card);
   }
+
 }

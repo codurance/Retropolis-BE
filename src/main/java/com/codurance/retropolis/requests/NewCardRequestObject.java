@@ -5,17 +5,17 @@ import javax.validation.constraints.Size;
 
 public class NewCardRequestObject {
 
-  @NotNull(message = "Text cannot be empty")
-  @Size(min = 1, message = "Text must not be less than 1 characters")
+  @NotNull
+  @Size(min = 1, message = "Text must not be less than 1 character")
   private String text;
 
   @NotNull(message = "Column id cannot be empty")
-  private int columnId;
+  private Integer columnId;
 
   public NewCardRequestObject() {
   }
 
-  public NewCardRequestObject(String text, int columnId) {
+  public NewCardRequestObject(String text, Integer columnId) {
     this.text = text;
     this.columnId = columnId;
   }
