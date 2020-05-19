@@ -40,6 +40,6 @@ public class CardServiceTest {
     when(boardService.addCard(card)).thenReturn(card);
 
     assertEquals(card, cardService.addCard(requestObject));
-
   }
+
 }

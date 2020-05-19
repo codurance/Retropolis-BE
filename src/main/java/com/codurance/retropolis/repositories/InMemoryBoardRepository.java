@@ -1,6 +1,7 @@
 package com.codurance.retropolis.repositories;
 
 import com.codurance.retropolis.models.Board;
+import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.models.Column;
 import java.util.Collections;
 import java.util.List;
@@ -22,5 +23,10 @@ public class InMemoryBoardRepository implements BoardRepository {
   @Override
   public Board getBoard() {
     return board;
+  }
+
+  @Override
+  public void addCard(Card card) {
+    throw new UnsupportedOperationException("implement me");
   }
 }

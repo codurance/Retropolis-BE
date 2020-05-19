@@ -21,6 +21,7 @@ public class BoardService {
   }
 
   public Card addCard(Card card) {
-    throw new UnsupportedOperationException("Implement me!");
+    boardRepository.addCard(card);
+    return card;
   }
 }
