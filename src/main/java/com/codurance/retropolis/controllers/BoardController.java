@@ -10,17 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/board")
-public class BoardController {
+public class BoardController extends BaseController {
 
-    private final BoardService boardService;
+  private final BoardService boardService;
 
-    @Autowired
-    public BoardController(BoardService boardService) {
-        this.boardService = boardService;
-    }
+  @Autowired
+  public BoardController(BoardService boardService) {
+    this.boardService = boardService;
+  }
 
-    @GetMapping
-    public Board getBoard() {
-        return boardService.getBoard();
-    }
+  @GetMapping
+  public Board getBoard() {
+    return boardService.getBoard();
+  }
+
 }

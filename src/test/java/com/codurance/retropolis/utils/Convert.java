@@ -2,7 +2,7 @@ package com.codurance.retropolis.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class Utils {
+public class Convert {
 
   public static String asJsonString(final Object obj) {
     try {

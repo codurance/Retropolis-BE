@@ -1,17 +1,30 @@
 package com.codurance.retropolis.requests;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class NewCardRequestObject {
 
-    private String text;
+  @NotNull
+  @Size(min = 1, message = "Text must not be less than 1 character")
+  private String text;
 
-    public NewCardRequestObject() {
-    }
+  @NotNull(message = "Column id cannot be empty")
+  private Integer columnId;
 
-    public NewCardRequestObject(String text) {
-        this.text = text;
-    }
+  public NewCardRequestObject() {
+  }
 
-    public String getText() {
-        return text;
-    }
+  public NewCardRequestObject(String text, Integer columnId) {
+    this.text = text;
+    this.columnId = columnId;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public int getColumnId() {
+    return columnId;
+  }
 }

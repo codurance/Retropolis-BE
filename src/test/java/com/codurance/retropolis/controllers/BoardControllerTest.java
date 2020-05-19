@@ -39,11 +39,7 @@ public class BoardControllerTest {
   void returns_a_board() throws Exception {
     when(boardService.getBoard()).thenReturn(new Board(Collections.emptyList()));
 
-    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-        .andExpect(status().isOk()).andReturn();
-    String contentAsString = httpResponse.getResponse().getContentAsString();
-    Board board = objectMapper.readValue(contentAsString, new TypeReference<>() {
-    });
+    Board board = requestBoard();
 
     assertNotNull(board);
   }
@@ -54,11 +50,7 @@ public class BoardControllerTest {
     List<Column> columns = List.of(new Column(columnID, "start", Collections.emptyList()));
     when(boardService.getBoard()).thenReturn(new Board(columns));
 
-    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-        .andExpect(status().isOk()).andReturn();
-    String contentAsString = httpResponse.getResponse().getContentAsString();
-    Board board = objectMapper.readValue(contentAsString, new TypeReference<>() {
-    });
+    Board board = requestBoard();
 
     assertEquals(columns.size(), board.getColumns().size());
     Column columnResponse = board.getColumns().get(0);
@@ -70,16 +62,11 @@ public class BoardControllerTest {
     int columnID = 1;
     String text = "hello";
     int cardId = 1;
-    List<Card> cards = List.of(new Card(text, cardId, columnID));
-    Column column = new Column(columnID, "start", cards);
-    List<Column> columns = List.of(column);
+    List<Card> cards = List.of(new Card(cardId, text, columnID));
+    List<Column> columns = List.of(new Column(columnID, "start", cards));
     when(boardService.getBoard()).thenReturn(new Board(columns));
 
-    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-        .andExpect(status().isOk()).andReturn();
-    String contentAsString = httpResponse.getResponse().getContentAsString();
-    Board board = objectMapper.readValue(contentAsString, new TypeReference<>() {
-    });
+    Board board = requestBoard();
 
     Column columnResponse = board.getColumns().get(0);
     assertEquals(cards.size(), columnResponse.getCards().size());
@@ -89,5 +76,11 @@ public class BoardControllerTest {
     assertEquals(columnID, cardResponse.getColumnId());
   }
 
-
+  private Board requestBoard() throws Exception {
+    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(URL))
+        .andExpect(status().isOk()).andReturn();
+    String contentAsString = httpResponse.getResponse().getContentAsString();
+    return objectMapper.readValue(contentAsString, new TypeReference<>() {
+    });
+  }
 }

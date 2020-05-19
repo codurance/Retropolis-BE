@@ -6,12 +6,7 @@ public class Card {
   private int columnId;
   private String text;
 
-  public Card(String text, int id) {
-    this.id = id;
-    this.text = text;
-  }
-
-  public Card(String text, int id, int columnId) {
+  public Card(int id, String text, int columnId) {
     this.text = text;
     this.id = id;
     this.columnId = columnId;

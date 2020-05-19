@@ -1,6 +1,6 @@
 package com.codurance.retropolis.controllers;
 
-import static com.codurance.retropolis.utils.Utils.asJsonString;
+import static com.codurance.retropolis.utils.Convert.asJsonString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -34,10 +34,12 @@ public class CardControllerTest {
   private ObjectMapper objectMapper;
 
   @Test
-  void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
+  public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
+    int cardId = 1;
+    int columnId = 1;
     String cardText = "hello";
-    NewCardRequestObject requestObject = new NewCardRequestObject(cardText);
-    given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardText, 1));
+    NewCardRequestObject requestObject = new NewCardRequestObject(cardText, columnId);
+    given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardId, cardText, columnId));
 
     MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
         .content(asJsonString(requestObject))
@@ -50,7 +52,9 @@ public class CardControllerTest {
     });
 
     assertEquals(cardText, cardResponse.getText());
-    assertEquals(1, cardResponse.getId());
+    assertEquals(cardId, cardResponse.getId());
+    assertEquals(cardText, cardResponse.getText());
+    assertEquals(columnId, cardResponse.getColumnId());
   }
 
 }
