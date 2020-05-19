@@ -1,14 +1,14 @@
 package com.codurance.retropolis.repositories;
 
 import com.codurance.retropolis.models.Card;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class InMemoryCardRepository implements CardRepository {
-    private List<Card> cards;
+
+    private final List<Card> cards;
 
     public InMemoryCardRepository() {
         this.cards = new ArrayList<>();
@@ -16,10 +16,5 @@ public class InMemoryCardRepository implements CardRepository {
 
     public List<Card> getAll() {
         return cards;
-    }
-
-    public Card save(Card card) {
-        cards.add(card);
-        return card;
     }
 }
