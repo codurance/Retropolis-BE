@@ -45,7 +45,7 @@ public class BoardServiceTest {
   }
 
   @Test
-  public void should_add_card_to_the_correct_column() {
+  public void should_add_card_to_in_memory_and_return_new_card() {
     Card cardToBeAdded = new Card("hello", 1, 1);
     Card card = boardService.addCard(cardToBeAdded);
 
