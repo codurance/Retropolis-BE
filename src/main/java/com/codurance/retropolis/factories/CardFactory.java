@@ -9,6 +9,6 @@ public class CardFactory {
 
   public Card create(NewCardRequestObject requestObject) {
     int id = CardIDGenerator.nextID();
-    return new Card(requestObject.getText(), requestObject.getColumnId(), id);
+    return new Card(requestObject.getText(), id, requestObject.getColumnId());
   }
 }
