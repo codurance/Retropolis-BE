@@ -31,10 +31,8 @@ public class BoardServiceTest {
 
   @Test
   void should_return_a_board() {
-
     when(boardRepository.getBoard()).thenReturn(
-        new Board(List.of(
-            new Column(1, "Start", Collections.emptyList()))));
+        new Board(List.of(new Column(1, "Start", Collections.emptyList()))));
 
     Board board = boardService.getBoard();
 
@@ -46,7 +44,7 @@ public class BoardServiceTest {
 
   @Test
   public void should_add_card_to_in_memory_and_return_new_card() {
-    Card cardToBeAdded = new Card("hello", 1, 1);
+    Card cardToBeAdded = new Card(1, "hello", 1);
     Card card = boardService.addCard(cardToBeAdded);
 
     verify(boardRepository).addCard(card);

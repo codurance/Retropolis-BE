@@ -1,10 +1,10 @@
-package com.codurance.retropolis.acceptance;
+package com.codurance.retropolis.utils;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-public class HttpHelpers {
+public class HttpWrapper {
 
   public static ResponseResults getResponse = null;
   public static ResponseResults postResponse = null;
@@ -20,5 +20,24 @@ public class HttpHelpers {
     ResponseEntity<String> response =
         restTemplate.postForEntity(url, request, String.class);
     postResponse = new ResponseResults(response.getBody(), response);
+  }
+
+  public static class ResponseResults {
+
+    private final ResponseEntity<String> theResponse;
+    private final String body;
+
+    ResponseResults(String body, final ResponseEntity<String> response) {
+      this.theResponse = response;
+      this.body = body;
+    }
+
+    public ResponseEntity<String> getTheResponse() {
+      return theResponse;
+    }
+
+    public String getBody() {
+      return body;
+    }
   }
 }

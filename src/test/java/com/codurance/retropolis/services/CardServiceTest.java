@@ -34,7 +34,7 @@ public class CardServiceTest {
     int columnId = 1;
     int cardId = 1;
     NewCardRequestObject requestObject = new NewCardRequestObject(text, columnId);
-    Card card = new Card(text, cardId, columnId);
+    Card card = new Card(cardId, text, columnId);
 
     when(cardFactory.create(requestObject)).thenReturn(card);
     when(boardService.addCard(card)).thenReturn(card);

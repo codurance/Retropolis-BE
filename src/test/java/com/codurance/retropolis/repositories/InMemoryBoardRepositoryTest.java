@@ -13,6 +13,7 @@ class InMemoryBoardRepositoryTest {
 
 
   private static final int NON_EXISTENT_COLUMN_ID = 999;
+  private int FIXED_COLUMN_SIZE = 3;
   private BoardRepository boardRepository;
 
   @BeforeEach
@@ -23,7 +24,7 @@ class InMemoryBoardRepositoryTest {
   @Test
   void should_return_three_columns() {
     Board board = boardRepository.getBoard();
-    assertEquals(3, board.getColumns().size());
+    assertEquals(FIXED_COLUMN_SIZE, board.getColumns().size());
   }
 
   @Test
@@ -39,14 +40,14 @@ class InMemoryBoardRepositoryTest {
     Board board = boardRepository.getBoard();
     int columnId = board.getColumns().get(0).getId();
 
-    boardRepository.addCard(new Card("hello", 1, columnId));
+    boardRepository.addCard(new Card(1, "hello", columnId));
 
     assertEquals(1, board.getColumns().get(0).getCards().size());
   }
 
   @Test
   void should_throw_exception_when_columnId_is_invalid() {
-    assertThrows(ColumnNotFoundException.class, () -> boardRepository.addCard(new Card("hello", 1, NON_EXISTENT_COLUMN_ID)));
+    assertThrows(ColumnNotFoundException.class, () -> boardRepository.addCard(new Card(1, "hello", NON_EXISTENT_COLUMN_ID)));
   }
 
 }

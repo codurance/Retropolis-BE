@@ -1,6 +1,6 @@
 package com.codurance.retropolis.controllers;
 
-import static com.codurance.retropolis.utils.Utils.asJsonString;
+import static com.codurance.retropolis.utils.Convert.asJsonString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -39,7 +39,7 @@ public class CardControllerTest {
     int columnId = 1;
     String cardText = "hello";
     NewCardRequestObject requestObject = new NewCardRequestObject(cardText, columnId);
-    given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardText, cardId, columnId));
+    given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardId, cardText, columnId));
 
     MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
         .content(asJsonString(requestObject))

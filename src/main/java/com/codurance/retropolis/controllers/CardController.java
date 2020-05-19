@@ -35,7 +35,7 @@ public class CardController extends BaseController {
 
   @ExceptionHandler(ColumnNotFoundException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public List<String> errorHandler(ColumnNotFoundException exception) {
+  public List<String> handleColumnNotFound(ColumnNotFoundException exception) {
     return Collections.singletonList(exception.getMessage());
   }
 
