@@ -33,7 +33,6 @@ public class CardControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  // TODO Remove request object redundant constructor
   @Test
   public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
     int cardId = 1;

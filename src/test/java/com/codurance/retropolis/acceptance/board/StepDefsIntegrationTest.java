@@ -10,7 +10,6 @@ import com.codurance.retropolis.models.Column;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -23,9 +22,9 @@ public class StepDefsIntegrationTest {
   }
 
   @Then("^the client receives status code of (\\d+)$")
-  public void theClientReceivesStatusCodeOf(int statusCode) throws IOException {
+  public void theClientReceivesStatusCodeOf(int statusCode) {
     final HttpStatus currentStatusCode = HttpHelpers.getResponse.getTheResponse().getStatusCode();
-    assertThat("status code is incorrect : " + HttpHelpers.getResponse.getBody(), currentStatusCode.value(), is(statusCode));
+    assertThat(currentStatusCode.value(), is(statusCode));
   }
 
   @And("^the client receives board with three columns, \"([^\"]*)\", \"([^\"]*)\", and \"([^\"]*)\"$")

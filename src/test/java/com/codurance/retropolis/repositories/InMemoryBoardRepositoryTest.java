@@ -1,7 +1,9 @@
 package com.codurance.retropolis.repositories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Card;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 class InMemoryBoardRepositoryTest {
 
 
+  private static final int NON_EXISTENT_COLUMN_ID = 999;
   private BoardRepository boardRepository;
 
   @BeforeEach
@@ -39,6 +42,11 @@ class InMemoryBoardRepositoryTest {
     boardRepository.addCard(new Card("hello", 1, columnId));
 
     assertEquals(1, board.getColumns().get(0).getCards().size());
+  }
+
+  @Test
+  void should_throw_exception_when_columnId_is_invalid() {
+    assertThrows(ColumnNotFoundException.class, () -> boardRepository.addCard(new Card("hello", 1, NON_EXISTENT_COLUMN_ID)));
   }
 
 }

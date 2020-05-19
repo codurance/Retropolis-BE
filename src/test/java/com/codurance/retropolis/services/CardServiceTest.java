@@ -25,7 +25,7 @@ public class CardServiceTest {
 
   @BeforeEach
   void setUp() {
-    cardService = new CardService(null, cardFactory, boardService);
+    cardService = new CardService(cardFactory, boardService);
   }
 
   @Test
