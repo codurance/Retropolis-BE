@@ -19,7 +19,7 @@ public class CardAcceptanceTest {
     void setUp() {
         CardRepository cardRepository = new InMemoryCardRepository();
         CardFactory cardFactory = new CardFactory();
-        cardService = new CardService(cardRepository, cardFactory);
+        cardService = new CardService(cardRepository, cardFactory, null);
     }
 
     @Test

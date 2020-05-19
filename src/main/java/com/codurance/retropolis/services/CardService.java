@@ -12,15 +12,18 @@ public class CardService {
 
     private final CardRepository cardRepository;
     private final CardFactory cardFactory;
+    private final BoardService boardService;
 
     @Autowired
-    public CardService(CardRepository cardRepository, CardFactory cardFactory) {
+    public CardService(CardRepository cardRepository, CardFactory cardFactory,
+        BoardService boardService) {
         this.cardRepository = cardRepository;
+        this.boardService = boardService;
         this.cardFactory = cardFactory;
     }
 
     public Card addCard(NewCardRequestObject requestObject) {
         Card card = cardFactory.create(requestObject);
-        return cardRepository.save(card);
+        return boardService.addCard(card);
     }
 }

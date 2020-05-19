@@ -33,11 +33,14 @@ public class CardControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
+  // TODO Remove request object redundant constructor
   @Test
-  void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
+  public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
+    int cardId = 1;
+    int columnId = 1;
     String cardText = "hello";
-    NewCardRequestObject requestObject = new NewCardRequestObject(cardText);
-    given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardText, 1));
+    NewCardRequestObject requestObject = new NewCardRequestObject(cardText, columnId);
+    given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardText, cardId, columnId));
 
     MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
         .content(asJsonString(requestObject))
@@ -50,7 +53,9 @@ public class CardControllerTest {
     });
 
     assertEquals(cardText, cardResponse.getText());
-    assertEquals(1, cardResponse.getId());
+    assertEquals(cardId, cardResponse.getId());
+    assertEquals(cardText, cardResponse.getText());
+    assertEquals(columnId, cardResponse.getColumnId());
   }
 
 }

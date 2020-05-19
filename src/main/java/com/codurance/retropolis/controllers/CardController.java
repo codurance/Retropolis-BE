@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cards")
 public class CardController {
 
-    private CardService cardService;
+    private final CardService cardService;
 
     @Autowired
     public CardController(CardService cardService) {
