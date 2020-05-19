@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class InMemoryBoardRepository implements BoardRepository {
 
-  private Board board;
+  private final Board board;
 
   public InMemoryBoardRepository() {
     this.board = new Board(List.of(

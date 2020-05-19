@@ -1,33 +1,34 @@
 package com.codurance.retropolis.models;
 
 public class Card {
-    private int id;
-    private int columnId;
-    private String text;
 
-    public Card(String text, int id) {
-        this.id = id;
-        this.text = text;
-    }
+  private int id;
+  private int columnId;
+  private String text;
 
-    public Card(String text, int id, int columnId) {
-        this.text = text;
-        this.id = id;
-        this.columnId = columnId;
-    }
+  public Card(String text, int id) {
+    this.id = id;
+    this.text = text;
+  }
 
-    public Card() {
-    }
+  public Card(String text, int id, int columnId) {
+    this.text = text;
+    this.id = id;
+    this.columnId = columnId;
+  }
 
-    public String getText() {
-        return text;
-    }
+  public Card() {
+  }
 
-    public int getColumnId() {
-        return columnId;
-    }
+  public String getText() {
+    return text;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public int getColumnId() {
+    return columnId;
+  }
+
+  public int getId() {
+    return id;
+  }
 }

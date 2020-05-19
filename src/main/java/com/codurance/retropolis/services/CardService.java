@@ -7,8 +7,6 @@ import com.codurance.retropolis.requests.NewCardRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CardService {
 
@@ -19,10 +17,6 @@ public class CardService {
     public CardService(CardRepository cardRepository, CardFactory cardFactory) {
         this.cardRepository = cardRepository;
         this.cardFactory = cardFactory;
-    }
-
-    public List<Card> getCards() {
-        return cardRepository.getAll();
     }
 
     public Card addCard(NewCardRequestObject requestObject) {

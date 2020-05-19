@@ -1,6 +1,7 @@
 package com.codurance.retropolis.requests;
 
 public class NewCardRequestObject {
+
     private String text;
 
     public NewCardRequestObject() {
