@@ -24,13 +24,13 @@ public class StepDefsIntegrationTest extends SpringIntegrationTest {
 
   @Then("^the client receives status code of (\\d+)$")
   public void theClientReceivesStatusCodeOf(int statusCode) throws IOException {
-    final HttpStatus currentStatusCode = latestResponse.getTheResponse().getStatusCode();
-    assertThat("status code is incorrect : " + latestResponse.getBody(), currentStatusCode.value(), is(statusCode));
+    final HttpStatus currentStatusCode = getResponse.getTheResponse().getStatusCode();
+    assertThat("status code is incorrect : " + getResponse.getBody(), currentStatusCode.value(), is(statusCode));
   }
 
   @And("^the client receives board with three columns, \"([^\"]*)\", \"([^\"]*)\", and \"([^\"]*)\"$")
   public void theClientReceivesBoardWithThreeColumnsAnd(String firstTitle, String secondTitle, String thirdTitle) {
-    assertThat(latestResponse.getBody(),
+    assertThat(getResponse.getBody(),
         is(asJsonString(new Board(List.of(
             new Column(0, firstTitle, Collections.emptyList()),
             new Column(1, secondTitle, Collections.emptyList()),
