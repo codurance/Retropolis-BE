@@ -62,7 +62,8 @@ public class BoardControllerTest {
     int columnID = 1;
     String text = "hello";
     int cardId = 1;
-    List<Card> cards = List.of(new Card(cardId, text, columnID));
+    String userName = "John Doe";
+    List<Card> cards = List.of(new Card(cardId, text, columnID, userName));
     List<Column> columns = List.of(new Column(columnID, "start", cards));
     when(boardService.getBoard()).thenReturn(new Board(columns));
 
@@ -74,6 +75,7 @@ public class BoardControllerTest {
     assertEquals(text, cardResponse.getText());
     assertEquals(cardId, cardResponse.getId());
     assertEquals(columnID, cardResponse.getColumnId());
+    assertEquals(userName, cardResponse.getUserName());
   }
 
   private Board requestBoard() throws Exception {

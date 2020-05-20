@@ -33,8 +33,9 @@ public class CardServiceTest {
     String text = "new card";
     int columnId = 1;
     int cardId = 1;
-    NewCardRequestObject requestObject = new NewCardRequestObject(text, columnId);
-    Card card = new Card(cardId, text, columnId);
+    String userName = "John Doe";
+    NewCardRequestObject requestObject = new NewCardRequestObject(text, columnId, userName);
+    Card card = new Card(cardId, text, columnId, userName);
 
     when(cardFactory.create(requestObject)).thenReturn(card);
     when(boardService.addCard(card)).thenReturn(card);

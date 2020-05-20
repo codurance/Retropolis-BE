@@ -40,14 +40,27 @@ class InMemoryBoardRepositoryTest {
     Board board = boardRepository.getBoard();
     int columnId = board.getColumns().get(0).getId();
 
-    boardRepository.addCard(new Card(1, "hello", columnId));
+    boardRepository.addCard(new Card(1, "hello", columnId, "John Doe"));
 
     assertEquals(1, board.getColumns().get(0).getCards().size());
   }
 
   @Test
   void should_throw_exception_when_columnId_is_invalid() {
-    assertThrows(ColumnNotFoundException.class, () -> boardRepository.addCard(new Card(1, "hello", NON_EXISTENT_COLUMN_ID)));
+    assertThrows(ColumnNotFoundException.class, () -> boardRepository.addCard(new Card(1, "hello", NON_EXISTENT_COLUMN_ID, "John Doe")));
   }
 
+  @Test
+  void should_add_card_with_correct_fields() {
+    Board board = boardRepository.getBoard();
+    int columnId = board.getColumns().get(0).getId();
+
+    boardRepository.addCard(new Card(1, "hello", columnId, "John Doe"));
+
+    Card card = board.getColumns().get(0).getCards().get(0);
+    assertEquals(1, card.getId());
+    assertEquals("hello", card.getText());
+    assertEquals(0, card.getColumnId());
+    assertEquals("John Doe", card.getUserName());
+  }
 }

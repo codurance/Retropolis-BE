@@ -7,12 +7,6 @@ public class Card {
   private String text;
   private String userName;
 
-  public Card(int id, String text, int columnId) {
-    this.text = text;
-    this.id = id;
-    this.columnId = columnId;
-  }
-
   public Card() {
   }
 

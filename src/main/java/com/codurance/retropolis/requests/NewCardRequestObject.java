@@ -23,16 +23,15 @@ public class NewCardRequestObject {
     this.userName = userName;
   }
 
-  public NewCardRequestObject(String text, Integer columnId) {
-    this.text = text;
-    this.columnId = columnId;
-  }
-
   public String getText() {
     return text;
   }
 
   public int getColumnId() {
     return columnId;
+  }
+
+  public String getUserName() {
+    return userName;
   }
 }

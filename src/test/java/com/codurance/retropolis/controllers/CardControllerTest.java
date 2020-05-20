@@ -39,7 +39,7 @@ public class CardControllerTest {
         int columnId = 1;
         String cardText = "hello";
         String userName = "John Doe";
-        NewCardRequestObject requestObject = new NewCardRequestObject(cardText, columnId);
+        NewCardRequestObject requestObject = new NewCardRequestObject(cardText, columnId, userName);
         given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardId, cardText, columnId, userName));
 
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
