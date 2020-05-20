@@ -12,8 +12,10 @@ public class WebConfig {
     public class WebConfiguration implements WebMvcConfigurer {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
-            registry.addMapping("/**")
-                    .allowedOrigins("http://retropolis-fe.s3-website.eu-west-2.amazonaws.com");
+            registry.addMapping("/**").allowedMethods("*");
+
+//            registry.addMapping("/**")
+//                    .allowedOrigins("http://retropolis-fe.s3-website.eu-west-2.amazonaws.com");
         }
     }
 }

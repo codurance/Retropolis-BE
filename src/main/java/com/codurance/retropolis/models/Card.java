@@ -5,6 +5,7 @@ public class Card {
   private int id;
   private int columnId;
   private String text;
+  private String userName;
 
   public Card(int id, String text, int columnId) {
     this.text = text;
@@ -13,6 +14,13 @@ public class Card {
   }
 
   public Card() {
+  }
+
+  public Card(int cardId, String cardText, int columnId, String userName) {
+    id = cardId;
+    text = cardText;
+    this.columnId = columnId;
+    this.userName = userName;
   }
 
   public String getText() {
@@ -25,5 +33,9 @@ public class Card {
 
   public int getId() {
     return id;
+  }
+
+  public String getUserName() {
+    return userName;
   }
 }

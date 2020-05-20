@@ -12,7 +12,15 @@ public class NewCardRequestObject {
   @NotNull(message = "Column id cannot be empty")
   private Integer columnId;
 
+  private String userName;
+
   public NewCardRequestObject() {
+  }
+
+  public NewCardRequestObject(String text, Integer columnId, String userName) {
+    this.text = text;
+    this.columnId = columnId;
+    this.userName = userName;
   }
 
   public NewCardRequestObject(String text, Integer columnId) {
