@@ -52,7 +52,7 @@
     <dependency>
       <artifactId>validation-api</artifactId>
       <groupId>javax.validation</groupId>
-      <version>2.0.0.Final</version>
+      <version>2.0.1.Final</version>
     </dependency>
     <dependency>
       <artifactId>spring-boot-starter-validation</artifactId>
