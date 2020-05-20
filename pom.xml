@@ -24,6 +24,11 @@
       <groupId>org.springframework</groupId>
       <version>5.2.6.RELEASE</version>
     </dependency>
+    <dependency>
+      <artifactId>spring-webmvc</artifactId>
+      <groupId>org.springframework</groupId>
+      <version>5.2.6.RELEASE</version>
+    </dependency>
 
     <dependency>
       <artifactId>spring-boot-starter-web</artifactId>
