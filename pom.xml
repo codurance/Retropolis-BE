@@ -94,6 +94,10 @@
       <groupId>com.google.api-client</groupId>
       <version>1.30.7</version>
     </dependency>
+    <dependency>
+      <artifactId>spring-test</artifactId>
+      <groupId>org.springframework</groupId>
+    </dependency>
 
   </dependencies>
   <description>Spring Boot Backend for Retropolis</description>
