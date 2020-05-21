@@ -89,6 +89,12 @@
       <version>1.3</version>
     </dependency>
 
+    <dependency>
+      <artifactId>google-api-client-appengine</artifactId>
+      <groupId>com.google.api-client</groupId>
+      <version>1.30.7</version>
+    </dependency>
+
   </dependencies>
   <description>Spring Boot Backend for Retropolis</description>
   <groupId>com.codurance</groupId>
