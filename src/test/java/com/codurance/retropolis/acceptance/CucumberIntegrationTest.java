@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/test/resources/features", strict = true)
 @CucumberContextConfiguration
-//@ActiveProfiles(Environment.TEST)
 @SpringBootTest(classes = Retropolis.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 public class CucumberIntegrationTest {
 
