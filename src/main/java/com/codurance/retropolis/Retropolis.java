@@ -10,9 +10,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-
 import java.util.Arrays;
 import java.util.Collections;
+import org.springframework.test.context.ActiveProfiles;
+
 
 @SpringBootApplication
 @ActiveProfiles(Environment.PROD)
@@ -35,5 +36,4 @@ public class Retropolis {
     bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
     return bean;
   }
-
 }
