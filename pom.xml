@@ -92,7 +92,7 @@
     <dependency>
       <artifactId>google-api-client-appengine</artifactId>
       <groupId>com.google.api-client</groupId>
-      <version>1.30.7</version>
+      <version>1.30.9</version>
     </dependency>
     <dependency>
       <artifactId>spring-test</artifactId>
