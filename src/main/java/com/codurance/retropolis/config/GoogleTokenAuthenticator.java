@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = "http://retropolis-fe.s3-website.eu-west-2.amazonaws.com", maxAge = 3600)
 @Profile("!" + Environment.TEST)
 public class GoogleTokenAuthenticator implements HandlerInterceptor {
 
