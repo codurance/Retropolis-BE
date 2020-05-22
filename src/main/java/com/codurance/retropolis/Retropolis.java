@@ -28,7 +28,8 @@ public class Retropolis {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5000", "http://retropolis-fe.s3-website.eu-west-2.amazonaws.com"));
+        config.setAllowedOrigins(Arrays.asList("*"));
+//        config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5000", "http://retropolis-fe.s3-website.eu-west-2.amazonaws.com"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
         source.registerCorsConfiguration("/**", config);
