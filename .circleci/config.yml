@@ -7,7 +7,11 @@ jobs:
     steps:
       - checkout
 
+      - run: mvn clean
+
       - run: mvn test
+
+      - run: mvn jacoco:report
 
       - run: mvn package
 
@@ -34,6 +38,8 @@ jobs:
       - run:
           name: Deploying
           command: eb deploy RetropolisBe-env --debug
+
+      - run: bash <(curl -s https://codecov.io/bash)
 
 
 workflows:
