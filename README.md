@@ -23,5 +23,9 @@ For continuous integration it uses [CircleCI](https://circleci.com/) and for the
 #### Run tests
 You can run the tests by using `$ mvn test`.
 
+#### Generate coverage report
+You can produce code coverage report using the jacoco plugin `$ mvn jacoco:report`.
+
+
 ### Documentation
 Retropolis-BE documentation is available [here](https://github.com/codurance/Retropolis-BE/wiki)
