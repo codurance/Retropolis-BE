@@ -1,4 +1,4 @@
-# Retropolis-BE [![codurance](https://circleci.com/gh/codurance/Retropolis-BE.svg?style=shield)](https://github.com/codurance/Retropolis-BE) [![Known Vulnerabilities](https://snyk.io/test/github/codurance/Retropolis-BE/badge.svg?targetFile=pom.xml)](https://snyk.io/test/github/codurance/Retropolis-BE?targetFile=pom.xml)
+# Retropolis-BE [![codurance](https://circleci.com/gh/codurance/Retropolis-BE.svg?style=shield)](https://github.com/codurance/Retropolis-BE) [![Known Vulnerabilities](https://snyk.io/test/github/codurance/Retropolis-BE/badge.svg?targetFile=pom.xml)](https://snyk.io/test/github/codurance/Retropolis-BE?targetFile=pom.xml) [![codecov](https://codecov.io/gh/codurance/Retropolis-BE/branch/master/graph/badge.svg)](https://codecov.io/gh/codurance/Retropolis-BE)
 
 The back end of the Retropolis application. This is the final project for the apprentices Mar-May-2020.
 The project is a remote tool to facilitate remote retrospectives.
