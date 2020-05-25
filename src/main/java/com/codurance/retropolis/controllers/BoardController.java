@@ -24,10 +24,9 @@ public class BoardController extends BaseController {
   public Board getBoard() {
     return boardService.getBoard(1);
   }
-  
+
   @GetMapping(value = "/{id}")
   public Board getBoard(@PathVariable String id) {
     return boardService.getBoard(1);
   }
-
 }
