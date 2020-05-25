@@ -1,8 +1,41 @@
-CREATE TABLE employee
-(
- employeeName varchar(100) NOT NULL,
-  employeeId varchar(11) NOT NULL ,
- employeeAddress varchar(100) DEFAULT NULL,
- employeeEmail varchar(100) DEFAULT NULL,
- PRIMARY KEY (employeeId)
+DROP TABLE IF EXISTS cards;
+DROP TABLE IF EXISTS columns;
+DROP TABLE IF EXISTS users_boards;
+DROP TABLE IF EXISTS boards;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE "users" (
+  "id" SERIAL PRIMARY KEY,
+  "email" varchar UNIQUE
 );
+
+CREATE TABLE "boards" (
+  "id" SERIAL PRIMARY KEY,
+  "title" varchar
+);
+
+CREATE TABLE "users_boards" (
+  "user_id" int,
+  "board_id" int
+);
+
+CREATE TABLE "columns" (
+  "id" SERIAL PRIMARY KEY,
+  "title" varchar,
+  "board_id" int
+);
+
+CREATE TABLE "cards" (
+  "id" SERIAL PRIMARY KEY,
+  "text" varchar,
+  "username" varchar,
+  "column_id" int
+);
+
+ALTER TABLE "users_boards" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+
+ALTER TABLE "users_boards" ADD FOREIGN KEY ("board_id") REFERENCES "boards" ("id");
+
+ALTER TABLE "columns" ADD FOREIGN KEY ("board_id") REFERENCES "boards" ("id");
+
+ALTER TABLE "cards" ADD FOREIGN KEY ("column_id") REFERENCES "columns" ("id");
