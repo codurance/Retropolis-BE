@@ -28,11 +28,11 @@ public class CardService {
 
   public Card addCard(NewCardRequestObject requestObject) {
     Card card = cardFactory.create(requestObject);
-    insert(card);
-    return boardService.addCard(card);
+    return boardService.addCard(insert(card));
   }
 
   private Card insert(Card newCard){
+
     return cardRepository.insert(newCard);
   }
 }
