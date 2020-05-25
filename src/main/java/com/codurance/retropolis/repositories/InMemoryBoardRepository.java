@@ -4,10 +4,11 @@ import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.models.Column;
+import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class InMemoryBoardRepository implements BoardRepository {
@@ -23,7 +24,7 @@ public class InMemoryBoardRepository implements BoardRepository {
   }
 
   @Override
-  public Board getBoard() {
+  public Board getBoard(Integer id) {
     return board;
   }
 

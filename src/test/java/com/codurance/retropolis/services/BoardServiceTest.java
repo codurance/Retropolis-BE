@@ -31,12 +31,12 @@ public class BoardServiceTest {
 
   @Test
   void should_return_a_board() {
-    when(boardRepository.getBoard()).thenReturn(
+    when(boardRepository.getBoard(1)).thenReturn(
         new Board(List.of(new Column(1, "Start", Collections.emptyList()))));
 
-    Board board = boardService.getBoard();
+    Board board = boardService.getBoard(1);
 
-    verify(boardRepository).getBoard();
+    verify(boardRepository).getBoard(1);
     assertEquals(1, board.getColumns().get(0).getId());
     assertEquals("Start", board.getColumns().get(0).getTitle());
     assertEquals(0, board.getColumns().get(0).getCards().size());

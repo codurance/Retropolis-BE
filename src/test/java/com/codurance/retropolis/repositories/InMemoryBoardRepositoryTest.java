@@ -23,13 +23,13 @@ class InMemoryBoardRepositoryTest {
 
   @Test
   void should_return_three_columns() {
-    Board board = boardRepository.getBoard();
+    Board board = boardRepository.getBoard(1);
     assertEquals(FIXED_COLUMN_SIZE, board.getColumns().size());
   }
 
   @Test
   void should_return_three_columns_with_correct_titles() {
-    Board board = boardRepository.getBoard();
+    Board board = boardRepository.getBoard(1);
     assertEquals("Start", board.getColumns().get(0).getTitle());
     assertEquals("Stop", board.getColumns().get(1).getTitle());
     assertEquals("Continue", board.getColumns().get(2).getTitle());
@@ -37,7 +37,7 @@ class InMemoryBoardRepositoryTest {
 
   @Test
   void should_add_card_to_correct_column() {
-    Board board = boardRepository.getBoard();
+    Board board = boardRepository.getBoard(1);
     int columnId = board.getColumns().get(0).getId();
 
     boardRepository.addCard(new Card(1, "hello", columnId, "John Doe"));
@@ -52,7 +52,7 @@ class InMemoryBoardRepositoryTest {
 
   @Test
   void should_add_card_with_correct_fields() {
-    Board board = boardRepository.getBoard();
+    Board board = boardRepository.getBoard(1);
     int columnId = board.getColumns().get(0).getId();
 
     boardRepository.addCard(new Card(1, "hello", columnId, "John Doe"));

@@ -16,8 +16,8 @@ public class BoardService {
     this.boardRepository = boardRepository;
   }
 
-  public Board getBoard() {
-    return boardRepository.getBoard();
+  public Board getBoard(Integer id) {
+    return boardRepository.getBoard(id);
   }
 
   public Card addCard(Card card) {
