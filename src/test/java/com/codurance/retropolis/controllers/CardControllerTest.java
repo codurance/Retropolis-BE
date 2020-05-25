@@ -20,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @WebMvcTest(CardController.class)
@@ -45,12 +46,7 @@ public class CardControllerTest {
     NewCardRequestObject requestObject = new NewCardRequestObject(cardText, columnId, userName);
     given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardId, cardText, columnId, userName));
 
-    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
-        .content(asJsonString(requestObject))
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isCreated()).andReturn();
-
+    MvcResult response = performHttpRequest(asJsonString(requestObject), status().isCreated());
     String responseBody = response.getResponse().getContentAsString();
     Card cardResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
     });
@@ -66,12 +62,7 @@ public class CardControllerTest {
     given(cardService.addCard(any(NewCardRequestObject.class))).willThrow(new ColumnNotFoundException("Column Id is not valid"));
     NewCardRequestObject requestObject = new NewCardRequestObject("hello", 1, "John Doe");
 
-    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
-        .content(asJsonString(requestObject))
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isBadRequest()).andReturn();
-
+    MvcResult response = performHttpRequest(asJsonString(requestObject), status().isBadRequest());
     String responseBody = response.getResponse().getContentAsString();
     List<String> cardResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
     });
@@ -82,11 +73,8 @@ public class CardControllerTest {
   @Test
   public void return_bad_request_when_text_is_empty() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject("", 1, "John Doe");
-    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
-        .content(asJsonString(requestObject))
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isBadRequest()).andReturn();
+    String content = asJsonString(requestObject);
+    MvcResult response = performHttpRequest(content, status().isBadRequest());
 
     String responseBody = response.getResponse().getContentAsString();
     List<String> errorResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
@@ -96,12 +84,7 @@ public class CardControllerTest {
 
   @Test
   public void return_bad_request_when_columnId_is_null() throws Exception {
-    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content("{\"text\":\"hello\"}")
-        .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isBadRequest()).andReturn();
-
+    MvcResult response = performHttpRequest("{\"text\":\"hello\"}", status().isBadRequest());
     String responseBody = response.getResponse().getContentAsString();
     List<String> errorResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
     });
@@ -110,16 +93,19 @@ public class CardControllerTest {
 
   @Test
   public void return_bad_request_when_no_text_is_sent() throws Exception {
-    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content("{\"columnId\":\"1\"}")
-        .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isBadRequest()).andReturn();
-
+    MvcResult response = performHttpRequest("{\"columnId\":\"1\"}", status().isBadRequest());
     String responseBody = response.getResponse().getContentAsString();
     List<String> errorResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
     });
     assertEquals("Text cannot be empty", errorResponse.get(0));
   }
 
+
+  private MvcResult performHttpRequest(String content, ResultMatcher response) throws Exception {
+    return mockMvc.perform(MockMvcRequestBuilders.post(URL)
+        .content(content)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(response).andReturn();
+  }
 }
