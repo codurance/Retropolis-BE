@@ -1,6 +1,5 @@
 package com.codurance.retropolis.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Column {
@@ -17,7 +16,6 @@ public class Column {
     this.id = id;
     this.title = title;
     this.board_id = board_id;
-    this.cards = new ArrayList<>();
   }
 
   public Column(int id, String title, List<Card> cards) {
@@ -36,5 +34,9 @@ public class Column {
 
   public List<Card> getCards() {
     return cards;
+  }
+
+  public void setCards(List<Card> columnCards) {
+    this.cards = columnCards;
   }
 }
