@@ -1,14 +1,23 @@
 package com.codurance.retropolis.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Column {
 
   private int id;
+  private int board_id;
   private String title;
   private List<Card> cards;
 
   public Column() {
+  }
+
+  public Column (int id, String title, int board_id) {
+    this.id = id;
+    this.title = title;
+    this.board_id = board_id;
+    this.cards = new ArrayList<>();
   }
 
   public Column(int id, String title, List<Card> cards) {

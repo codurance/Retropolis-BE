@@ -1,4 +1,4 @@
-package com.codurance.retropolis.models.util;
+package com.codurance.retropolis.repositories.util;
 
 import com.codurance.retropolis.models.Board;
 import org.springframework.jdbc.core.RowMapper;
