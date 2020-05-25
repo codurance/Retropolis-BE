@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 public class CardControllerTest {
 
   private static final String URL = "/cards";
+  public static final String NULL = null;
   @Autowired
   private MockMvc mockMvc;
 
@@ -76,6 +77,49 @@ public class CardControllerTest {
     });
 
     assertEquals("Column Id is not valid", cardResponse.get(0));
+  }
+
+  @Test
+  public void return_bad_request_when_text_is_empty() throws Exception {
+    NewCardRequestObject requestObject = new NewCardRequestObject("", 1, "John Doe");
+    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
+        .content(asJsonString(requestObject))
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest()).andReturn();
+
+    String responseBody = response.getResponse().getContentAsString();
+    List<String> errorResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
+    });
+    assertEquals("Text must not be less than 1 character", errorResponse.get(0));
+  }
+
+  @Test
+  public void return_bad_request_when_columnId_is_null() throws Exception {
+    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("{\"text\":\"hello\"}")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest()).andReturn();
+
+    String responseBody = response.getResponse().getContentAsString();
+    List<String> errorResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
+    });
+    assertEquals("Column id cannot be empty", errorResponse.get(0));
+  }
+
+  @Test
+  public void return_bad_request_when_no_text_is_sent() throws Exception {
+    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("{\"columnId\":\"1\"}")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest()).andReturn();
+
+    String responseBody = response.getResponse().getContentAsString();
+    List<String> errorResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
+    });
+    assertEquals("Text cannot be empty", errorResponse.get(0));
   }
 
 }
