@@ -17,6 +17,9 @@ import java.util.List;
 @Primary
 @Repository
 public class PostgresBoardRepository implements BoardRepository {
+    public static final String SELECT_BOARD = "select * from boards where id = ?";
+    public static final String SELECT_COLUMNS = "select * from columns where board_id = ?";
+    public static final String SELECT_CARDS = "select * from cards where column_id = ?";
     JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -26,12 +29,12 @@ public class PostgresBoardRepository implements BoardRepository {
 
     @Override
     public Board getBoard(Integer id) {
-        Board board = jdbcTemplate.queryForObject("select * from boards where id = ?", new Object[]{id}, new BoardMapper());
+        Board board = jdbcTemplate.queryForObject(SELECT_BOARD, new Object[]{id}, new BoardMapper());
         if (board != null) {
-            List<Column> columns = jdbcTemplate.query("select * from columns where board_id = ?", new Object[]{id}, new ColumnMapper());
+            List<Column> columns = jdbcTemplate.query(SELECT_COLUMNS, new Object[]{id}, new ColumnMapper());
             board.setColumns(columns);
             columns.forEach((column -> {
-                List<Card> columnCards = jdbcTemplate.query("select * from cards where column_id = ?", new Object[]{column.getId()}, new CardMapper());
+                List<Card> columnCards = jdbcTemplate.query(SELECT_CARDS, new Object[]{column.getId()}, new CardMapper());
                 column.setCards(columnCards);
             }));
         }

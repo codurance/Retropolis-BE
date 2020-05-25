@@ -13,6 +13,8 @@ import java.sql.PreparedStatement;
 @Repository
 public class PostgresCardRepository implements CardRepository {
 
+    public static final String INSERT_CARD = "insert into cards (text, username, column_id) values (?,?,?)";
+    public static final String SELECT_CARD = "select * from cards where id = ?";
     private final JdbcTemplate jdbcTemplate;
 
     public PostgresCardRepository(DataSource dataSource) {
@@ -23,24 +25,18 @@ public class PostgresCardRepository implements CardRepository {
     public Card insert(Card newCard) {
         KeyHolder key = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-
-            PreparedStatement statement = connection.prepareStatement(
-                    "insert into cards (text, username, column_id) values (?,?,?)",
-                    new String[]{"id"});
+            PreparedStatement statement = connection.prepareStatement(INSERT_CARD, new String[]{"id"});
             statement.setString(1, newCard.getText());
             statement.setString(2, newCard.getUserName());
             statement.setInt(3, newCard.getColumnId());
             return statement;
-
         }, key);
 
-
-        return getCard(key.getKey().intValue());
+        Integer id = key.getKey().intValue();
+        return getCard(id);
     }
 
     private Card getCard(Integer id) {
-        return jdbcTemplate.queryForObject("select * from cards where column_id = ?",
-                new Object[]{id},
-                new CardMapper());
+        return jdbcTemplate.queryForObject(SELECT_CARD, new CardMapper(), id);
     }
 }
