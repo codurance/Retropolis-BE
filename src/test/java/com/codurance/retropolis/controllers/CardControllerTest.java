@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -45,7 +46,15 @@ public class CardControllerTest {
     NewCardRequestObject requestObject = new NewCardRequestObject(cardText, columnId, userName);
     given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardId, cardText, columnId, userName));
 
-    Card cardResponse = performHttpRequest(asJsonString(requestObject), status().isCreated());
+    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
+        .content(asJsonString(requestObject))
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isCreated()).andReturn();
+
+    String responseBody = response.getResponse().getContentAsString();
+    Card cardResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
+    });
 
     assertEquals(cardText, cardResponse.getText());
     assertEquals(cardId, cardResponse.getId());
