@@ -12,7 +12,8 @@ public class NewCardRequestObject {
   @NotNull(message = "Column id cannot be empty")
   private Integer columnId;
 
-  private String userName;
+  @NotNull(message = "Username cannot be null")
+  private String username;
 
   public NewCardRequestObject() {
   }
@@ -20,7 +21,7 @@ public class NewCardRequestObject {
   public NewCardRequestObject(String text, Integer columnId, String userName) {
     this.text = text;
     this.columnId = columnId;
-    this.userName = userName;
+    this.username = userName;
   }
 
   public String getText() {
@@ -31,7 +32,7 @@ public class NewCardRequestObject {
     return columnId;
   }
 
-  public String getUserName() {
-    return userName;
+  public String getUsername() {
+    return username;
   }
 }

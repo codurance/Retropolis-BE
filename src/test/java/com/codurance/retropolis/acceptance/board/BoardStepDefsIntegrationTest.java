@@ -16,9 +16,9 @@ import org.springframework.http.HttpStatus;
 
 public class BoardStepDefsIntegrationTest {
 
-  @When("^the client calls /board/(\\d+)")
+  @When("^the client calls /boards/(\\d+)")
   public void theClientCallsBoard(int boardId) {
-    HttpWrapper.executeGet("http://localhost:5000/board/" + boardId);
+    HttpWrapper.executeGet("http://localhost:5000/boards/" + boardId);
   }
 
   @Then("^the client receives status code of (\\d+)$")

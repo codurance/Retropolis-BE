@@ -81,14 +81,20 @@ public class CardControllerTest {
 
   @Test
   public void return_bad_request_when_columnId_is_null() throws Exception {
-    List<String> errorResponse = performHttpRequest("{\"text\":\"hello\"}", status().isBadRequest());
+    List<String> errorResponse = performHttpRequest("{\"text\":\"hello\",\"username\":\"John Doe\"}", status().isBadRequest());
     assertEquals("Column id cannot be empty", errorResponse.get(0));
   }
 
   @Test
   public void return_bad_request_when_no_text_is_sent() throws Exception {
-    List<String> errorResponse = performHttpRequest("{\"columnId\":\"1\"}", status().isBadRequest());
+    List<String> errorResponse = performHttpRequest("{\"columnId\":\"1\",\"username\":\"John Doe\"}", status().isBadRequest());
     assertEquals("Text cannot be empty", errorResponse.get(0));
+  }
+
+  @Test
+  public void return_bad_request_when_no_username_is_sent() throws Exception {
+    List<String> errorResponse = performHttpRequest("{\"text\":\"hello\",\"columnId\":\"1\"}", status().isBadRequest());
+    assertEquals("Username cannot be null", errorResponse.get(0));
   }
 
   private <T> T performHttpRequest(String content, ResultMatcher response) throws Exception {

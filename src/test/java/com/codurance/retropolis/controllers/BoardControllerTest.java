@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 public class BoardControllerTest {
 
   public static final Integer BOARD_ID = 1;
-  private static final String URL = "/board/" + BOARD_ID;
+  private static final String URL = "/boards/" + BOARD_ID;
 
   @MockBean
   private BoardService boardService;
