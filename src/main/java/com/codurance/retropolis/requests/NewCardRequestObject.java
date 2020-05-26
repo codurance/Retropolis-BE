@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public class NewCardRequestObject {
 
-  @NotNull
+  @NotNull(message = "Text cannot be empty")
   @Size(min = 1, message = "Text must not be less than 1 character")
   private String text;
 
