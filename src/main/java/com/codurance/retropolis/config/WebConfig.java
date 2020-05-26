@@ -19,7 +19,7 @@ public class WebConfig {
       registry.addMapping("/**")
           .allowedOrigins("http://retropolis-fe.s3-website.eu-west-2.amazonaws.com");
     }
-//
+// //TODO UNCOMENT THAT
 //    @Override
 //    public void addInterceptors(InterceptorRegistry registry) {
 //      registry.addInterceptor(new GoogleTokenAuthenticator());

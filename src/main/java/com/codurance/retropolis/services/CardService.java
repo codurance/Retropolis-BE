@@ -20,7 +20,7 @@ public class CardService {
   }
 
   public Card addCard(NewCardRequestObject requestObject) {
-    Card newCard = cardFactory.createWithoutId(requestObject);
+    Card newCard = cardFactory.create(requestObject);
     return cardRepository.insert(newCard);
   }
 }

@@ -31,7 +31,7 @@ public class BoardServiceTest {
   @Test
   void should_return_a_board() {
     when(boardRepository.getBoard(1)).thenReturn(
-        new Board(List.of(new Column(1, "Start", Collections.emptyList()))));
+        new Board(1, "test board", List.of(new Column(1, "Start", Collections.emptyList()))));
 
     Board board = boardService.getBoard(1);
 
@@ -40,17 +40,5 @@ public class BoardServiceTest {
     assertEquals("Start", board.getColumns().get(0).getTitle());
     assertEquals(0, board.getColumns().get(0).getCards().size());
   }
-
-//  @Test
-//  public void should_add_card_to_in_memory_and_return_new_card() {
-//    Card cardToBeAdded = new Card(1, "hello", 1, "John Doe");
-//    Card card = boardService.addCard(cardToBeAdded);
-//
-//    verify(boardRepository).addCard(card);
-//    assertEquals(card.getText(), cardToBeAdded.getText());
-//    assertEquals(card.getId(), cardToBeAdded.getId());
-//    assertEquals(card.getColumnId(), cardToBeAdded.getColumnId());
-//    assertEquals(card.getUserName(), cardToBeAdded.getUserName());
-//  }
 
 }

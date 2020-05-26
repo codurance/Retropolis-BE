@@ -38,11 +38,11 @@ public class CardServiceTest {
     NewCardRequestObject requestObject = new NewCardRequestObject(text, columnId, userName);
 
     Card card = new Card(cardId, text, columnId, userName);
-    when(cardFactory.createWithoutId(requestObject)).thenReturn(card);
+    when(cardFactory.create(requestObject)).thenReturn(card);
 
     cardService.addCard(requestObject);
 
-    verify(cardFactory).createWithoutId(requestObject);
+    verify(cardFactory).create(requestObject);
     verify(cardRepository).insert(card);
   }
 

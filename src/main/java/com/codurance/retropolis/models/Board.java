@@ -22,10 +22,6 @@ public class Board {
         this.columns = columns;
     }
 
-    public Board(List<Column> columns) {
-        this.columns = columns;
-    }
-
     public List<Column> getColumns() {
         return columns;
     }

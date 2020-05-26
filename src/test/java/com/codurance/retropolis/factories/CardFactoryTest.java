@@ -12,7 +12,7 @@ public class CardFactoryTest {
   void returns_a_new_card() {
     NewCardRequestObject newCardRequestObject = new NewCardRequestObject("hello", 1, "John Doe");
     CardFactory cardFactory = new CardFactory();
-    Card card = cardFactory.createWithoutId(newCardRequestObject);
+    Card card = cardFactory.create(newCardRequestObject);
     assertEquals("hello", card.getText());
     assertEquals(1, card.getColumnId());
     assertEquals("John Doe", card.getUserName());
