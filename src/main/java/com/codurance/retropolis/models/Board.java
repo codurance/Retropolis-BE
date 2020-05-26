@@ -4,33 +4,33 @@ import java.util.List;
 
 public class Board {
 
-    private Integer id;
-    private String title;
-    private List<Column> columns;
+  private Long id;
+  private String title;
+  private List<Column> columns;
 
-    public Board() {
-    }
+  public Board() {
+  }
 
-    public Board(Integer id, String title) {
-        this.id = id;
-        this.title = title;
-    }
+  public Board(Long id, String title) {
+    this.id = id;
+    this.title = title;
+  }
 
-    public Board(Integer id, String title, List<Column> columns) {
-        this.id = id;
-        this.title = title;
-        this.columns = columns;
-    }
+  public Board(Long id, String title, List<Column> columns) {
+    this.id = id;
+    this.title = title;
+    this.columns = columns;
+  }
 
-    public List<Column> getColumns() {
-        return columns;
-    }
+  public List<Column> getColumns() {
+    return columns;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setColumns(List<Column> columns) {
-        this.columns = columns;
-    }
+  public void setColumns(List<Column> columns) {
+    this.columns = columns;
+  }
 }

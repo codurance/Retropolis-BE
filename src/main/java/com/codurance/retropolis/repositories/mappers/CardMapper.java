@@ -9,9 +9,9 @@ public class CardMapper implements RowMapper<Card> {
     @Override
     public Card mapRow(ResultSet resultSet, int i) throws SQLException {
         return new Card(
-            resultSet.getInt("id"),
+            resultSet.getLong("id"),
             resultSet.getString("text"),
-            resultSet.getInt("column_id"),
+            resultSet.getLong("column_id"),
             resultSet.getString("username")
         );
     }

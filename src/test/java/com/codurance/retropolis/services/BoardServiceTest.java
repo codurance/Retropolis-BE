@@ -31,7 +31,7 @@ public class BoardServiceTest {
   @Test
   void should_return_a_board() {
     when(boardRepository.getBoard(1)).thenReturn(
-        new Board(1, "test board", List.of(new Column(1, "Start", Collections.emptyList()))));
+        new Board(1L, "test board", List.of(new Column(1L, "Start", Collections.emptyList()))));
 
     Board board = boardService.getBoard(1);
 

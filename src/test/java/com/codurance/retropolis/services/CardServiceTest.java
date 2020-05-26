@@ -32,8 +32,8 @@ public class CardServiceTest {
   @Test
   public void should_add_and_return_new_card() {
     String text = "new card";
-    int columnId = 1;
-    int cardId = 1;
+    Long columnId = 1L;
+    Long cardId = 1L;
     String userName = "John Doe";
     NewCardRequestObject requestObject = new NewCardRequestObject(text, columnId, userName);
 

@@ -9,9 +9,9 @@ public class ColumnMapper implements RowMapper<Column> {
     @Override
     public Column mapRow(ResultSet resultSet, int i) throws SQLException {
         return new Column(
-                resultSet.getInt("id"),
-                resultSet.getString("title"),
-                resultSet.getInt("board_id")
+            resultSet.getLong("id"),
+            resultSet.getString("title"),
+            resultSet.getLong("board_id")
         );
     }
 }

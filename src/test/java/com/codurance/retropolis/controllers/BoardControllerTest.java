@@ -38,7 +38,7 @@ public class BoardControllerTest {
 
   @Test
   void returns_a_board() throws Exception {
-    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(1, "test board", Collections.emptyList()));
+    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(1L, "test board", Collections.emptyList()));
 
     Board board = requestBoard();
 
@@ -47,9 +47,9 @@ public class BoardControllerTest {
 
   @Test
   void returns_board_with_columns() throws Exception {
-    int columnID = 1;
+    long columnID = 1;
     List<Column> columns = List.of(new Column(columnID, "start", Collections.emptyList()));
-    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(1, "test board", columns));
+    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(1L, "test board", columns));
 
     Board board = requestBoard();
 
@@ -60,13 +60,13 @@ public class BoardControllerTest {
 
   @Test
   void returns_board_with_columns_and_cards() throws Exception {
-    int columnID = 1;
+    long columnID = 1;
     String text = "hello";
-    int cardId = BOARD_ID;
+    long cardId = BOARD_ID;
     String userName = "John Doe";
     List<Card> cards = List.of(new Card(cardId, text, columnID, userName));
     List<Column> columns = List.of(new Column(columnID, "start", cards));
-    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(1, "test board", columns));
+    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(1L, "test board", columns));
 
     Board board = requestBoard();
 

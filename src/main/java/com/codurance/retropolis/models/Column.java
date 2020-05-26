@@ -4,27 +4,27 @@ import java.util.List;
 
 public class Column {
 
-  private int id;
-  private int board_id;
+  private Long id;
+  private Long boardId;
   private String title;
   private List<Card> cards;
 
   public Column() {
   }
 
-  public Column (int id, String title, int board_id) {
+  public Column(Long id, String title, Long boardId) {
     this.id = id;
     this.title = title;
-    this.board_id = board_id;
+    this.boardId = boardId;
   }
 
-  public Column(int id, String title, List<Card> cards) {
+  public Column(Long id, String title, List<Card> cards) {
     this.id = id;
     this.title = title;
     this.cards = cards;
   }
 
-  public int getId() {
+  public Long getId() {
     return id;
   }
 

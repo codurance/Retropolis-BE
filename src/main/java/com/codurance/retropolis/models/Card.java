@@ -2,23 +2,23 @@ package com.codurance.retropolis.models;
 
 public class Card {
 
-  private int id;
-  private int columnId;
+  private Long id;
+  private Long columnId;
   private String text;
   private String userName;
 
   public Card() {
   }
 
-  public Card(int cardId, String cardText, int columnId, String userName) {
-    id = cardId;
-    text = cardText;
+  public Card(Long id, String text, Long columnId, String userName) {
+    this.id = id;
+    this.text = text;
     this.columnId = columnId;
     this.userName = userName;
   }
 
-  public Card(String cardText, int columnId, String userName) {
-    text = cardText;
+  public Card(String text, Long columnId, String userName) {
+    this.text = text;
     this.columnId = columnId;
     this.userName = userName;
   }
@@ -27,11 +27,11 @@ public class Card {
     return text;
   }
 
-  public int getColumnId() {
+  public Long getColumnId() {
     return columnId;
   }
 
-  public int getId() {
+  public Long getId() {
     return id;
   }
 

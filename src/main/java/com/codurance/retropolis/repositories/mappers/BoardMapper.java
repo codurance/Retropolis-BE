@@ -9,8 +9,8 @@ public class BoardMapper implements RowMapper<Board> {
     @Override
     public Board mapRow(ResultSet resultSet, int i) throws SQLException {
         return new Board(
-                resultSet.getInt("id"),
-                resultSet.getString("title")
+            resultSet.getLong("id"),
+            resultSet.getString("title")
         );
     }
 }

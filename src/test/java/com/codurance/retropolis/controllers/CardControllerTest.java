@@ -39,8 +39,8 @@ public class CardControllerTest {
 
   @Test
   public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
-    int cardId = 1;
-    int columnId = 1;
+    Long cardId = 1L;
+    Long columnId = 1L;
     String cardText = "hello";
     String userName = "John Doe";
     NewCardRequestObject requestObject = new NewCardRequestObject(cardText, columnId, userName);
@@ -65,7 +65,7 @@ public class CardControllerTest {
   @Test
   public void returns_bad_request_when_column_is_not_found() throws Exception {
     given(cardService.addCard(any(NewCardRequestObject.class))).willThrow(new ColumnNotFoundException("Column Id is not valid"));
-    NewCardRequestObject requestObject = new NewCardRequestObject("hello", 1, "John Doe");
+    NewCardRequestObject requestObject = new NewCardRequestObject("hello", 1L, "John Doe");
 
     List<String> cardResponse = performHttpRequest(asJsonString(requestObject), status().isBadRequest());
     assertEquals("Column Id is not valid", cardResponse.get(0));
@@ -73,7 +73,7 @@ public class CardControllerTest {
 
   @Test
   public void return_bad_request_when_text_is_empty() throws Exception {
-    NewCardRequestObject requestObject = new NewCardRequestObject("", 1, "John Doe");
+    NewCardRequestObject requestObject = new NewCardRequestObject("", 1L, "John Doe");
     String content = asJsonString(requestObject);
     List<String> errorResponse = performHttpRequest(content, status().isBadRequest());
     assertEquals("Text must not be less than 1 character", errorResponse.get(0));

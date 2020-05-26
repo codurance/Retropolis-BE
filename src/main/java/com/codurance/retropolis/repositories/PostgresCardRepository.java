@@ -28,7 +28,7 @@ public class PostgresCardRepository implements CardRepository {
             PreparedStatement statement = connection.prepareStatement(INSERT_CARD, new String[]{"id"});
             statement.setString(1, newCard.getText());
             statement.setString(2, newCard.getUserName());
-            statement.setInt(3, newCard.getColumnId());
+            statement.setLong(3, newCard.getColumnId());
             return statement;
         }, key);
 

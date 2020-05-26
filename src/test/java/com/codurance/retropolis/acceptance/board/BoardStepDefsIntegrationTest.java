@@ -30,10 +30,10 @@ public class BoardStepDefsIntegrationTest {
   @And("^the client receives board with three columns, \"([^\"]*)\", \"([^\"]*)\", and \"([^\"]*)\"$")
   public void theClientReceivesBoardWithThreeColumnsAnd(String firstTitle, String secondTitle, String thirdTitle) {
     assertThat(HttpWrapper.getResponse.getBody(),
-        is(asJsonString(new Board(1, "test board", List.of(
-            new Column(1, firstTitle, Collections.emptyList()),
-            new Column(2, secondTitle, Collections.emptyList()),
-            new Column(3, thirdTitle, Collections.emptyList()))))));
+        is(asJsonString(new Board(1L, "test board", List.of(
+            new Column(1L, firstTitle, Collections.emptyList()),
+            new Column(2L, secondTitle, Collections.emptyList()),
+            new Column(3L, thirdTitle, Collections.emptyList()))))));
   }
 
 }
