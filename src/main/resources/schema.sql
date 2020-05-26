@@ -4,28 +4,28 @@ DROP TABLE IF EXISTS users_boards;
 DROP TABLE IF EXISTS boards;
 DROP TABLE IF EXISTS users;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   email varchar UNIQUE
 );
 
-CREATE TABLE boards (
+CREATE TABLE IF NOT EXISTS boards (
   id SERIAL PRIMARY KEY,
   title varchar
 );
 
-CREATE TABLE users_boards (
+CREATE TABLE IF NOT EXISTS users_boards (
   user_id int,
   board_id int
 );
 
-CREATE TABLE columns (
+CREATE TABLE IF NOT EXISTS columns (
   id SERIAL PRIMARY KEY,
   title varchar,
   board_id int
 );
 
-CREATE TABLE cards (
+CREATE TABLE IF NOT EXISTS cards (
   id SERIAL PRIMARY KEY,
   text varchar,
   username varchar,
