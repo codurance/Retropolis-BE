@@ -1,14 +1,13 @@
 package com.codurance.retropolis.repositories;
 
 import com.codurance.retropolis.models.Card;
-import com.codurance.retropolis.repositories.util.CardMapper;
+import com.codurance.retropolis.repositories.mappers.CardMapper;
+import java.sql.PreparedStatement;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
 
 @Repository
 public class PostgresCardRepository implements CardRepository {

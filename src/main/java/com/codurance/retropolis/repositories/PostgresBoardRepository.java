@@ -3,16 +3,15 @@ package com.codurance.retropolis.repositories;
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.models.Column;
-import com.codurance.retropolis.repositories.util.BoardMapper;
-import com.codurance.retropolis.repositories.util.CardMapper;
-import com.codurance.retropolis.repositories.util.ColumnMapper;
+import com.codurance.retropolis.repositories.mappers.BoardMapper;
+import com.codurance.retropolis.repositories.mappers.CardMapper;
+import com.codurance.retropolis.repositories.mappers.ColumnMapper;
+import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.util.List;
 
 @Primary
 @Repository

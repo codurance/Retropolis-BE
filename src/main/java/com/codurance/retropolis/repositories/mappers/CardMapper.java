@@ -1,10 +1,9 @@
-package com.codurance.retropolis.repositories.util;
+package com.codurance.retropolis.repositories.mappers;
 
 import com.codurance.retropolis.models.Card;
-import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.springframework.jdbc.core.RowMapper;
 
 public class CardMapper implements RowMapper<Card> {
     @Override
