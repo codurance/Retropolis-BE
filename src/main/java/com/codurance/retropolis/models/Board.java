@@ -30,10 +30,6 @@ public class Board {
         return id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
     public void setColumns(List<Column> columns) {
         this.columns = columns;
     }
