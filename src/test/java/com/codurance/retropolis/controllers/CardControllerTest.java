@@ -59,7 +59,7 @@ public class CardControllerTest {
     assertEquals(cardText, cardResponse.getText());
     assertEquals(cardId, cardResponse.getId());
     assertEquals(columnId, cardResponse.getColumnId());
-    assertEquals(userName, cardResponse.getUserName());
+    assertEquals(userName, cardResponse.getUsername());
   }
 
   @Test

@@ -5,22 +5,22 @@ public class Card {
   private Long id;
   private Long columnId;
   private String text;
-  private String userName;
+  private String username;
 
   public Card() {
   }
 
-  public Card(Long id, String text, Long columnId, String userName) {
+  public Card(Long id, String text, Long columnId, String username) {
     this.id = id;
     this.text = text;
     this.columnId = columnId;
-    this.userName = userName;
+    this.username = username;
   }
 
-  public Card(String text, Long columnId, String userName) {
+  public Card(String text, Long columnId, String username) {
     this.text = text;
     this.columnId = columnId;
-    this.userName = userName;
+    this.username = username;
   }
 
   public String getText() {
@@ -35,7 +35,7 @@ public class Card {
     return id;
   }
 
-  public String getUserName() {
-    return userName;
+  public String getUsername() {
+    return username;
   }
 }

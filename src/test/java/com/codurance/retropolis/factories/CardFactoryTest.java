@@ -15,7 +15,7 @@ public class CardFactoryTest {
     Card card = cardFactory.create(newCardRequestObject);
     assertEquals("hello", card.getText());
     assertEquals(1, card.getColumnId());
-    assertEquals("John Doe", card.getUserName());
+    assertEquals("John Doe", card.getUsername());
   }
 
 }

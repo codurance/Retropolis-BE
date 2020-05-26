@@ -18,10 +18,10 @@ public class NewCardRequestObject {
   public NewCardRequestObject() {
   }
 
-  public NewCardRequestObject(String text, Long columnId, String userName) {
+  public NewCardRequestObject(String text, Long columnId, String username) {
     this.text = text;
     this.columnId = columnId;
-    this.username = userName;
+    this.username = username;
   }
 
   public String getText() {

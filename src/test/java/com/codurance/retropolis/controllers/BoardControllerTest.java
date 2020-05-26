@@ -76,7 +76,7 @@ public class BoardControllerTest {
     assertEquals(text, cardResponse.getText());
     assertEquals(cardId, cardResponse.getId());
     assertEquals(columnID, cardResponse.getColumnId());
-    assertEquals(userName, cardResponse.getUserName());
+    assertEquals(userName, cardResponse.getUsername());
   }
 
   private Board requestBoard() throws Exception {
