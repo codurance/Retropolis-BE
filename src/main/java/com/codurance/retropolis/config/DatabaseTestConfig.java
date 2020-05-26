@@ -8,16 +8,16 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
-@Profile(Environment.PROD)
-public class DatabaseConfig {
+@Profile(Environment.TEST)
+public class DatabaseTestConfig {
 
-  @Value("${datasourceProdUrl}")
+  @Value("${datasourceDevUrl}")
   private String dataSourceUrl;
 
-  @Value("${datasourceProdUsername}")
+  @Value("${datasourceDevUsername}")
   private String username;
 
-  @Value("${datasourceProdPass}")
+  @Value("${datasourceDevPass}")
   private String password;
 
   @Bean

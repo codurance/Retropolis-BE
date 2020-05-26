@@ -9,11 +9,9 @@ import com.codurance.retropolis.repositories.mappers.ColumnMapper;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Primary
 @Repository
 public class PostgresBoardRepository implements BoardRepository {
     public static final String SELECT_BOARD = "select * from boards where id = ?";
