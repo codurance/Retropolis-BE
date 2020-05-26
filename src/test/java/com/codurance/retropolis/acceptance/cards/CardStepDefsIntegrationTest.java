@@ -37,6 +37,6 @@ public class CardStepDefsIntegrationTest {
 
     assertThat(card.getColumnId(), is(columnId));
     assertThat(card.getText(), is(text));
-    assertThat(card.getUserName(), is(userName));
+    assertThat(card.getUsername(), is(userName));
   }
 }
