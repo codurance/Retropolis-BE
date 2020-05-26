@@ -135,6 +135,11 @@
       <groupId>org.postgresql</groupId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <artifactId>h2</artifactId>
+      <groupId>com.h2database</groupId>
+      <scope>runtime</scope>
+    </dependency>
 
   </dependencies>
   <description>Spring Boot Backend for Retropolis</description>

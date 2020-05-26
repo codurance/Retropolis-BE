@@ -11,13 +11,13 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Profile(Environment.PROD)
 public class DatabaseConfig {
 
-  @Value("${datasourceProdUrl}")
+  @Value("${datasourceUrl}")
   private String dataSourceUrl;
 
-  @Value("${datasourceProdUsername}")
+  @Value("${datasourceUsername}")
   private String username;
 
-  @Value("${datasourceProdPass}")
+  @Value("${datasourcePass}")
   private String password;
 
   @Bean
