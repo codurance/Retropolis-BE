@@ -24,7 +24,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @WebMvcTest(BoardController.class)
 public class BoardControllerTest {
 
-  private static final String URL = "/board";
+  public static final Integer BOARD_ID = 1;
+  private static final String URL = "/board/" + BOARD_ID;
 
   @MockBean
   private BoardService boardService;
@@ -37,7 +38,7 @@ public class BoardControllerTest {
 
   @Test
   void returns_a_board() throws Exception {
-    when(boardService.getBoard(1)).thenReturn(new Board(Collections.emptyList()));
+    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(Collections.emptyList()));
 
     Board board = requestBoard();
 
@@ -48,7 +49,7 @@ public class BoardControllerTest {
   void returns_board_with_columns() throws Exception {
     int columnID = 1;
     List<Column> columns = List.of(new Column(columnID, "start", Collections.emptyList()));
-    when(boardService.getBoard(1)).thenReturn(new Board(columns));
+    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(columns));
 
     Board board = requestBoard();
 
@@ -61,11 +62,11 @@ public class BoardControllerTest {
   void returns_board_with_columns_and_cards() throws Exception {
     int columnID = 1;
     String text = "hello";
-    int cardId = 1;
+    int cardId = BOARD_ID;
     String userName = "John Doe";
     List<Card> cards = List.of(new Card(cardId, text, columnID, userName));
     List<Column> columns = List.of(new Column(columnID, "start", cards));
-    when(boardService.getBoard(1)).thenReturn(new Board(columns));
+    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(columns));
 
     Board board = requestBoard();
 

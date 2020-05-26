@@ -60,7 +60,7 @@ class InMemoryBoardRepositoryTest {
     Card card = board.getColumns().get(0).getCards().get(0);
     assertEquals(1, card.getId());
     assertEquals("hello", card.getText());
-    assertEquals(0, card.getColumnId());
+    assertEquals(1, card.getColumnId());
     assertEquals("John Doe", card.getUserName());
   }
 }

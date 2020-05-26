@@ -11,28 +11,16 @@ import org.springframework.stereotype.Service;
 public class CardService {
 
   private final CardFactory cardFactory;
-  private final BoardService boardService;
-  private CardRepository cardRepository;
-
-  public CardService(CardFactory cardFactory, BoardService boardService) {
-    this.boardService = boardService;
-    this.cardFactory = cardFactory;
-  }
+  private final CardRepository cardRepository;
 
   @Autowired
-  public CardService(CardFactory cardFactory, BoardService boardService, CardRepository cardRepository) {
+  public CardService(CardFactory cardFactory, CardRepository cardRepository) {
     this.cardFactory = cardFactory;
-    this.boardService = boardService;
     this.cardRepository = cardRepository;
   }
 
   public Card addCard(NewCardRequestObject requestObject) {
-    Card card = cardFactory.create(requestObject);
-    return boardService.addCard(insert(card));
-  }
-
-  private Card insert(Card newCard){
-
+    Card newCard = cardFactory.createWithoutId(requestObject);
     return cardRepository.insert(newCard);
   }
 }

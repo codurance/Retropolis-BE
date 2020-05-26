@@ -1,157 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <artifactId>com.codurance.retropolis.backend</artifactId>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <groupId>org.springframework.boot</groupId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>9</source>
-                    <target>9</target>
-                </configuration>
-                <groupId>org.apache.maven.plugins</groupId>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/config/*</exclude>
-                        <exclude>**/*Retropolis.*</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-    <dependencies>
-        <dependency>
-            <artifactId>spring-web</artifactId>
-            <groupId>org.springframework</groupId>
-            <version>5.2.6.RELEASE</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-webmvc</artifactId>
-            <groupId>org.springframework</groupId>
-            <version>5.2.6.RELEASE</version>
-        </dependency>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>com.codurance.retropolis.backend</artifactId>
 
-        <dependency>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <groupId>org.springframework.boot</groupId>
-        </dependency>
-
-        <dependency>
-            <artifactId>cucumber-java</artifactId>
-            <groupId>io.cucumber</groupId>
-            <version>5.7.0</version>
-        </dependency>
-
-        <dependency>
-            <artifactId>cucumber-junit</artifactId>
-            <groupId>io.cucumber</groupId>
-            <scope>test</scope>
-            <version>5.7.0</version>
-        </dependency>
-
-        <dependency>
-            <artifactId>cucumber-spring</artifactId>
-            <groupId>io.cucumber</groupId>
-            <scope>test</scope>
-            <version>5.7.0</version>
-        </dependency>
-        <dependency>
-            <artifactId>validation-api</artifactId>
-            <groupId>javax.validation</groupId>
-            <version>2.0.1.Final</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-boot-starter-validation</artifactId>
-            <groupId>org.springframework.boot</groupId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <artifactId>rest-assured</artifactId>
-            <groupId>io.rest-assured</groupId>
-            <scope>test</scope>
-            <version>4.3.0</version>
-        </dependency>
-        <dependency>
-            <artifactId>hamcrest-all</artifactId>
-            <groupId>org.hamcrest</groupId>
-            <scope>test</scope>
-            <version>1.3</version>
-        </dependency>
-
-        <dependency>
-            <artifactId>google-api-client-appengine</artifactId>
-            <groupId>com.google.api-client</groupId>
-            <version>1.30.9</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-test</artifactId>
-            <groupId>org.springframework</groupId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-    </dependencies>
-    <description>Spring Boot Backend for Retropolis</description>
-    <groupId>com.codurance</groupId>
-    <modelVersion>4.0.0</modelVersion>
-    <name>retropolis-backend</name>
-
-    <parent>
-        <artifactId>spring-boot-starter-parent</artifactId>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
         <groupId>org.springframework.boot</groupId>
-        <relativePath/>
-        <version>2.3.0.RELEASE</version>
-    </parent>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>9</source>
+          <target>9</target>
+        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+      </plugin>
+      <plugin>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/config/*</exclude>
+            <exclude>**/*Retropolis.*</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <id>report</id>
+            <phase>test</phase>
+          </execution>
+        </executions>
+        <groupId>org.jacoco</groupId>
+        <version>0.8.5</version>
+      </plugin>
+    </plugins>
+  </build>
 
-    <properties>
-        <java.version>1.11</java.version>
-        <spring-web.version>5.2.2.RELEASE</spring-web.version>
-    </properties>
+  <dependencies>
+    <dependency>
+      <artifactId>spring-web</artifactId>
+      <groupId>org.springframework</groupId>
+      <version>5.2.6.RELEASE</version>
+    </dependency>
+    <dependency>
+      <artifactId>spring-webmvc</artifactId>
+      <groupId>org.springframework</groupId>
+      <version>5.2.6.RELEASE</version>
+    </dependency>
 
-    <version>0.0.1-SNAPSHOT</version>
+    <dependency>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
 
+    <dependency>
+      <artifactId>cucumber-java</artifactId>
+      <groupId>io.cucumber</groupId>
+      <version>5.7.0</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>cucumber-junit</artifactId>
+      <groupId>io.cucumber</groupId>
+      <scope>test</scope>
+      <version>5.7.0</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>cucumber-spring</artifactId>
+      <groupId>io.cucumber</groupId>
+      <scope>test</scope>
+      <version>5.7.0</version>
+    </dependency>
+    <dependency>
+      <artifactId>validation-api</artifactId>
+      <groupId>javax.validation</groupId>
+      <version>2.0.1.Final</version>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-validation</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+
+
+    <dependency>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit-vintage-engine</artifactId>
+          <groupId>org.junit.vintage</groupId>
+        </exclusion>
+      </exclusions>
+      <groupId>org.springframework.boot</groupId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <artifactId>rest-assured</artifactId>
+      <groupId>io.rest-assured</groupId>
+      <scope>test</scope>
+      <version>4.3.0</version>
+    </dependency>
+    <dependency>
+      <artifactId>hamcrest-all</artifactId>
+      <groupId>org.hamcrest</groupId>
+      <scope>test</scope>
+      <version>1.3</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>google-api-client-appengine</artifactId>
+      <groupId>com.google.api-client</groupId>
+      <version>1.30.9</version>
+    </dependency>
+    <dependency>
+      <artifactId>spring-test</artifactId>
+      <groupId>org.springframework</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>postgresql</artifactId>
+      <groupId>org.postgresql</groupId>
+      <scope>runtime</scope>
+    </dependency>
+
+  </dependencies>
+  <description>Spring Boot Backend for Retropolis</description>
+  <groupId>com.codurance</groupId>
+
+  <modelVersion>4.0.0</modelVersion>
+  <name>retropolis-backend</name>
+
+  <parent>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <relativePath/>
+    <version>2.3.0.RELEASE</version>
+  </parent>
+
+  <properties>
+    <java.version>1.11</java.version>
+    <spring-web.version>5.2.2.RELEASE</spring-web.version>
+  </properties>
+
+  <version>0.0.1-SNAPSHOT</version>
 </project>

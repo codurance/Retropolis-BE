@@ -17,6 +17,12 @@ public class Card {
     this.userName = userName;
   }
 
+  public Card(String cardText, int columnId, String userName) {
+    text = cardText;
+    this.columnId = columnId;
+    this.userName = userName;
+  }
+
   public String getText() {
     return text;
   }
