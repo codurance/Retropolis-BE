@@ -4,6 +4,7 @@ import static com.codurance.retropolis.utils.Convert.asJsonString;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
@@ -60,6 +61,17 @@ public class CardControllerTest {
     assertEquals(cardId, cardResponse.getId());
     assertEquals(columnId, cardResponse.getColumnId());
     assertEquals(userName, cardResponse.getUsername());
+  }
+
+  @Test
+  public void delete_card_should_return_200_status_code() throws Exception {
+    Long cardId = 1L;
+    mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/" + cardId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andReturn();
+
+    verify(cardService).delete(cardId);
   }
 
   @Test

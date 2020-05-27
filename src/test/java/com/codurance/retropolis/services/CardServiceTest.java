@@ -46,4 +46,11 @@ public class CardServiceTest {
     verify(cardRepository).insert(card);
   }
 
+  @Test
+  public void should_delete_card_from_the_repository() {
+    Long cardId = 1L;
+    cardService.delete(cardId);
+    verify(cardRepository).delete(cardId);
+  }
+
 }

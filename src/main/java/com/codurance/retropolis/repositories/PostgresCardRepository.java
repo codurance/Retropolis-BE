@@ -13,30 +13,36 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PostgresCardRepository implements CardRepository {
 
-    private final String INSERT_CARD = "insert into cards (text, username, column_id) values (?,?,?)";
-    private final String SELECT_CARD = "select * from cards where id = ?";
-    private final JdbcTemplate jdbcTemplate;
+  private final String INSERT_CARD = "insert into cards (text, username, column_id) values (?,?,?)";
+  private final String SELECT_CARD = "select * from cards where id = ?";
+  private final String DELETE_CARD = "delete from cards where id = ?";
+  private final JdbcTemplate jdbcTemplate;
 
-    public PostgresCardRepository(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+  public PostgresCardRepository(DataSource dataSource) {
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+  }
 
-    @Override
-    public Card insert(Card newCard) {
-        KeyHolder key = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(INSERT_CARD, new String[]{"id"});
-            statement.setString(1, newCard.getText());
-            statement.setString(2, newCard.getUsername());
-            statement.setLong(3, newCard.getColumnId());
-            return statement;
-        }, key);
+  @Override
+  public Card insert(Card newCard) {
+    KeyHolder key = new GeneratedKeyHolder();
+    jdbcTemplate.update(connection -> {
+      PreparedStatement statement = connection.prepareStatement(INSERT_CARD, new String[]{"id"});
+      statement.setString(1, newCard.getText());
+      statement.setString(2, newCard.getUsername());
+      statement.setLong(3, newCard.getColumnId());
+      return statement;
+    }, key);
 
-        Integer id = Objects.requireNonNull(key.getKey()).intValue();
-        return getCard(id);
-    }
+    Integer id = Objects.requireNonNull(key.getKey()).intValue();
+    return getCard(id);
+  }
 
-    private Card getCard(Integer id) {
-        return jdbcTemplate.queryForObject(SELECT_CARD, new CardMapper(), id);
-    }
+  @Override
+  public void delete(Long cardId) {
+    jdbcTemplate.update(DELETE_CARD, cardId);
+  }
+
+  private Card getCard(Integer id) {
+    return jdbcTemplate.queryForObject(SELECT_CARD, new CardMapper(), id);
+  }
 }

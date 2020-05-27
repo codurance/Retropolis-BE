@@ -23,4 +23,8 @@ public class CardService {
     Card newCard = cardFactory.create(requestObject);
     return cardRepository.insert(newCard);
   }
+
+  public void delete(Long cardId) {
+    cardRepository.delete(cardId);
+  }
 }
