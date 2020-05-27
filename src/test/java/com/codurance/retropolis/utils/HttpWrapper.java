@@ -9,6 +9,7 @@ public class HttpWrapper {
 
   public static ResponseResults getResponse = null;
   public static ResponseResults postResponse = null;
+  public static ResponseResults putResponse = null;
   public static ResponseResults deleteResponse = null;
 
   private static final RestTemplate restTemplate = new RestTemplate();
@@ -22,6 +23,12 @@ public class HttpWrapper {
     ResponseEntity<String> response =
         restTemplate.postForEntity(url, request, String.class);
     postResponse = new ResponseResults(response.getBody(), response);
+  }
+
+  public static void executePatch(String url, HttpEntity<?> request) {
+    ResponseEntity<String> response =
+        restTemplate.exchange(url, HttpMethod.PATCH, request, String.class);
+    putResponse = new ResponseResults(response.getBody(), response);
   }
 
   public static void executeDelete(String url) {

@@ -12,6 +12,7 @@ import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.services.CardService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @WebMvcTest(CardController.class)
@@ -78,6 +80,30 @@ public class CardControllerTest {
   }
 
   @Test
+  public void update_card_with_new_text_should_return_updated_card() throws Exception {
+    Long cardId = 1L;
+    Long columnId = 1L;
+    String cardText = "hello";
+    String userName = "John Doe";
+    UpdateCardRequestObject requestObject = new UpdateCardRequestObject(cardText);
+
+    given(cardService.update(any(), any(UpdateCardRequestObject.class)))
+        .willReturn(new Card(cardId, cardText, columnId, userName));
+
+    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.patch(URL + "/" + cardId)
+        .content(asJsonString(requestObject))
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andReturn();
+
+    String responseBody = response.getResponse().getContentAsString();
+    Card cardResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
+    });
+
+    assertEquals(cardText, cardResponse.getText());
+  }
+
+  @Test
   public void returns_bad_request_on_delete_when_card_does_not_exist() throws Exception {
     doThrow(new CardNotFoundException("Card Id is not valid")).when(cardService).delete(NON_EXISTENT_CARD_ID);
     List<String> response = performHttpDeleteRequest(status().isBadRequest(), URL + "/" + NON_EXISTENT_CARD_ID);
@@ -89,7 +115,7 @@ public class CardControllerTest {
     given(cardService.addCard(any(NewCardRequestObject.class))).willThrow(new ColumnNotFoundException("Column Id is not valid"));
     NewCardRequestObject requestObject = new NewCardRequestObject("hello", 1L, "John Doe");
 
-    List<String> cardResponse = performHttpRequest(asJsonString(requestObject), status().isBadRequest());
+    List<String> cardResponse = performHttpPostRequest(asJsonString(requestObject), status().isBadRequest());
     assertEquals("Column Id is not valid", cardResponse.get(0));
   }
 
@@ -97,30 +123,46 @@ public class CardControllerTest {
   public void return_bad_request_when_text_is_empty() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject("", 1L, "John Doe");
     String content = asJsonString(requestObject);
-    List<String> errorResponse = performHttpRequest(content, status().isBadRequest());
+    List<String> errorResponse = performHttpPostRequest(content, status().isBadRequest());
     assertEquals("Text must not be less than 1 character", errorResponse.get(0));
   }
 
   @Test
   public void return_bad_request_when_columnId_is_null() throws Exception {
-    List<String> errorResponse = performHttpRequest("{\"text\":\"hello\",\"username\":\"John Doe\"}", status().isBadRequest());
+    List<String> errorResponse = performHttpPostRequest("{\"text\":\"hello\",\"username\":\"John Doe\"}",
+        status().isBadRequest());
     assertEquals("Column id cannot be empty", errorResponse.get(0));
   }
 
   @Test
   public void return_bad_request_when_no_text_is_sent() throws Exception {
-    List<String> errorResponse = performHttpRequest("{\"columnId\":\"1\",\"username\":\"John Doe\"}", status().isBadRequest());
+    List<String> errorResponse = performHttpPostRequest("{\"columnId\":\"1\",\"username\":\"John Doe\"}",
+        status().isBadRequest());
     assertEquals("Text cannot be empty", errorResponse.get(0));
   }
 
   @Test
   public void return_bad_request_when_no_username_is_sent() throws Exception {
-    List<String> errorResponse = performHttpRequest("{\"text\":\"hello\",\"columnId\":\"1\"}", status().isBadRequest());
+    List<String> errorResponse = performHttpPostRequest("{\"text\":\"hello\",\"columnId\":\"1\"}", status().isBadRequest());
     assertEquals("Username cannot be null", errorResponse.get(0));
   }
 
-  private <T> T performHttpRequest(String content, ResultMatcher response) throws Exception {
-    String responseBody = mockMvc.perform(MockMvcRequestBuilders.post(URL)
+  //TODO Refactor
+  private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
+    MockHttpServletRequestBuilder post = MockMvcRequestBuilders.post(URL);
+    String responseBody = mockMvc.perform(post
+        .content(content)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(response).andReturn().getResponse().getContentAsString();
+
+    return objectMapper.readValue(responseBody, new TypeReference<>() {
+    });
+  }
+
+  private <T> T performHttpPatchRequest(String content, ResultMatcher response, String url) throws Exception {
+    MockHttpServletRequestBuilder post = MockMvcRequestBuilders.patch(url);
+    String responseBody = mockMvc.perform(post
         .content(content)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
