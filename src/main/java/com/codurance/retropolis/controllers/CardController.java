@@ -1,5 +1,6 @@
 package com.codurance.retropolis.controllers;
 
+import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
@@ -45,6 +46,12 @@ public class CardController extends BaseController {
   @ExceptionHandler(ColumnNotFoundException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public List<String> handleColumnNotFound(ColumnNotFoundException exception) {
+    return Collections.singletonList(exception.getMessage());
+  }
+
+  @ExceptionHandler(CardNotFoundException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public List<String> handleCardNotFound(CardNotFoundException exception) {
     return Collections.singletonList(exception.getMessage());
   }
 

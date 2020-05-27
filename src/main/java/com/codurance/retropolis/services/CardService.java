@@ -1,5 +1,6 @@
 package com.codurance.retropolis.services;
 
+import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
@@ -25,6 +26,10 @@ public class CardService {
   }
 
   public void delete(Long cardId) {
-    cardRepository.delete(cardId);
+    try {
+      cardRepository.delete(cardId);
+    } catch (RuntimeException exception) {
+      throw new CardNotFoundException("Card Id is not valid");
+    }
   }
 }
