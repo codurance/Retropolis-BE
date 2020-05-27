@@ -9,10 +9,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.EncodedResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 
 import static com.codurance.retropolis.utils.HttpWrapper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,8 +31,12 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
     }
 
     @Before
-    public void doSomethingBefore() {
-        jdbcTemplate.execute("delete from cards");
+    public void doSomethingBefore() throws SQLException {
+        ScriptUtils.executeSqlScript(
+                jdbcTemplate.getDataSource().getConnection(),
+                new EncodedResource(new ClassPathResource("cleanDb.sql"), StandardCharsets.UTF_8)
+        );
+
     }
 
     @When("the card exists with id")

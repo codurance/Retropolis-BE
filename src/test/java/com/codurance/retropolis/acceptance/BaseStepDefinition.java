@@ -7,7 +7,6 @@ import javax.sql.DataSource;
 public class BaseStepDefinition {
 
     protected JdbcTemplate jdbcTemplate;
-
     public BaseStepDefinition(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
