@@ -1,20 +1,33 @@
 package com.codurance.retropolis.acceptance.board;
 
+import com.codurance.retropolis.acceptance.BaseStepDefinition;
+import com.codurance.retropolis.models.Board;
+import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.utils.HttpWrapper;
+import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import org.springframework.http.HttpStatus;
+
+import javax.sql.DataSource;
+import java.util.Collections;
+import java.util.List;
+
 import static com.codurance.retropolis.utils.Convert.asJsonString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import com.codurance.retropolis.models.Board;
-import com.codurance.retropolis.models.Column;
-import com.codurance.retropolis.utils.HttpWrapper;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-import java.util.Collections;
-import java.util.List;
-import org.springframework.http.HttpStatus;
+public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
-public class BoardStepDefsIntegrationTest {
+  public BoardStepDefsIntegrationTest(DataSource dataSource) {
+    super(dataSource);
+  }
+
+  @Before
+  public void doSomethingBefore() {
+    jdbcTemplate.execute("delete from cards");
+  }
 
   @When("^the client calls /boards/(\\d+)")
   public void theClientCallsBoard(int boardId) {
