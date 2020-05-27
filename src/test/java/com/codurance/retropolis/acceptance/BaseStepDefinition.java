@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class BaseStepDefinition {
 
-    private final String CLEAN_DB_SQL = "cleanDb.sql";
+    private final String CLEAN_DB_SQL = "sql/cleanDb.sql";
     protected JdbcTemplate jdbcTemplate;
 
     public BaseStepDefinition(DataSource dataSource) {
