@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 import static com.codurance.retropolis.utils.HttpWrapper.executePost;
 import static com.codurance.retropolis.utils.HttpWrapper.postResponse;
@@ -27,8 +28,8 @@ public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
   }
 
   @Before
-  public void doSomethingBefore() {
-    jdbcTemplate.execute("delete from cards");
+  public void cleanUpDatabase() throws SQLException {
+    cleanUp();
   }
 
   @When("the client posts to cards endpoint with column_id:{long}, text:{string} and userName:{string}")

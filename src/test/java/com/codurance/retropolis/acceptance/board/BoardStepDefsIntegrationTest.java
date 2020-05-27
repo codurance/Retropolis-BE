@@ -11,6 +11,7 @@ import io.cucumber.java.en.When;
 import org.springframework.http.HttpStatus;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,8 +26,8 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
   }
 
   @Before
-  public void doSomethingBefore() {
-    jdbcTemplate.execute("delete from cards");
+  public void cleanUpDatabase() throws SQLException {
+    cleanUp();
   }
 
   @When("^the client calls /boards/(\\d+)")
