@@ -1,11 +1,14 @@
 package com.codurance.retropolis.models;
 
+import java.util.List;
+
 public class Card {
 
   private Long id;
   private Long columnId;
   private String text;
   private String username;
+  private List<String> voters;
 
   public Card() {
   }
@@ -37,5 +40,9 @@ public class Card {
 
   public String getUsername() {
     return username;
+  }
+
+  public List<String> getVoters() {
+    return voters;
   }
 }
