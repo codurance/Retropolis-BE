@@ -1,20 +1,20 @@
 package com.codurance.retropolis.services;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CardServiceTest {
@@ -64,4 +64,16 @@ public class CardServiceTest {
     assertThrows(CardNotFoundException.class, () -> cardService.delete(NON_EXISTENT_CARD_ID));
   }
 
+  @Test
+  void should_change_card_text_and_return_edited_card() {
+    Long cardId = 1L;
+    String newText = "updated hello";
+    UpdateCardRequestObject requestObject = new UpdateCardRequestObject(newText);
+    Card editedCard = new Card(cardId, newText, 1L,"John Doe");
+    when(cardRepository.update(cardId, requestObject.getNewText())).thenReturn(editedCard);
+
+    Card card = cardService.update(cardId, requestObject);
+
+    assertEquals(newText, card.getText());
+  }
 }

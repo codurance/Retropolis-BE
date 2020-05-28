@@ -3,16 +3,18 @@ package com.codurance.retropolis.utils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 public class HttpWrapper {
 
   public static ResponseResults getResponse = null;
   public static ResponseResults postResponse = null;
+  public static ResponseResults patchResponse = null;
   public static ResponseResults deleteResponse = null;
   public static ResponseResults patchResponse = null;
 
-  private static final RestTemplate restTemplate = new RestTemplate();
+  private static final RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 
   public static void executeGet(String url) {
     ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -23,6 +25,12 @@ public class HttpWrapper {
     ResponseEntity<String> response =
         restTemplate.postForEntity(url, request, String.class);
     postResponse = new ResponseResults(response.getBody(), response);
+  }
+
+  public static void executePatch(String url, HttpEntity<?> request) {
+    ResponseEntity<String> response =
+        restTemplate.exchange(url, HttpMethod.PATCH, request, String.class);
+    patchResponse = new ResponseResults(response.getBody(), response);
   }
 
   public static void executeDelete(String url) {
