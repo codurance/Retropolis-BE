@@ -8,6 +8,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
 import javax.sql.DataSource;
@@ -32,7 +33,7 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @When("^the client calls /boards/(\\d+)")
   public void theClientCallsBoard(int boardId) {
-    HttpWrapper.executeGet("http://localhost:5000/boards/" + boardId);
+    HttpWrapper.executeGet(url + "/boards/" + boardId);
   }
 
   @Then("^the client receives status code of (\\d+)$")

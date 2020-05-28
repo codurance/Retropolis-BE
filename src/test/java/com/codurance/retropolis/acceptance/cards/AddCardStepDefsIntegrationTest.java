@@ -34,7 +34,7 @@ public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @When("the client posts to cards endpoint with column_id:{long}, text:{string} and userName:{string}")
   public void theClientPostsToCardsEndpointWithColumn_idAndText(Long columnId, String text, String userName) {
-    executePost("http://localhost:5000/cards", new HttpEntity<>(new NewCardRequestObject(text, columnId, userName)));
+    executePost(url + "/cards", new HttpEntity<>(new NewCardRequestObject(text, columnId, userName)));
   }
 
   @Then("^the client receives a status code of (\\d+)$")

@@ -1,5 +1,6 @@
 package com.codurance.retropolis.acceptance;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +12,9 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 public class BaseStepDefinition {
+
+    @Value("http://localhost:${server.port}")
+    protected String url;
 
     private final String CLEAN_DB_SQL = "sql/cleanDb.sql";
     protected JdbcTemplate jdbcTemplate;
