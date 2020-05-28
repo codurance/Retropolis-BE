@@ -1,9 +1,16 @@
 package com.codurance.retropolis.acceptance.cards;
 
+import static com.codurance.retropolis.utils.HttpWrapper.executePatch;
+import static com.codurance.retropolis.utils.HttpWrapper.executePost;
+import static com.codurance.retropolis.utils.HttpWrapper.responseResult;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,15 +18,9 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-
-import javax.sql.DataSource;
 import java.sql.SQLException;
-
-import static com.codurance.retropolis.utils.HttpWrapper.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import javax.sql.DataSource;
+import org.springframework.http.HttpEntity;
 
 
 public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition {
@@ -40,7 +41,7 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
 
   @And("the client updates to cards with this id and changes the text to {string}")
   public void theClientUpdatesToCardsWithThisIdAndChangesTheTextFromTo(String newText) throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(postResponse.getBody(), new TypeReference<>() {
+    Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 
     executePatch("http://localhost:5000/cards/" + card.getId(), new HttpEntity<>(new UpdateCardRequestObject(newText)));
@@ -48,15 +49,13 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
 
   @And("the client receives the card with the text:{string}")
   public void theClientReceivesTheCardWithTheText(String newText) throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(patchResponse.getBody(), new TypeReference<>() {
+    Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
-
     assertThat(card.getText(), is(newText));
   }
 
   @Then("the client receives {int} status code")
   public void theClientReceivesStatusCode(int statusCode) {
-    final HttpStatus currentStatusCode = deleteResponse.getTheResponse().getStatusCode();
-    assertThat(currentStatusCode.value(), is(statusCode));
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(statusCode));
   }
 }
