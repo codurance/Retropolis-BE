@@ -35,6 +35,6 @@ public class CardService {
   }
 
   public Card update(Long cardId, UpdateCardRequestObject requestObject) {
-    return cardRepository.update(cardId, requestObject.getNewText());
+    return cardRepository.updateText(cardId, requestObject.getNewText());
   }
 }

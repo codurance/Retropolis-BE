@@ -2,14 +2,13 @@ package com.codurance.retropolis.repositories;
 
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
+import java.sql.PreparedStatement;
+import java.util.Objects;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.util.Objects;
 
 @Repository
 public class PostgresCardRepository implements CardRepository {
@@ -45,7 +44,7 @@ public class PostgresCardRepository implements CardRepository {
   }
 
   @Override
-  public Card update(Long cardId, String newText) {
+  public Card updateText(Long cardId, String newText) {
     jdbcTemplate.update(UPDATE_CARD, newText, cardId);
     return getCard(cardId);
   }

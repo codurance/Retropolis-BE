@@ -1,5 +1,11 @@
 package com.codurance.retropolis.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.models.Card;
@@ -11,10 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CardServiceTest {
@@ -70,7 +72,7 @@ public class CardServiceTest {
     String newText = "updated hello";
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(newText);
     Card editedCard = new Card(cardId, newText, 1L,"John Doe");
-    when(cardRepository.update(cardId, requestObject.getNewText())).thenReturn(editedCard);
+    when(cardRepository.updateText(cardId, requestObject.getNewText())).thenReturn(editedCard);
 
     Card card = cardService.update(cardId, requestObject);
 
