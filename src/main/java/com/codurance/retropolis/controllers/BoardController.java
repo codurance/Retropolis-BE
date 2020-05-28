@@ -5,11 +5,12 @@ import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/boards")
 public class BoardController extends BaseController {
 
   private final BoardService boardService;
@@ -19,9 +20,8 @@ public class BoardController extends BaseController {
     this.boardService = boardService;
   }
 
-  @GetMapping
-  public Board getBoard() {
-    return boardService.getBoard();
+  @GetMapping(value = "/{id}")
+  public Board getBoard(@PathVariable Integer id) {
+    return boardService.getBoard(id);
   }
-
 }

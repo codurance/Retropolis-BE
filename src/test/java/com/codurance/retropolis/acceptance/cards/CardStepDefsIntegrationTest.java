@@ -18,8 +18,8 @@ import org.springframework.http.HttpStatus;
 
 public class CardStepDefsIntegrationTest {
 
-  @When("the client posts to cards endpoint with column_id:{int}, text:{string} and userName:{string}")
-  public void theClientPostsToCardsEndpointWithColumn_idAndText(int columnId, String text, String userName) {
+  @When("the client posts to cards endpoint with column_id:{long}, text:{string} and userName:{string}")
+  public void theClientPostsToCardsEndpointWithColumn_idAndText(Long columnId, String text, String userName) {
     executePost("http://localhost:5000/cards", new HttpEntity<>(new NewCardRequestObject(text, columnId, userName)));
   }
 
@@ -29,13 +29,14 @@ public class CardStepDefsIntegrationTest {
     assertThat(currentStatusCode.value(), is(statusCode));
   }
 
-  @And("the client receives the card with the column_id:{int}, text:{string} and userName:{string}")
-  public void theClientReceivesTheCardWithTheColumn_idAndText(int columnId, String text, String userName) throws JsonProcessingException {
+  @And("the client receives the card with the column_id:{long}, text:{string} and userName:{string}")
+  public void theClientReceivesTheCardWithTheColumn_idAndText(Long columnId, String text, String userName)
+      throws JsonProcessingException {
     Card card = new ObjectMapper().readValue(postResponse.getBody(), new TypeReference<>() {
     });
 
     assertThat(card.getColumnId(), is(columnId));
     assertThat(card.getText(), is(text));
-    assertThat(card.getUserName(), is(userName));
+    assertThat(card.getUsername(), is(userName));
   }
 }

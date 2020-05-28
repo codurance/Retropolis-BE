@@ -16,9 +16,9 @@ import org.springframework.http.HttpStatus;
 
 public class BoardStepDefsIntegrationTest {
 
-  @When("^the client calls /board$")
-  public void theClientCallsBoard() {
-    HttpWrapper.executeGet("http://localhost:5000/board");
+  @When("^the client calls /boards/(\\d+)")
+  public void theClientCallsBoard(int boardId) {
+    HttpWrapper.executeGet("http://localhost:5000/boards/" + boardId);
   }
 
   @Then("^the client receives status code of (\\d+)$")
@@ -30,9 +30,10 @@ public class BoardStepDefsIntegrationTest {
   @And("^the client receives board with three columns, \"([^\"]*)\", \"([^\"]*)\", and \"([^\"]*)\"$")
   public void theClientReceivesBoardWithThreeColumnsAnd(String firstTitle, String secondTitle, String thirdTitle) {
     assertThat(HttpWrapper.getResponse.getBody(),
-        is(asJsonString(new Board(List.of(
-            new Column(0, firstTitle, Collections.emptyList()),
-            new Column(1, secondTitle, Collections.emptyList()),
-            new Column(2, thirdTitle, Collections.emptyList()))))));
+        is(asJsonString(new Board(1L, "test board", List.of(
+            new Column(1L, firstTitle, Collections.emptyList()),
+            new Column(2L, secondTitle, Collections.emptyList()),
+            new Column(3L, thirdTitle, Collections.emptyList()))))));
   }
+
 }

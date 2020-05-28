@@ -4,20 +4,27 @@ import java.util.List;
 
 public class Column {
 
-  private int id;
+  private Long id;
+  private Long boardId;
   private String title;
   private List<Card> cards;
 
   public Column() {
   }
 
-  public Column(int id, String title, List<Card> cards) {
+  public Column(Long id, String title, Long boardId) {
+    this.id = id;
+    this.title = title;
+    this.boardId = boardId;
+  }
+
+  public Column(Long id, String title, List<Card> cards) {
     this.id = id;
     this.title = title;
     this.cards = cards;
   }
 
-  public int getId() {
+  public Long getId() {
     return id;
   }
 
@@ -27,5 +34,9 @@ public class Column {
 
   public List<Card> getCards() {
     return cards;
+  }
+
+  public void setCards(List<Card> columnCards) {
+    this.cards = columnCards;
   }
 }

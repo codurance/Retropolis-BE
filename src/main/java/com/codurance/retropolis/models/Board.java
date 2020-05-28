@@ -3,16 +3,34 @@ package com.codurance.retropolis.models;
 import java.util.List;
 
 public class Board {
-    private List<Column> columns;
 
-    public Board() {
-    }
+  private Long id;
+  private String title;
+  private List<Column> columns;
 
-    public Board(List<Column> columns) {
-        this.columns = columns;
-    }
+  public Board() {
+  }
 
-    public List<Column> getColumns() {
-        return columns;
-    }
+  public Board(Long id, String title) {
+    this.id = id;
+    this.title = title;
+  }
+
+  public Board(Long id, String title, List<Column> columns) {
+    this.id = id;
+    this.title = title;
+    this.columns = columns;
+  }
+
+  public List<Column> getColumns() {
+    return columns;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setColumns(List<Column> columns) {
+    this.columns = columns;
+  }
 }

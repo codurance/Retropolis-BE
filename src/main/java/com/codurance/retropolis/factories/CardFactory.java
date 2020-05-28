@@ -8,11 +8,7 @@ import org.springframework.stereotype.Component;
 public class CardFactory {
 
   public Card create(NewCardRequestObject requestObject) {
-    int id = getCardId();
-    return new Card(id, requestObject.getText(), requestObject.getColumnId(), requestObject.getUserName());
+    return new Card(requestObject.getText(), requestObject.getColumnId(), requestObject.getUsername());
   }
 
-  protected int getCardId() {
-    return CardIDGenerator.nextID();
-  }
 }
