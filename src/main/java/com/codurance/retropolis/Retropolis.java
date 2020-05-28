@@ -1,6 +1,7 @@
 package com.codurance.retropolis;
 
 import java.util.Collections;
+import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -23,7 +24,8 @@ public class Retropolis {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
-    config.setAllowedOrigins(Collections.singletonList("http://retropolis-fe.s3-website.eu-west-2.amazonaws.com"));
+    config.setAllowedOrigins(
+        List.of("http://retropolis-fe.s3-website.eu-west-2.amazonaws.com", "http://localhost:3000"));
     config.setAllowedMethods(Collections.singletonList("*"));
     config.setAllowedHeaders(Collections.singletonList("*"));
     source.registerCorsConfiguration("/**", config);
