@@ -35,6 +35,6 @@ public class CardService {
   }
 
   public Card update(Long cardId, UpdateCardRequestObject requestObject) {
-    throw new UnsupportedOperationException();
+    return cardRepository.update(cardId, requestObject.getNewText());
   }
 }

@@ -2,13 +2,14 @@ package com.codurance.retropolis.repositories;
 
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
-import java.sql.PreparedStatement;
-import java.util.Objects;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.util.Objects;
 
 @Repository
 public class PostgresCardRepository implements CardRepository {
@@ -16,6 +17,7 @@ public class PostgresCardRepository implements CardRepository {
   private final String INSERT_CARD = "insert into cards (text, username, column_id) values (?,?,?)";
   private final String SELECT_CARD = "select * from cards where id = ?";
   private final String DELETE_CARD = "delete from cards where id = ?";
+  private final String UPDATE_CARD = "update cards set text = ? where id = ?";
   private final JdbcTemplate jdbcTemplate;
 
   public PostgresCardRepository(DataSource dataSource) {
@@ -33,7 +35,7 @@ public class PostgresCardRepository implements CardRepository {
       return statement;
     }, key);
 
-    Integer id = Objects.requireNonNull(key.getKey()).intValue();
+    Long id = Objects.requireNonNull(key.getKey()).longValue();
     return getCard(id);
   }
 
@@ -42,7 +44,13 @@ public class PostgresCardRepository implements CardRepository {
     jdbcTemplate.update(DELETE_CARD, cardId);
   }
 
-  private Card getCard(Integer id) {
+  @Override
+  public Card update(Long cardId, String newText) {
+    jdbcTemplate.update(UPDATE_CARD, newText, cardId);
+    return getCard(cardId);
+  }
+
+  private Card getCard(Long id) {
     return jdbcTemplate.queryForObject(SELECT_CARD, new CardMapper(), id);
   }
 }

@@ -1,4 +1,4 @@
-Feature: card is created
+Feature: card is edited
 
   Scenario: client makes call to PATCH /cards/1
     When the card exists with an id

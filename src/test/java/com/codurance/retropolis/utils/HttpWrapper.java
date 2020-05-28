@@ -3,6 +3,7 @@ package com.codurance.retropolis.utils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 public class HttpWrapper {
@@ -13,6 +14,16 @@ public class HttpWrapper {
   public static ResponseResults deleteResponse = null;
 
   private static final RestTemplate restTemplate = new RestTemplate();
+
+
+
+  public HttpWrapper() {
+    HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+    requestFactory.setConnectTimeout(1000);
+    requestFactory.setReadTimeout(1000);
+
+    restTemplate.setRequestFactory(requestFactory);
+  }
 
   public static void executeGet(String url) {
     ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
