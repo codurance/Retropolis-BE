@@ -162,7 +162,6 @@ public class CardControllerTest {
     assertEquals("Username cannot be null", errorResponse.get(0));
   }
 
-  //TODO Refactor
   private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
     MockHttpServletRequestBuilder post = MockMvcRequestBuilders.post(URL);
     String responseBody = mockMvc.perform(post
