@@ -1,13 +1,10 @@
 package com.codurance.retropolis.acceptance.cards;
 
-import static com.codurance.retropolis.utils.HttpWrapper.deleteResponse;
-import static com.codurance.retropolis.utils.HttpWrapper.executeDelete;
 import static com.codurance.retropolis.utils.HttpWrapper.executePatch;
 import static com.codurance.retropolis.utils.HttpWrapper.patchResponse;
 import static com.codurance.retropolis.utils.HttpWrapper.postResponse;
 import static java.lang.Boolean.getBoolean;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;

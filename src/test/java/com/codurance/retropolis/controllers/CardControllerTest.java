@@ -191,6 +191,18 @@ public class CardControllerTest {
     assertEquals("Username cannot be null", errorResponse.get(0));
   }
 
+  @Test
+  public void return_bad_request_when_username_is_empty_on_add_vote() throws Exception {
+    List<String> errorResponse = performHttpPatchRequest("{\"addVote\":\"true\"}", status().isBadRequest(), URL + "/1/vote");
+    assertEquals("Username cannot be empty", errorResponse.get(0));
+  }
+
+  @Test
+  public void return_bad_request_when_addVote_is_empty_on_add_vote() throws Exception {
+    List<String> errorResponse = performHttpPatchRequest("{\"username\":\"John Doe\"}", status().isBadRequest(), URL + "/1/vote");
+    assertEquals("addVote cannot be empty", errorResponse.get(0));
+  }
+
   //TODO Refactor
   private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
     MockHttpServletRequestBuilder post = MockMvcRequestBuilders.post(URL);

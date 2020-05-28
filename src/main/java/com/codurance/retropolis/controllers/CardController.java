@@ -47,12 +47,12 @@ public class CardController extends BaseController {
   }
 
   @PatchMapping(value = "/{cardId}")
-  public Card updateCard(@PathVariable Long cardId, @RequestBody @Valid UpdateCardRequestObject request) {
+  public Card updateText(@PathVariable Long cardId, @RequestBody @Valid UpdateCardRequestObject request) {
     return cardService.update(cardId, request);
   }
 
   @PatchMapping(value = "/{cardId}/vote")
-  public Card updateVote(@PathVariable Long cardId, @RequestBody UpVoteRequestObject request) {
+  public Card updateVote(@PathVariable Long cardId, @RequestBody @Valid UpVoteRequestObject request) {
     return cardService.updateVotes(cardId, request);
   }
 
