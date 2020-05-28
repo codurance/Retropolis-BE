@@ -6,11 +6,11 @@ import com.codurance.retropolis.models.Column;
 import com.codurance.retropolis.repositories.mappers.BoardMapper;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
 import com.codurance.retropolis.repositories.mappers.ColumnMapper;
-import java.util.List;
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class PostgresBoardRepository implements BoardRepository {
@@ -20,7 +20,6 @@ public class PostgresBoardRepository implements BoardRepository {
   private final String SELECT_CARDS = "select * from cards where column_id = ?";
   private final JdbcTemplate jdbcTemplate;
 
-  @Autowired
   public PostgresBoardRepository(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
   }

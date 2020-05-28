@@ -1,8 +1,11 @@
 package com.codurance.retropolis.services;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
@@ -15,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class CardServiceTest {
+
+  public static final long NON_EXISTENT_CARD_ID = 999L;
 
   @Mock
   private CardFactory cardFactory;
@@ -44,6 +49,19 @@ public class CardServiceTest {
 
     verify(cardFactory).create(requestObject);
     verify(cardRepository).insert(card);
+  }
+
+  @Test
+  public void should_delete_card_from_the_repository() {
+    Long cardId = 1L;
+    cardService.delete(cardId);
+    verify(cardRepository).delete(cardId);
+  }
+
+  @Test
+  public void should_throw_CardNotFoundException_when_cardId_is_invalid() {
+    doThrow(new RuntimeException()).when(cardRepository).delete(NON_EXISTENT_CARD_ID);
+    assertThrows(CardNotFoundException.class, () -> cardService.delete(NON_EXISTENT_CARD_ID));
   }
 
 }

@@ -1,5 +1,6 @@
 package com.codurance.retropolis.controllers;
 
+import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
@@ -9,7 +10,10 @@ import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +37,21 @@ public class CardController extends BaseController {
     return cardService.addCard(request);
   }
 
+  @DeleteMapping(value = "/{cardId}")
+  public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long cardId) {
+    cardService.delete(cardId);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
   @ExceptionHandler(ColumnNotFoundException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public List<String> handleColumnNotFound(ColumnNotFoundException exception) {
+    return Collections.singletonList(exception.getMessage());
+  }
+
+  @ExceptionHandler(CardNotFoundException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public List<String> handleCardNotFound(CardNotFoundException exception) {
     return Collections.singletonList(exception.getMessage());
   }
 
