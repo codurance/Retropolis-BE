@@ -10,20 +10,10 @@ public class HttpWrapper {
 
   public static ResponseResults getResponse = null;
   public static ResponseResults postResponse = null;
-  public static ResponseResults putResponse = null;
+  public static ResponseResults patchResponse = null;
   public static ResponseResults deleteResponse = null;
 
-  private static final RestTemplate restTemplate = new RestTemplate();
-
-
-
-  public HttpWrapper() {
-    HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-    requestFactory.setConnectTimeout(1000);
-    requestFactory.setReadTimeout(1000);
-
-    restTemplate.setRequestFactory(requestFactory);
-  }
+  private static final RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 
   public static void executeGet(String url) {
     ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -39,7 +29,7 @@ public class HttpWrapper {
   public static void executePatch(String url, HttpEntity<?> request) {
     ResponseEntity<String> response =
         restTemplate.exchange(url, HttpMethod.PATCH, request, String.class);
-    putResponse = new ResponseResults(response.getBody(), response);
+    patchResponse = new ResponseResults(response.getBody(), response);
   }
 
   public static void executeDelete(String url) {

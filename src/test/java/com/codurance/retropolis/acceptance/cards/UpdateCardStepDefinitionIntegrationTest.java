@@ -1,12 +1,5 @@
 package com.codurance.retropolis.acceptance.cards;
 
-import static com.codurance.retropolis.utils.HttpWrapper.deleteResponse;
-import static com.codurance.retropolis.utils.HttpWrapper.executePatch;
-import static com.codurance.retropolis.utils.HttpWrapper.executePost;
-import static com.codurance.retropolis.utils.HttpWrapper.postResponse;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
@@ -18,10 +11,15 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import java.sql.SQLException;
-import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
+
+import static com.codurance.retropolis.utils.HttpWrapper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 
 public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition {
@@ -50,7 +48,7 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
 
   @And("the client receives the card with the text:{string}")
   public void theClientReceivesTheCardWithTheText(String newText) throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(postResponse.getBody(), new TypeReference<>() {
+    Card card = new ObjectMapper().readValue(patchResponse.getBody(), new TypeReference<>() {
     });
 
     assertThat(card.getText(), is(newText));
