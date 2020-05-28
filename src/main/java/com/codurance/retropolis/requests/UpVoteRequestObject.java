@@ -1,9 +1,17 @@
 package com.codurance.retropolis.requests;
 
-import org.springframework.http.HttpEntity;
+public class UpVoteRequestObject {
 
-public class UpVoteRequestObject extends HttpEntity<?> {
+  private String username;
+
+  public UpVoteRequestObject() {
+  }
 
   public UpVoteRequestObject(String username) {
+    this.username = username;
+  }
+
+  public String getUsername() {
+    return username;
   }
 }

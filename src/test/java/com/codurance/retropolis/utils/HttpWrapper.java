@@ -12,7 +12,6 @@ public class HttpWrapper {
   public static ResponseResults postResponse = null;
   public static ResponseResults patchResponse = null;
   public static ResponseResults deleteResponse = null;
-  public static ResponseResults patchResponse = null;
 
   private static final RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 
@@ -37,12 +36,6 @@ public class HttpWrapper {
     ResponseEntity<String> response =
         restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
     deleteResponse = new ResponseResults(response.getBody(), response);
-  }
-
-  public static void executePatch(String url, HttpEntity<?> request) {
-    ResponseEntity<String> response =
-        restTemplate.patchForObject(url, request, );
-    patchResponse = new ResponseResults(response.getBody(), response);
   }
 
   public static class ResponseResults {
