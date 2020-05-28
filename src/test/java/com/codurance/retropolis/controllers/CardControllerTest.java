@@ -12,10 +12,13 @@ import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.services.CardService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +104,32 @@ public class CardControllerTest {
     });
 
     assertEquals(cardText, cardResponse.getText());
+  }
+
+  @Test
+  void update_card_vote_with_username_should_return_card_with_voter() throws Exception {
+    Long cardId = 1L;
+    Long columnId = 1L;
+    String cardText = "hello";
+    String userName = "John Doe";
+    String voter = "tom";
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter, true);
+
+    given(cardService.updateVotes(any(), any(UpVoteRequestObject.class)))
+        .willReturn(new Card(cardId, cardText, columnId, userName, Collections.singletonList(voter)));
+
+    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.patch(URL + "/" + cardId + "/vote")
+        .content(asJsonString(requestObject))
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andReturn();
+
+    String responseBody = response.getResponse().getContentAsString();
+    Card cardResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
+    });
+
+    assertEquals(1, cardResponse.getVoters().size());
+    assertEquals(voter, cardResponse.getVoters().get(0));
   }
 
   @Test

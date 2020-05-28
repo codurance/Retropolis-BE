@@ -5,7 +5,9 @@ import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,5 +77,20 @@ public class CardServiceTest {
     Card card = cardService.update(cardId, requestObject);
 
     assertEquals(newText, card.getText());
+  }
+
+  @Test
+  void should_add_card_voter_and_return_card() {
+    Long cardId = 1L;
+    String voter = "Jane Doe";
+    String text = "Hello";
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter, true);
+    Card editedCard = new Card(cardId, text, 1L,"John Doe", Collections.singletonList(voter));
+    when(cardRepository.addVoter(cardId, requestObject.getUsername())).thenReturn(editedCard);
+
+    Card card = cardService.updateVotes(cardId, requestObject);
+
+    assertEquals(1, card.getVoters().size());
+    assertEquals(voter, card.getVoters().get(0));
   }
 }

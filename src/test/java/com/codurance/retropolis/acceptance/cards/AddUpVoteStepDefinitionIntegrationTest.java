@@ -5,6 +5,7 @@ import static com.codurance.retropolis.utils.HttpWrapper.executeDelete;
 import static com.codurance.retropolis.utils.HttpWrapper.executePatch;
 import static com.codurance.retropolis.utils.HttpWrapper.patchResponse;
 import static com.codurance.retropolis.utils.HttpWrapper.postResponse;
+import static java.lang.Boolean.getBoolean;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
@@ -35,13 +36,13 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
     cleanUp();
   }
 
-  @And("the client updates to cards with this id in path and addUpVote {string} in body")
-  public void theClientUpdatesToCardsWithThisIdInPathAndAddUpVoteInBody(String username)
+  @And("the client updates cards vote with this id in path and voter:{string} and addVote:{string} in body")
+  public void theClientUpdatesToCardsWithThisIdInPathAndAddUpVoteInBody(String username, String addVote)
       throws JsonProcessingException {
     Card card = new ObjectMapper().readValue(postResponse.getBody(), new TypeReference<>() {
     });
-    executePatch("http://localhost:5000/cards/" + card.getId(),
-        new HttpEntity<>(new UpVoteRequestObject(username)));
+    executePatch("http://localhost:5000/cards/" + card.getId() + "/vote",
+        new HttpEntity<>(new UpVoteRequestObject(username, getBoolean(addVote))));
   }
 
   @Then("the client receives a status code of {int} after update")
@@ -55,6 +56,6 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
     Card card = new ObjectMapper().readValue(patchResponse.getBody(), new TypeReference<>() {
     });
 
-    assertThat(card.getVoters(), contains(username));
+    assertThat(card.getVoters().size(), is(1));
   }
 }

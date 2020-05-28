@@ -5,6 +5,7 @@ import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,9 @@ public class CardService {
 
   public Card update(Long cardId, UpdateCardRequestObject requestObject) {
     return cardRepository.update(cardId, requestObject.getNewText());
+  }
+
+  public Card updateVotes(Long cardId, UpVoteRequestObject requestObject) {
+    return cardRepository.addVoter(cardId, requestObject.getUsername());
   }
 }

@@ -9,4 +9,6 @@ public interface CardRepository {
   void delete(Long cardId);
 
     Card update(Long cardId, String newText);
+
+  Card addVoter(Long cardId, String username);
 }

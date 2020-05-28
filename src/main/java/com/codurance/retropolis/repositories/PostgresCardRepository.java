@@ -18,6 +18,7 @@ public class PostgresCardRepository implements CardRepository {
   private final String SELECT_CARD = "select * from cards where id = ?";
   private final String DELETE_CARD = "delete from cards where id = ?";
   private final String UPDATE_CARD = "update cards set text = ? where id = ?";
+  private final String ADD_VOTER = "update cards set voters = array_append(voters, ?) where id = ?";
   private final JdbcTemplate jdbcTemplate;
 
   public PostgresCardRepository(DataSource dataSource) {
@@ -52,5 +53,11 @@ public class PostgresCardRepository implements CardRepository {
 
   private Card getCard(Long id) {
     return jdbcTemplate.queryForObject(SELECT_CARD, new CardMapper(), id);
+  }
+
+  @Override
+  public Card addVoter(Long cardId, String username) {
+    jdbcTemplate.update(ADD_VOTER, username, cardId);
+    return getCard(cardId);
   }
 }
