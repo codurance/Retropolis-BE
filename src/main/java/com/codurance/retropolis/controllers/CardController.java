@@ -40,7 +40,7 @@ public class CardController extends BaseController {
   }
 
   @DeleteMapping(value = "/{cardId}")
-  public ResponseEntity<HttpStatus> postCard(@PathVariable Long cardId) {
+  public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long cardId) {
     cardService.delete(cardId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
