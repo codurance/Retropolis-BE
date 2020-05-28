@@ -46,9 +46,8 @@ public class CardController extends BaseController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  // todo add validation
   @PatchMapping(value = "/{cardId}")
-  public Card updateCard(@PathVariable Long cardId, @RequestBody UpdateCardRequestObject request) {
+  public Card updateCard(@PathVariable Long cardId, @RequestBody @Valid UpdateCardRequestObject request) {
     return cardService.update(cardId, request);
   }
 

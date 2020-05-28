@@ -149,7 +149,7 @@ public class CardControllerTest {
   }
 
   @Test
-  public void return_bad_request_when_text_is_empty() throws Exception {
+  public void return_bad_request_when_text_is_empty_on_post_card() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject("", 1L, "John Doe");
     String content = asJsonString(requestObject);
     List<String> errorResponse = performHttpPostRequest(content, status().isBadRequest());
@@ -164,9 +164,24 @@ public class CardControllerTest {
   }
 
   @Test
-  public void return_bad_request_when_no_text_is_sent() throws Exception {
+  public void return_bad_request_when_no_text_is_sent_on_post_card() throws Exception {
     List<String> errorResponse = performHttpPostRequest("{\"columnId\":\"1\",\"username\":\"John Doe\"}",
         status().isBadRequest());
+    assertEquals("Text cannot be empty", errorResponse.get(0));
+  }
+
+  @Test
+  public void return_bad_request_when_text_is_empty_on_edit_text_card() throws Exception {
+    UpdateCardRequestObject requestObject = new UpdateCardRequestObject("");
+    String content = asJsonString(requestObject);
+    List<String> errorResponse = performHttpPatchRequest(content, status().isBadRequest(), URL + "/1");
+    assertEquals("Text must not be less than 1 character", errorResponse.get(0));
+  }
+
+  @Test
+  public void return_bad_request_when_no_text_is_sent_on_edit_text_card() throws Exception {
+    List<String> errorResponse = performHttpPatchRequest("{}",
+        status().isBadRequest(), URL + "/1");
     assertEquals("Text cannot be empty", errorResponse.get(0));
   }
 
