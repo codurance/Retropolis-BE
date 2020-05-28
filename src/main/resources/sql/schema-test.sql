@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS cards (
   text varchar,
   username varchar,
   column_id int,
-  voters TEXT []
+  voters ARRAY
 );
 
 ALTER TABLE users_boards ADD FOREIGN KEY (user_id) REFERENCES users (id);
