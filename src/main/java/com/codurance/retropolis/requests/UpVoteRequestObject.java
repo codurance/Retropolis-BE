@@ -7,7 +7,10 @@ public class UpVoteRequestObject {
   @NotNull(message = "Username cannot be empty")
   private String username;
   @NotNull(message = "addVote cannot be empty")
-  private final Boolean addVote;
+  private Boolean addVote;
+
+  public UpVoteRequestObject() {
+  }
 
   public UpVoteRequestObject(String username, Boolean addVote) {
     this.username = username;
