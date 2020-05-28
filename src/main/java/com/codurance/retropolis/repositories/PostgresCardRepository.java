@@ -2,6 +2,7 @@ package com.codurance.retropolis.repositories;
 
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
+import java.sql.Array;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -14,7 +15,7 @@ import java.util.Objects;
 @Repository
 public class PostgresCardRepository implements CardRepository {
 
-  private final String INSERT_CARD = "insert into cards (text, username, column_id) values (?,?,?)";
+  private final String INSERT_CARD = "insert into cards (text, username, column_id, voters) values (?,?,?,?)";
   private final String SELECT_CARD = "select * from cards where id = ?";
   private final String DELETE_CARD = "delete from cards where id = ?";
   private final String UPDATE_CARD = "update cards set text = ? where id = ?";
@@ -33,6 +34,7 @@ public class PostgresCardRepository implements CardRepository {
       statement.setString(1, newCard.getText());
       statement.setString(2, newCard.getUsername());
       statement.setLong(3, newCard.getColumnId());
+      statement.setArray(4, connection.createArrayOf("TEXT", new String[]{}));
       return statement;
     }, key);
 
