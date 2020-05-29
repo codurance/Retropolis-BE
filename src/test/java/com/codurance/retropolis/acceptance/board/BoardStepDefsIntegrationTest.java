@@ -30,7 +30,7 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @When("^the client calls /boards/(\\d+)")
   public void theClientCallsBoard(int boardId) {
-    HttpWrapper.executeGet("http://localhost:5000/boards/" + boardId);
+    HttpWrapper.executeGet(url + "/boards/" + boardId);
   }
 
   @Then("^the client receives status code of (\\d+)$")

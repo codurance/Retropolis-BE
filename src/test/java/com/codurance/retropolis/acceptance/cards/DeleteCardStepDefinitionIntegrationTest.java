@@ -34,14 +34,14 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
 
   @When("the card exists with id")
   public void theCardExistsWithId() {
-    executePost("http://localhost:5000/cards", new HttpEntity<>(new NewCardRequestObject("Hello", 1L, "John Doe")));
+    executePost(url + "/cards", new HttpEntity<>(new NewCardRequestObject("Hello", 1L, "John Doe")));
   }
 
   @When("the client deletes to cards with this id passing it as path variable to endpoint")
   public void theClientDeletesToCardsEndpointWithPathVariable() throws JsonProcessingException {
     Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
-    executeDelete("http://localhost:5000/cards/" + card.getId());
+    executeDelete(url + "/cards/" + card.getId());
   }
 
   @Then("the client receives a status code of {int} after card was deleted")
