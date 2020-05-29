@@ -4,6 +4,7 @@ import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.services.CardService;
 import java.util.Collections;
@@ -46,10 +47,14 @@ public class CardController extends BaseController {
   }
 
   @PatchMapping(value = "/{cardId}")
-  public Card updateCard(@PathVariable Long cardId, @RequestBody @Valid UpdateCardRequestObject request) {
+  public Card updateText(@PathVariable Long cardId, @RequestBody @Valid UpdateCardRequestObject request) {
     return cardService.update(cardId, request);
   }
 
+  @PatchMapping(value = "/{cardId}/vote")
+  public Card updateVote(@PathVariable Long cardId, @RequestBody @Valid UpVoteRequestObject request) {
+    return cardService.updateVotes(cardId, request);
+  }
 
   @ExceptionHandler(ColumnNotFoundException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
