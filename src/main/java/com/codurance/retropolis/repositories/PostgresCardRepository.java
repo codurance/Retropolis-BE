@@ -1,16 +1,15 @@
 package com.codurance.retropolis.repositories;
 
+import com.codurance.retropolis.exceptions.UserUpvotedException;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
-import java.sql.Array;
+import java.sql.PreparedStatement;
+import java.util.Objects;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.util.Objects;
 
 @Repository
 public class PostgresCardRepository implements CardRepository {
@@ -22,12 +21,13 @@ public class PostgresCardRepository implements CardRepository {
   private final String ADD_VOTER = "update cards set voters = array_append(voters, ?::varchar) where id = ?";
   private final JdbcTemplate jdbcTemplate;
 
+
   public PostgresCardRepository(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
 
   @Override
-  public Card insert(Card newCard) {
+  public Card addCard(Card newCard) {
     KeyHolder key = new GeneratedKeyHolder();
     jdbcTemplate.update(connection -> {
       PreparedStatement statement = connection.prepareStatement(INSERT_CARD, new String[]{"id"});
@@ -59,6 +59,11 @@ public class PostgresCardRepository implements CardRepository {
 
   @Override
   public Card addVoter(Long cardId, String username) {
+    Card card = getCard(cardId);
+    if (card.getVoters().contains(username)) {
+      throw new UserUpvotedException();
+    }
+
     jdbcTemplate.update(ADD_VOTER, username, cardId);
     return getCard(cardId);
   }

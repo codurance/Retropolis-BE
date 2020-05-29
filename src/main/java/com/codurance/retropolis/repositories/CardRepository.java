@@ -4,7 +4,7 @@ import com.codurance.retropolis.models.Card;
 
 public interface CardRepository {
 
-  Card insert(Card newCard);
+  Card addCard(Card newCard);
 
   void delete(Long cardId);
 

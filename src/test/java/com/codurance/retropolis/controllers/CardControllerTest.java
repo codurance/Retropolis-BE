@@ -17,7 +17,6 @@ import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.services.CardService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -134,14 +133,14 @@ public class CardControllerTest {
 
   @Test
   public void returns_bad_request_on_delete_when_card_does_not_exist() throws Exception {
-    doThrow(new CardNotFoundException("Card Id is not valid")).when(cardService).delete(NON_EXISTENT_CARD_ID);
+    doThrow(new CardNotFoundException()).when(cardService).delete(NON_EXISTENT_CARD_ID);
     List<String> response = performHttpDeleteRequest(status().isBadRequest(), URL + "/" + NON_EXISTENT_CARD_ID);
     assertEquals("Card Id is not valid", response.get(0));
   }
 
   @Test
   public void returns_bad_request_when_column_is_not_found() throws Exception {
-    given(cardService.addCard(any(NewCardRequestObject.class))).willThrow(new ColumnNotFoundException("Column Id is not valid"));
+    given(cardService.addCard(any(NewCardRequestObject.class))).willThrow(new ColumnNotFoundException());
     NewCardRequestObject requestObject = new NewCardRequestObject("hello", 1L, "John Doe");
 
     List<String> cardResponse = performHttpPostRequest(asJsonString(requestObject), status().isBadRequest());
