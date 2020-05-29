@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
-@Profile("!" + Environment.TEST)
+@Profile(Environment.PROD)
 public class WebConfig {
 
   @Configuration
