@@ -48,7 +48,7 @@ public class PostgresCardRepository implements CardRepository {
   }
 
   @Override
-  public Card update(Long cardId, String newText) {
+  public Card updateText(Long cardId, String newText) {
     jdbcTemplate.update(UPDATE_CARD, newText, cardId);
     return getCard(cardId);
   }

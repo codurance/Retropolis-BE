@@ -77,7 +77,7 @@ public class CardServiceTest {
     String newText = "updated hello";
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(newText);
     Card editedCard = new Card(cardId, newText, 1L, USERNAME);
-    when(cardRepository.update(cardId, requestObject.getNewText())).thenReturn(editedCard);
+    when(cardRepository.updateText(cardId, requestObject.getNewText())).thenReturn(editedCard);
 
     Card card = cardService.update(cardId, requestObject);
 
@@ -120,7 +120,7 @@ public class CardServiceTest {
   @Test
   public void should_throw_CardNotFoundException_on_edit_card_text() {
     String updatedText = "updated text";
-    doThrow(new RuntimeException()).when(cardRepository).update(NON_EXISTENT_CARD_ID, updatedText);
+    doThrow(new RuntimeException()).when(cardRepository).updateText(NON_EXISTENT_CARD_ID, updatedText);
     assertThrows(CardNotFoundException.class,
         () -> cardService.update(NON_EXISTENT_CARD_ID, new UpdateCardRequestObject(updatedText)));
   }

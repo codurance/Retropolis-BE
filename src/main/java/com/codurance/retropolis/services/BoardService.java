@@ -15,7 +15,7 @@ public class BoardService {
     this.boardRepository = boardRepository;
   }
 
-  public Board getBoard(Integer id) {
+  public Board getBoard(Long id) {
     return boardRepository.getBoard(id);
   }
 

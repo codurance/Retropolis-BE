@@ -43,7 +43,7 @@ public class CardService {
 
   public Card update(Long cardId, UpdateCardRequestObject requestObject) {
     try {
-      return cardRepository.update(cardId, requestObject.getNewText());
+      return cardRepository.updateText(cardId, requestObject.getNewText());
     } catch (RuntimeException invalidCardId) {
       throw new CardNotFoundException();
     }
