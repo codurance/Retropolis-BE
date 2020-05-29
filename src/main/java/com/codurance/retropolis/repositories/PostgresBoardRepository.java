@@ -6,11 +6,10 @@ import com.codurance.retropolis.models.Column;
 import com.codurance.retropolis.repositories.mappers.BoardMapper;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
 import com.codurance.retropolis.repositories.mappers.ColumnMapper;
+import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.util.List;
 
 @Repository
 public class PostgresBoardRepository implements BoardRepository {
@@ -25,7 +24,7 @@ public class PostgresBoardRepository implements BoardRepository {
   }
 
   @Override
-  public Board getBoard(Integer id) {
+  public Board getBoard(Long id) {
     Board board = jdbcTemplate.queryForObject(SELECT_BOARD, new Object[]{id}, new BoardMapper());
     if (board != null) {
       List<Column> columns = jdbcTemplate.query(SELECT_COLUMNS, new Object[]{id}, new ColumnMapper());

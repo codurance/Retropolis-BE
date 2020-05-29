@@ -7,4 +7,6 @@ public interface CardRepository {
   Card insert(Card newCard);
 
   void delete(Long cardId);
+
+    Card updateText(Long cardId, String newText);
 }

@@ -5,6 +5,7 @@ import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +32,9 @@ public class CardService {
     } catch (RuntimeException exception) {
       throw new CardNotFoundException("Card Id is not valid");
     }
+  }
+
+  public Card update(Long cardId, UpdateCardRequestObject requestObject) {
+    return cardRepository.updateText(cardId, requestObject.getNewText());
   }
 }
