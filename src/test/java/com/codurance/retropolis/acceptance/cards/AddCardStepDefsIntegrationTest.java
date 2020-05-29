@@ -1,5 +1,10 @@
 package com.codurance.retropolis.acceptance.cards;
 
+import static com.codurance.retropolis.utils.HttpWrapper.executePost;
+import static com.codurance.retropolis.utils.HttpWrapper.responseResult;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
@@ -10,16 +15,9 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-
-import javax.sql.DataSource;
 import java.sql.SQLException;
-
-import static com.codurance.retropolis.utils.HttpWrapper.executePost;
-import static com.codurance.retropolis.utils.HttpWrapper.postResponse;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import javax.sql.DataSource;
+import org.springframework.http.HttpEntity;
 
 public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
 
@@ -39,14 +37,13 @@ public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @Then("^the client receives a status code of (\\d+)$")
   public void theClientReceivesStatusCodeOf(int statusCode) {
-    final HttpStatus currentStatusCode = postResponse.getTheResponse().getStatusCode();
-    assertThat(currentStatusCode.value(), is(statusCode));
+    assertThat(responseResult.getResponseCode(), is(statusCode));
   }
 
   @And("the client receives the card with the column_id:{long}, text:{string} and userName:{string}")
   public void theClientReceivesTheCardWithTheColumn_idAndText(Long columnId, String text, String userName)
       throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(postResponse.getBody(), new TypeReference<>() {
+    Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 
     assertThat(card.getColumnId(), is(columnId));

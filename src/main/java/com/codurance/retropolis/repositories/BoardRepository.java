@@ -4,6 +4,6 @@ import com.codurance.retropolis.models.Board;
 
 public interface BoardRepository {
 
-  Board getBoard(Integer id);
+  Board getBoard(Long id);
 
 }

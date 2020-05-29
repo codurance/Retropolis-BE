@@ -1,5 +1,6 @@
 package com.codurance.retropolis.services;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -7,7 +8,6 @@ import static org.mockito.Mockito.when;
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Column;
 import com.codurance.retropolis.repositories.BoardRepository;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,14 +30,16 @@ public class BoardServiceTest {
 
   @Test
   void should_return_a_board() {
-    when(boardRepository.getBoard(1)).thenReturn(
-        new Board(1L, "test board", List.of(new Column(1L, "Start", Collections.emptyList()))));
+    long boardId = 1L;
+    String columnTitle = "Start";
+    when(boardRepository.getBoard(boardId)).thenReturn(
+        new Board(boardId, "test board", List.of(new Column(1L, columnTitle, emptyList()))));
 
-    Board board = boardService.getBoard(1);
+    Board board = boardService.getBoard(boardId);
 
-    verify(boardRepository).getBoard(1);
-    assertEquals(1, board.getColumns().get(0).getId());
-    assertEquals("Start", board.getColumns().get(0).getTitle());
+    verify(boardRepository).getBoard(boardId);
+    assertEquals(boardId, board.getColumns().get(0).getId());
+    assertEquals(columnTitle, board.getColumns().get(0).getTitle());
     assertEquals(0, board.getColumns().get(0).getCards().size());
   }
 

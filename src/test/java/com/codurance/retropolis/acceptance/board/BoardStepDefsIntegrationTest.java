@@ -1,5 +1,9 @@
 package com.codurance.retropolis.acceptance.board;
 
+import static com.codurance.retropolis.utils.Convert.asJsonString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Column;
@@ -8,17 +12,10 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
-
-import static com.codurance.retropolis.utils.Convert.asJsonString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import javax.sql.DataSource;
 
 public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
@@ -38,13 +35,12 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @Then("^the client receives status code of (\\d+)$")
   public void theClientReceivesStatusCodeOf(int statusCode) {
-    final HttpStatus currentStatusCode = HttpWrapper.getResponse.getTheResponse().getStatusCode();
-    assertThat(currentStatusCode.value(), is(statusCode));
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(statusCode));
   }
 
   @And("^the client receives board with three columns, \"([^\"]*)\", \"([^\"]*)\", and \"([^\"]*)\"$")
   public void theClientReceivesBoardWithThreeColumnsAnd(String firstTitle, String secondTitle, String thirdTitle) {
-    assertThat(HttpWrapper.getResponse.getBody(),
+    assertThat(HttpWrapper.responseResult.getBody(),
         is(asJsonString(new Board(1L, "test board", List.of(
             new Column(1L, firstTitle, Collections.emptyList()),
             new Column(2L, secondTitle, Collections.emptyList()),

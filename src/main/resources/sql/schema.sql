@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS cards (
   id SERIAL PRIMARY KEY,
   text varchar,
   username varchar,
-  column_id int
+  column_id int,
+  voters varchar[]
 );
 
 ALTER TABLE users_boards ADD FOREIGN KEY (user_id) REFERENCES users (id);

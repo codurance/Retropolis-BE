@@ -4,6 +4,8 @@ import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.requests.UpVoteRequestObject;
+import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.services.CardService;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +44,16 @@ public class CardController extends BaseController {
   public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long cardId) {
     cardService.delete(cardId);
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PatchMapping(value = "/{cardId}")
+  public Card updateText(@PathVariable Long cardId, @RequestBody @Valid UpdateCardRequestObject request) {
+    return cardService.update(cardId, request);
+  }
+
+  @PatchMapping(value = "/{cardId}/vote")
+  public Card updateVote(@PathVariable Long cardId, @RequestBody @Valid UpVoteRequestObject request) {
+    return cardService.updateVotes(cardId, request);
   }
 
   @ExceptionHandler(ColumnNotFoundException.class)

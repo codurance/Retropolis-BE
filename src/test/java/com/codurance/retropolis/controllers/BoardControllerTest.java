@@ -1,5 +1,6 @@
 package com.codurance.retropolis.controllers;
 
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -11,7 +12,6 @@ import com.codurance.retropolis.models.Column;
 import com.codurance.retropolis.services.BoardService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @WebMvcTest(BoardController.class)
 public class BoardControllerTest {
 
-  public static final Integer BOARD_ID = 1;
+  public static final Long BOARD_ID = 1L;
+  public static final Long COLUMN_ID = 1L;
+  public static final String BOARD_TITLE = "test board";
   private static final String URL = "/boards/" + BOARD_ID;
 
   @MockBean
@@ -38,35 +40,30 @@ public class BoardControllerTest {
 
   @Test
   void returns_a_board() throws Exception {
-    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(1L, "test board", Collections.emptyList()));
-
+    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, emptyList()));
     Board board = requestBoard();
-
     assertNotNull(board);
   }
 
   @Test
   void returns_board_with_columns() throws Exception {
-    long columnID = 1;
-    List<Column> columns = List.of(new Column(columnID, "start", Collections.emptyList()));
-    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(1L, "test board", columns));
+    List<Column> columns = List.of(new Column(COLUMN_ID, "start", emptyList()));
+    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     Board board = requestBoard();
 
     assertEquals(columns.size(), board.getColumns().size());
-    Column columnResponse = board.getColumns().get(0);
-    assertEquals(columnID, columnResponse.getId());
+    assertEquals(COLUMN_ID, board.getColumns().get(0).getId());
   }
 
   @Test
   void returns_board_with_columns_and_cards() throws Exception {
-    long columnID = 1;
     String text = "hello";
-    long cardId = BOARD_ID;
+    long cardId = 1;
     String userName = "John Doe";
-    List<Card> cards = List.of(new Card(cardId, text, columnID, userName));
-    List<Column> columns = List.of(new Column(columnID, "start", cards));
-    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(1L, "test board", columns));
+    List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName));
+    List<Column> columns = List.of(new Column(COLUMN_ID, "start", cards));
+    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     Board board = requestBoard();
 
@@ -75,7 +72,7 @@ public class BoardControllerTest {
     Card cardResponse = columnResponse.getCards().get(0);
     assertEquals(text, cardResponse.getText());
     assertEquals(cardId, cardResponse.getId());
-    assertEquals(columnID, cardResponse.getColumnId());
+    assertEquals(COLUMN_ID, cardResponse.getColumnId());
     assertEquals(userName, cardResponse.getUsername());
   }
 

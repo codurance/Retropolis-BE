@@ -1,11 +1,14 @@
 package com.codurance.retropolis.models;
 
+import java.util.List;
+
 public class Card {
 
   private Long id;
   private Long columnId;
   private String text;
   private String username;
+  private List<String> voters;
 
   public Card() {
   }
@@ -23,6 +26,15 @@ public class Card {
     this.username = username;
   }
 
+  // FIXME do we need another constructor for voters
+  public Card(Long cardId, String cardText, Long columnId, String username, List<String> voters) {
+    id = cardId;
+    text = cardText;
+    this.columnId = columnId;
+    this.username = username;
+    this.voters = voters;
+  }
+
   public String getText() {
     return text;
   }
@@ -37,5 +49,9 @@ public class Card {
 
   public String getUsername() {
     return username;
+  }
+
+  public List<String> getVoters() {
+    return voters;
   }
 }
