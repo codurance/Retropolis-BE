@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
+import org.apache.http.HttpHeaders;
 
 public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
