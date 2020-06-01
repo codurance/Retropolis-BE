@@ -36,6 +36,7 @@ public class BoardControllerTest {
   public static final Long COLUMN_ID = 1L;
   public static final String BOARD_TITLE = "test board";
   private static final String URL = "/boards/" + BOARD_ID;
+  public static final String TOKEN = "SOMETOKEN";
 
   @MockBean
   private BoardService boardService;
@@ -43,7 +44,7 @@ public class BoardControllerTest {
   @MockBean
   private UserService userService;
 
-  @Mock
+  @MockBean
   private GoogleTokenAuthenticator tokenAuthenticator;
 
   @Autowired
@@ -55,8 +56,7 @@ public class BoardControllerTest {
   @BeforeEach
   void setUp() throws GeneralSecurityException, IOException {
     String email = "john.doe@codurance.com";
-    when(tokenAuthenticator.getEmail("SOMETOKEN")).thenReturn(email);
-//    when(userService.registerUserIfNotExists(email, 1L))
+    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(email);
   }
 
   @Test
@@ -98,7 +98,7 @@ public class BoardControllerTest {
   }
 
   private Board requestBoard() throws Exception {
-    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(URL).header("Authorization" , "SOMETOKEN"))
+    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
         .andExpect(status().isOk()).andReturn();
     String contentAsString = httpResponse.getResponse().getContentAsString();
     return objectMapper.readValue(contentAsString, new TypeReference<>() {
