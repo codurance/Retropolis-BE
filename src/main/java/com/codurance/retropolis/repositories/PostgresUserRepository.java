@@ -10,4 +10,9 @@ public class PostgresUserRepository implements UserRepository {
   public User findByEmail(String email) {
     throw new UnsupportedOperationException();
   }
+
+  @Override
+  public User registerBy(String email) {
+    throw new UnsupportedOperationException();
+  }
 }

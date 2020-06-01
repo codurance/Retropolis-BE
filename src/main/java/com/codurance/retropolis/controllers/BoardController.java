@@ -33,7 +33,7 @@ public class BoardController extends BaseController {
       throws GeneralSecurityException, IOException {
     String email = googleTokenAuthenticator.getEmail(token);
 
-//    userService.registerUser(email);
+//    userService.registerUserIfNotExists(email, id);
 
     System.out.println("!!!!!!!!!!!!!!!!!!!!" + email + "!!!!!!!!!!!!!!!!!");
 
