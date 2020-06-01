@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
-@Profile(Environment.PROD)
+@Profile({Environment.PROD, Environment.DEV})
 public class DatabaseConfig {
 
   @Value("${datasourceUrl}")
