@@ -74,6 +74,8 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
   @Then("the user receives a list of the boards with one called {string}")
   public void theUserReceivesAListOfTheBoardsWithOneCalled(String title)
       throws JsonProcessingException {
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(200));
+
     List<Board> boards = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 

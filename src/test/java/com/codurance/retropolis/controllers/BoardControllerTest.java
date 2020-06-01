@@ -27,7 +27,8 @@ public class BoardControllerTest {
   public static final Long BOARD_ID = 1L;
   public static final Long COLUMN_ID = 1L;
   public static final String BOARD_TITLE = "test board";
-  private static final String URL = "/boards/" + BOARD_ID;
+  private static final String BOARD_URL = "/boards/" + BOARD_ID;
+  private static final String USERS_BOARDS = "/boards";
 
   @MockBean
   private BoardService boardService;
@@ -76,8 +77,28 @@ public class BoardControllerTest {
     assertEquals(userName, cardResponse.getUsername());
   }
 
+  @Test
+  void returns_id_and_title_of_users_boards() throws Exception {
+    Long userId = 1L;
+    when(boardService.getBoards(userId)).thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
+
+    List<Board> boards = requestUsersBoards();
+
+    assertEquals(1, boards.size());
+    assertEquals(BOARD_TITLE, boards.get(0).getTitle());
+    assertEquals(BOARD_ID, boards.get(0).getId());
+  }
+
   private Board requestBoard() throws Exception {
-    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(URL))
+    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(BOARD_URL))
+        .andExpect(status().isOk()).andReturn();
+    String contentAsString = httpResponse.getResponse().getContentAsString();
+    return objectMapper.readValue(contentAsString, new TypeReference<>() {
+    });
+  }
+
+  private List<Board> requestUsersBoards() throws Exception {
+    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(USERS_BOARDS))
         .andExpect(status().isOk()).andReturn();
     String contentAsString = httpResponse.getResponse().getContentAsString();
     return objectMapper.readValue(contentAsString, new TypeReference<>() {
