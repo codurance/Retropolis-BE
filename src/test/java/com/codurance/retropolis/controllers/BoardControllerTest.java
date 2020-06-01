@@ -80,7 +80,7 @@ public class BoardControllerTest {
   @Test
   void returns_id_and_title_of_users_boards() throws Exception {
     Long userId = 1L;
-    when(boardService.getBoards(userId)).thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
+    when(boardService.getUsersBoards(userId)).thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
 
     List<Board> boards = requestUsersBoards();
 
