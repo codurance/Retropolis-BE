@@ -21,6 +21,6 @@ public class BoardService {
   }
 
   public List<Board> getUsersBoards(long userId) {
-    throw new UnsupportedOperationException();
+    return boardRepository.getUsersBoards(userId);
   }
 }

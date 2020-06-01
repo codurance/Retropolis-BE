@@ -38,7 +38,7 @@ public class PostgresBoardRepository implements BoardRepository {
   }
 
   @Override
-  public Object getUsersBoards(long userId) {
+  public List<Board> getUsersBoards(long userId) {
     throw new UnsupportedOperationException();
   }
 }
