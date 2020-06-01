@@ -19,4 +19,7 @@ public class BoardService {
     return boardRepository.getBoard(id);
   }
 
+  public void addToBoard(Long userId, Long boardId) {
+    throw new UnsupportedOperationException();
+  }
 }
