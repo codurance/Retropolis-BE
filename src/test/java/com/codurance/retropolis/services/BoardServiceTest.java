@@ -21,6 +21,7 @@ public class BoardServiceTest {
 
 
   public static final String BOARD_TITLE = "test board";
+  public static final long BOARD_ID = 1L;
   @Mock
   private BoardRepository boardRepository;
   private BoardService boardService;
@@ -32,32 +33,29 @@ public class BoardServiceTest {
 
   @Test
   void should_return_a_board() {
-    long boardId = 1L;
     String columnTitle = "Start";
-    when(boardRepository.getBoard(boardId)).thenReturn(
-        new Board(boardId, BOARD_TITLE, List.of(new Column(1L, columnTitle, emptyList()))));
+    when(boardRepository.getBoard(BOARD_ID)).thenReturn(
+        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(1L, columnTitle, emptyList()))));
 
-    Board board = boardService.getBoard(boardId);
+    Board board = boardService.getBoard(BOARD_ID);
 
-    verify(boardRepository).getBoard(boardId);
-    assertEquals(boardId, board.getColumns().get(0).getId());
+    verify(boardRepository).getBoard(BOARD_ID);
+    assertEquals(BOARD_ID, board.getColumns().get(0).getId());
     assertEquals(columnTitle, board.getColumns().get(0).getTitle());
     assertEquals(0, board.getColumns().get(0).getCards().size());
   }
 
   @Test
   void should_return_boards_for_a_user() {
-    long boardId = 1L;
     long userId = 1L;
-//    when(boardRepository.getBoard(boardId)).thenReturn(
-//        new Board(boardId, BOARD_TITLE, Collections.emptyList()));
+    when(boardRepository.getUsersBoards(userId)).thenReturn(List.of(
+        new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList())));
 
-    Board board = boardService.getUsersBoards(userId);
+    List<Board> boards = boardService.getUsersBoards(userId);
 
-    verify(boardRepository).getBoard(boardId);
-    assertEquals(boardId, board.getColumns().get(0).getId());
-    assertEquals(columnTitle, board.getColumns().get(0).getTitle());
-    assertEquals(0, board.getColumns().get(0).getCards().size());
+    assertEquals(1, boards.size());
+    assertEquals(BOARD_ID, boards.get(0).getId());
+    assertEquals(BOARD_TITLE, boards.get(0).getTitle());
   }
 
 }

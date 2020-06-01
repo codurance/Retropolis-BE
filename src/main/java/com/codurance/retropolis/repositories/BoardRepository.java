@@ -6,4 +6,5 @@ public interface BoardRepository {
 
   Board getBoard(Long id);
 
+  Object getUsersBoards(long userId);
 }

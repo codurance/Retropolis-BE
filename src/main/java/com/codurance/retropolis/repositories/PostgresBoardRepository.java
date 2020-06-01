@@ -36,4 +36,9 @@ public class PostgresBoardRepository implements BoardRepository {
     }
     return board;
   }
+
+  @Override
+  public Object getUsersBoards(long userId) {
+    throw new UnsupportedOperationException();
+  }
 }
