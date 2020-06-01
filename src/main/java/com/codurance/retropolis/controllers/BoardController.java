@@ -19,21 +19,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/boards")
 public class BoardController extends BaseController {
   private final BoardService boardService;
-  private final GoogleTokenAuthenticator googleTokenAuthenticator;
+  private final GoogleTokenAuthenticator tokenAuthenticator;
   private UserService userService;
 
   @Autowired
-  public BoardController(BoardService boardService, GoogleTokenAuthenticator googleTokenAuthenticator, UserService userService) {
+  public BoardController(BoardService boardService, GoogleTokenAuthenticator tokenAuthenticator, UserService userService) {
     this.boardService = boardService;
-    this.googleTokenAuthenticator = googleTokenAuthenticator;
+    this.tokenAuthenticator = tokenAuthenticator;
     this.userService = userService;
   }
 
   @GetMapping(value = "/{id}")
   public Board getBoard(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
-    String email = googleTokenAuthenticator.getEmail(token);
-    userService.registerUserIfNotExists(email, id);
+    userService.registerUserIfNotExists(tokenAuthenticator.getEmail(token), id);
     return boardService.getBoard(id);
   }
 }

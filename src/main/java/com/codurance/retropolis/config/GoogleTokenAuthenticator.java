@@ -18,7 +18,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Profile("!" + Environment.TEST)
 public class GoogleTokenAuthenticator implements HandlerInterceptor {
 
-  private final String CLIENT_ID = "726246748089-oo8hruu919d2oers0j6h8sam6o1444ug.apps.googleusercontent.com";
+  private final String CLIENT_ID = "582070750046-gn9mvl54av9j8b3mo3ea807c18di9ees.apps.googleusercontent.com";
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

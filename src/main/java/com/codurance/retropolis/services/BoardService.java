@@ -20,6 +20,6 @@ public class BoardService {
   }
 
   public void addToBoard(Long userId, Long boardId) {
-    throw new UnsupportedOperationException();
+    boardRepository.addToBoard(userId, boardId);
   }
 }

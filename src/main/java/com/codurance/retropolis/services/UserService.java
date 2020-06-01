@@ -17,16 +17,16 @@ public class UserService {
     this.boardService = boardService;
   }
 
-  public void registerUserIfNotExists(String email, Long boardId){
-      User user = findOrCreateBy(email);
-      boardService.addToBoard(user.id, boardId);
+  public void registerUserIfNotExists(String email, Long boardId) {
+    User user = findOrCreateBy(email);
+    boardService.addToBoard(user.id, boardId);
   }
 
   private User findOrCreateBy(String email) {
     try {
       return userRepository.findByEmail(email);
     } catch (UserNotFoundException userNotFoundException) {
-      return userRepository.registerBy(email);
+      return userRepository.register(email);
     }
   }
 }

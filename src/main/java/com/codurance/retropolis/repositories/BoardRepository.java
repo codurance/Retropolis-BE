@@ -6,4 +6,5 @@ public interface BoardRepository {
 
   Board getBoard(Long id);
 
+  void addToBoard(Long userId, Long boardId);
 }

@@ -1,6 +1,5 @@
 package com.codurance.retropolis.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,16 +16,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
-  public static final long BOARD_ID = 1L;
-  private UserService userService;
+  public static final Long BOARD_ID = 1L;
+  public static final Long USER_ID = 1L;
+  public static final String EMAIL = "john.doe@codurance.com";
 
   @Mock
   private UserRepository userRepository;
 
   @Mock
   private BoardService boardService;
-  public static final String EMAIL = "john.doe@codurance.com";
-  public static final Long USER_ID = BOARD_ID;
+
+  private UserService userService;
 
   @BeforeEach
   void setUp() {
@@ -44,9 +44,9 @@ public class UserServiceTest {
   @Test
   void calls_userRepository_RegisterByEmail_when_UserNotFoundException() {
     given(userRepository.findByEmail(EMAIL)).willThrow(new UserNotFoundException());
-    given(userRepository.registerBy(EMAIL)).willReturn(new User(USER_ID, EMAIL));
+    given(userRepository.register(EMAIL)).willReturn(new User(USER_ID, EMAIL));
     userService.registerUserIfNotExists(EMAIL, BOARD_ID);
-    verify(userRepository).registerBy(EMAIL);
+    verify(userRepository).register(EMAIL);
     verify(boardService).addToBoard(USER_ID, BOARD_ID);
   }
 }

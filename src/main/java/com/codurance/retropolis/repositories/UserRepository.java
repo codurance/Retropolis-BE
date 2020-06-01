@@ -6,5 +6,5 @@ public interface UserRepository {
 
   User findByEmail(String email);
 
-  User registerBy(String email);
+  User register(String email);
 }
