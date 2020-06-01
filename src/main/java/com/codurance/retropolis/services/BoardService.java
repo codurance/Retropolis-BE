@@ -20,7 +20,7 @@ public class BoardService {
     return boardRepository.getBoard(id);
   }
 
-  public List<Board> getUsersBoards(Long userId) {
+  public List<Board> getUsersBoards(long userId) {
     throw new UnsupportedOperationException();
   }
 }

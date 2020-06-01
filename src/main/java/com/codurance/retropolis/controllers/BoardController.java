@@ -23,12 +23,12 @@ public class BoardController extends BaseController {
 
   @GetMapping(value = "")
   public List<Board> getUsersBoards() {
-    Long userId = 1L;
+    long userId = 1L;
     return boardService.getUsersBoards(userId);
   }
 
   @GetMapping(value = "/{id}")
-  public Board getBoard(@PathVariable Long id) {
+  public Board getBoard(@PathVariable long id) {
     return boardService.getBoard(id);
   }
 }
