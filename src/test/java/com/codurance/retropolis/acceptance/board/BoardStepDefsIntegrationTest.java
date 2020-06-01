@@ -10,6 +10,7 @@ import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -58,12 +59,15 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @Given("a board exists called {string}")
   public void aBoardExistsCalled(String title) {
-    // TODO post a real board when we have the endpoint for it
+    String email = "test@example.com";
+    executePost(url + "/boards", new HttpEntity<>(new NewBoardRequestObject(title, email)));
   }
 
-  @Given("a user has previously accessed {string}")
-  public void aUserHasPreviouslyAccessed(String title) {
-    // TODO make a request to create a connection between user and board
+  @Given("a user has previously accessed the board")
+  public void aUserHasPreviouslyAccessedTheBoard() throws JsonProcessingException {
+    Board board = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
+    HttpWrapper.executeGet(url + "/boards/" + board.getId());
   }
 
   @When("the user requests all their boards")
@@ -80,7 +84,6 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
     });
 
     assertThat(boards.size(), is(1));
-    // TODO assert title by given title when we are able to post a board with title
-    assertThat(boards.get(0).getTitle(), is("test board"));
+    assertThat(boards.get(0).getTitle(), is(title));
   }
 }

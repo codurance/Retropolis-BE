@@ -20,7 +20,6 @@ public class PostgresBoardRepository implements BoardRepository {
   private final String SELECT_USERS_BOARDS = "select boards.title, boards.id from boards inner join "
       + "users_boards on boards.id = users_boards.board_id where users_boards.user_id = ? "
       + "ORDER BY boards.id ASC";
-  private final String TEMP_SELECT_USERS_BOARDS = "select title, id from boards ORDER BY id ASC";
   private final JdbcTemplate jdbcTemplate;
 
   public PostgresBoardRepository(DataSource dataSource) {
@@ -43,8 +42,6 @@ public class PostgresBoardRepository implements BoardRepository {
 
   @Override
   public List<Board> getUsersBoards(long userId) {
-    // TODO switch to the other query below to add user_id condition
-//    return jdbcTemplate.query(SELECT_USERS_BOARDS, new Object[]{userId}, new BoardMapper());
-    return jdbcTemplate.query(TEMP_SELECT_USERS_BOARDS, new BoardMapper());
+    return jdbcTemplate.query(SELECT_USERS_BOARDS, new Object[]{userId}, new BoardMapper());
   }
 }
