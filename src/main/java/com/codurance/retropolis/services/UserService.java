@@ -1,5 +1,6 @@
 package com.codurance.retropolis.services;
 
+import com.codurance.retropolis.exceptions.UserNotFoundException;
 import com.codurance.retropolis.models.User;
 import com.codurance.retropolis.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -17,19 +18,15 @@ public class UserService {
   }
 
   public void registerUserIfNotExists(String email, Long boardId){
-    User user = findByEmail(email);
-    boardService.addToBoard(user.id, boardId);
-//    try {
-//      User user = findByEmail(email);
-//    } catch (UserNotFoundException userNotFoundException){
-//      User createdUser = userRepository.registerBy(email);
-//    } finally {
-//      boardService.addToBoard(createdUser.id, boardId);
-//    }
+      User user = findOrCreateBy(email);
+      boardService.addToBoard(user.id, boardId);
   }
 
-  private User findByEmail(String email) {
-    return userRepository.findByEmail(email);
+  private User findOrCreateBy(String email) {
+    try {
+      return userRepository.findByEmail(email);
+    } catch (UserNotFoundException userNotFoundException) {
+      return userRepository.registerBy(email);
+    }
   }
-
 }
