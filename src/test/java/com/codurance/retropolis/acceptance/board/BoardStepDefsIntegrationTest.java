@@ -10,6 +10,7 @@ import com.codurance.retropolis.models.Column;
 import com.codurance.retropolis.utils.HttpWrapper;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.sql.SQLException;
@@ -47,4 +48,18 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
             new Column(3L, thirdTitle, Collections.emptyList()))))));
   }
 
+  @Given("a user has previously accessed a board called {string}")
+  public void aUserHasPreviouslyAccessedABoardCalled(String boardName) {
+
+  }
+
+  @When("the user requests all their boards")
+  public void theUserRequestsAllTheirBoards() {
+
+  }
+
+  @Then("the user receives a list of the boards with one called {string}")
+  public void theUserReceivesAListOfTheBoardsWithOneCalled(String arg0) {
+
+  }
 }
