@@ -17,6 +17,9 @@ public class PostgresBoardRepository implements BoardRepository {
   private final String SELECT_BOARD = "select * from boards where id = ?";
   private final String SELECT_COLUMNS = "select * from columns where board_id = ?";
   private final String SELECT_CARDS = "select * from cards where column_id = ? ORDER BY id ASC";
+  private final String SELECT_USERS_BOARDS = "select boards.title, boards.id from boards inner join "
+      + "users_boards on boards.id = users_boards.board_id where users_boards.user_id = ? "
+      + "ORDER BY boards.id ASC";
   private final JdbcTemplate jdbcTemplate;
 
   public PostgresBoardRepository(DataSource dataSource) {
@@ -39,6 +42,6 @@ public class PostgresBoardRepository implements BoardRepository {
 
   @Override
   public List<Board> getUsersBoards(long userId) {
-    throw new UnsupportedOperationException();
+    return jdbcTemplate.query(SELECT_USERS_BOARDS, new Object[]{userId}, new BoardMapper());
   }
 }
