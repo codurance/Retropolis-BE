@@ -16,9 +16,11 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
-import org.apache.http.HttpHeaders;
+import org.springframework.http.HttpHeaders;
 
 public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
+
+  public static final String TOKEN = "token";
 
   public BoardStepDefsIntegrationTest(DataSource dataSource) {
     super(dataSource);
@@ -31,7 +33,9 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @When("^the client calls /boards/(\\d+)")
   public void theClientCallsBoard(int boardId) {
-    HttpWrapper.executeGet(url + "/boards/" + boardId);
+    HttpHeaders headers = new HttpHeaders();
+    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
+    HttpWrapper.executeGet(url + "/boards/" + boardId, headers);
   }
 
   @Then("^the client receives status code of (\\d+)$")
