@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/boards")
 public class BoardController extends BaseController {
+
   private final BoardService boardService;
   private final GoogleTokenAuthenticator tokenAuthenticator;
-  private UserService userService;
+  private final UserService userService;
 
   @Autowired
   public BoardController(BoardService boardService, GoogleTokenAuthenticator tokenAuthenticator, UserService userService) {

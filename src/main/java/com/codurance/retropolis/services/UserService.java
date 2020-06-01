@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-  private UserRepository userRepository;
-  private BoardService boardService;
+  private final UserRepository userRepository;
+  private final BoardService boardService;
 
   public UserService(UserRepository userRepository,
       BoardService boardService) {
