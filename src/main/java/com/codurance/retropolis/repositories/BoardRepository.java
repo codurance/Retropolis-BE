@@ -1,6 +1,6 @@
 package com.codurance.retropolis.repositories;
 
-import com.codurance.retropolis.models.Board;
+import com.codurance.retropolis.entities.Board;
 
 public interface BoardRepository {
 

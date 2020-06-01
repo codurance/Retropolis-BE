@@ -2,7 +2,7 @@ package com.codurance.retropolis.controllers;
 
 
 import com.codurance.retropolis.config.GoogleTokenAuthenticator;
-import com.codurance.retropolis.models.Board;
+import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.UserService;
 import java.io.IOException;

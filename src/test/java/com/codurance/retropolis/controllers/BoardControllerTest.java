@@ -7,9 +7,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codurance.retropolis.config.GoogleTokenAuthenticator;
-import com.codurance.retropolis.models.Board;
-import com.codurance.retropolis.models.Card;
-import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.entities.Card;
+import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;

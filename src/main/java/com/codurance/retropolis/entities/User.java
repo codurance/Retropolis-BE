@@ -1,4 +1,4 @@
-package com.codurance.retropolis.models;
+package com.codurance.retropolis.entities;
 
 public class User {
   public final Long id;

@@ -1,10 +1,10 @@
 package com.codurance.retropolis.services;
 
+import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.exceptions.UserUpvotedException;
 import com.codurance.retropolis.factories.CardFactory;
-import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;

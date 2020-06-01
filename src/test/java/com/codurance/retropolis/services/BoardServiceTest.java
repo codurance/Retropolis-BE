@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.codurance.retropolis.models.Board;
-import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.repositories.BoardRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

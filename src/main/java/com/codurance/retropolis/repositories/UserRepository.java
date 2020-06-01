@@ -1,6 +1,6 @@
 package com.codurance.retropolis.repositories;
 
-import com.codurance.retropolis.models.User;
+import com.codurance.retropolis.entities.User;
 
 public interface UserRepository {
 

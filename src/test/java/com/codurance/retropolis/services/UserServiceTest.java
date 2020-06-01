@@ -4,8 +4,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.UserNotFoundException;
-import com.codurance.retropolis.models.User;
 import com.codurance.retropolis.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

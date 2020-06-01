@@ -5,8 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.models.Board;
-import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.utils.HttpWrapper;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;

@@ -1,7 +1,7 @@
 package com.codurance.retropolis.repositories;
 
+import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.UserNotFoundException;
-import com.codurance.retropolis.models.User;
 import com.codurance.retropolis.repositories.mappers.UserMapper;
 import java.sql.PreparedStatement;
 import java.util.Objects;

@@ -1,8 +1,8 @@
 package com.codurance.retropolis.repositories;
 
-import com.codurance.retropolis.models.Board;
-import com.codurance.retropolis.models.Card;
-import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.entities.Card;
+import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.repositories.mappers.BoardMapper;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
 import com.codurance.retropolis.repositories.mappers.ColumnMapper;
