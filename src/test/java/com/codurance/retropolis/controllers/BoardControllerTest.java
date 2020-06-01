@@ -3,17 +3,25 @@ package com.codurance.retropolis.controllers;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.codurance.retropolis.config.GoogleTokenAuthenticator;
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.models.Column;
 import com.codurance.retropolis.services.BoardService;
+import com.codurance.retropolis.services.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
+import org.apache.http.HttpHeaders;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,11 +40,24 @@ public class BoardControllerTest {
   @MockBean
   private BoardService boardService;
 
+  @MockBean
+  private UserService userService;
+
+  @Mock
+  private GoogleTokenAuthenticator tokenAuthenticator;
+
   @Autowired
   private MockMvc mockMvc;
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  @BeforeEach
+  void setUp() throws GeneralSecurityException, IOException {
+    String email = "john.doe@codurance.com";
+    when(tokenAuthenticator.getEmail("SOMETOKEN")).thenReturn(email);
+//    when(userService.registerUserIfNotExists(email, 1L))
+  }
 
   @Test
   void returns_a_board() throws Exception {
@@ -77,7 +98,7 @@ public class BoardControllerTest {
   }
 
   private Board requestBoard() throws Exception {
-    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(URL))
+    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(URL).header("Authorization" , "SOMETOKEN"))
         .andExpect(status().isOk()).andReturn();
     String contentAsString = httpResponse.getResponse().getContentAsString();
     return objectMapper.readValue(contentAsString, new TypeReference<>() {

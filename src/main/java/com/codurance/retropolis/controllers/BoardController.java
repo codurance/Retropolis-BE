@@ -7,6 +7,7 @@ import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.UserService;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,14 +30,10 @@ public class BoardController extends BaseController {
   }
 
   @GetMapping(value = "/{id}")
-  public Board getBoard(@PathVariable Long id, @RequestHeader("Authorization") String token)
+  public Board getBoard(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
     String email = googleTokenAuthenticator.getEmail(token);
-
-//    userService.registerUserIfNotExists(email, id);
-
-    System.out.println("!!!!!!!!!!!!!!!!!!!!" + email + "!!!!!!!!!!!!!!!!!");
-
+    userService.registerUserIfNotExists(email, id);
     return boardService.getBoard(id);
   }
 }
