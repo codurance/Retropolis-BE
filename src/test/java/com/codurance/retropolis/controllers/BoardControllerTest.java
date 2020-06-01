@@ -6,13 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.codurance.retropolis.config.GoogleTokenAuthenticator;
 import com.codurance.retropolis.models.Board;
 import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.models.User;
 import com.codurance.retropolis.services.BoardService;
+import com.codurance.retropolis.services.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
+import org.apache.http.HttpHeaders;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -29,15 +36,29 @@ public class BoardControllerTest {
   public static final String BOARD_TITLE = "test board";
   private static final String BOARD_URL = "/boards/" + BOARD_ID;
   private static final String USERS_BOARDS = "/boards";
+  public static final String TOKEN = "SOMETOKEN";
+  public static final String TEST_EMAIL = "john.doe@codurance.com";
 
   @MockBean
   private BoardService boardService;
+
+  @MockBean
+  private UserService userService;
+
+  @MockBean
+  private GoogleTokenAuthenticator tokenAuthenticator;
 
   @Autowired
   private MockMvc mockMvc;
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  @BeforeEach
+  void setUp() throws GeneralSecurityException, IOException {
+    String email = "john.doe@codurance.com";
+    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(email);
+  }
 
   @Test
   void returns_a_board() throws Exception {
@@ -80,7 +101,9 @@ public class BoardControllerTest {
   @Test
   void returns_id_and_title_of_users_boards() throws Exception {
     long userId = 1L;
-    when(boardService.getUsersBoards(userId)).thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
+    when(userService.findOrCreateBy(TEST_EMAIL)).thenReturn(new User(userId));
+    when(boardService.getUsersBoards(userId))
+        .thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
 
     List<Board> boards = requestUsersBoards();
 
@@ -90,7 +113,8 @@ public class BoardControllerTest {
   }
 
   private Board requestBoard() throws Exception {
-    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(BOARD_URL))
+    MvcResult httpResponse = mockMvc
+        .perform(MockMvcRequestBuilders.get(BOARD_URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
         .andExpect(status().isOk()).andReturn();
     String contentAsString = httpResponse.getResponse().getContentAsString();
     return objectMapper.readValue(contentAsString, new TypeReference<>() {
@@ -98,7 +122,8 @@ public class BoardControllerTest {
   }
 
   private List<Board> requestUsersBoards() throws Exception {
-    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(USERS_BOARDS))
+    MvcResult httpResponse = mockMvc
+        .perform(MockMvcRequestBuilders.get(USERS_BOARDS).header(HttpHeaders.AUTHORIZATION, TOKEN))
         .andExpect(status().isOk()).andReturn();
     String contentAsString = httpResponse.getResponse().getContentAsString();
     return objectMapper.readValue(contentAsString, new TypeReference<>() {
