@@ -195,7 +195,7 @@ public class CardControllerTest {
     assertEquals("addVote cannot be empty", errorResponse.get(0));
   }
 
-  //TODO Refactor
+  //TODO #1. Refactor: maybe extract this function to a separate file
   private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
     MockHttpServletRequestBuilder post = MockMvcRequestBuilders.post(URL);
     String responseBody = mockMvc.perform(post
@@ -209,8 +209,7 @@ public class CardControllerTest {
   }
 
   private <T> T performHttpPatchRequest(String content, ResultMatcher response, String url) throws Exception {
-    MockHttpServletRequestBuilder post = MockMvcRequestBuilders.patch(url);
-    String responseBody = mockMvc.perform(post
+    String responseBody = mockMvc.perform(MockMvcRequestBuilders.patch(url)
         .content(content)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))

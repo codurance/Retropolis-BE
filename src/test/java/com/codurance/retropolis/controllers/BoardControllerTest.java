@@ -32,7 +32,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @WebMvcTest(BoardController.class)
@@ -153,10 +152,9 @@ public class BoardControllerTest {
     Assert.assertEquals("Email is invalid", errorResponse.get(0));
   }
 
-  //TODO Refactor
+  //TODO #2. Refactor: Same with #1 (duplicated)
   private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
-    MockHttpServletRequestBuilder post = MockMvcRequestBuilders.post(URL);
-    String responseBody = mockMvc.perform(post
+    String responseBody = mockMvc.perform(MockMvcRequestBuilders.post(URL)
         .content(content)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
