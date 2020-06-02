@@ -42,7 +42,7 @@ public class PostgresBoardRepository implements BoardRepository {
   @Override
   public void addToBoard(Long userId, Long boardId) {
     Boolean userExistsOnBoard = jdbcTemplate.queryForObject(SELECT_USER_FROM_BOARD, Boolean.class, userId, boardId);
-    if(!userExistsOnBoard){
+    if (userExistsOnBoard != null && !userExistsOnBoard) {
       jdbcTemplate.update(INSERT_USER_TO_BOARD, userId, boardId);
     }
   }
