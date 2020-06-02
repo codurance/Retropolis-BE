@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-@Profile("!" + Environment.TEST)
+@Profile(Environment.PROD)
 public class GoogleTokenAuthenticator implements HandlerInterceptor {
 
   private final String CLIENT_ID = "582070750046-gn9mvl54av9j8b3mo3ea807c18di9ees.apps.googleusercontent.com";
