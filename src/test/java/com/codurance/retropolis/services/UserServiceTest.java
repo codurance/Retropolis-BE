@@ -24,7 +24,7 @@ public class UserServiceTest {
   private UserRepository userRepository;
 
   @Mock
-  private BoardService boardService;
+  private UserBoardService boardService;
 
   private UserService userService;
 

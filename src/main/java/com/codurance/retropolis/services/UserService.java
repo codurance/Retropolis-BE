@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
   private final UserRepository userRepository;
-  private final BoardService boardService;
+  private final UserBoardService userBoardService;
 
   public UserService(UserRepository userRepository,
-      BoardService boardService) {
+      UserBoardService userBoardService) {
     this.userRepository = userRepository;
-    this.boardService = boardService;
+    this.userBoardService = userBoardService;
   }
 
   public void registerUserIfNotExists(String email, Long boardId) {
     User user = findOrCreateBy(email);
-    boardService.addToBoard(user.id, boardId);
+    userBoardService.addToBoard(user.id, boardId);
   }
 
   public User findOrCreateBy(String email) {

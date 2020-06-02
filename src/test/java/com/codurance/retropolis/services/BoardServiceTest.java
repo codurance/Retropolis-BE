@@ -35,11 +35,14 @@ public class BoardServiceTest {
   @Mock
   private UserService userService;
 
+  @Mock
+  private UserBoardService userBoardService;
+
   private BoardService boardService;
 
   @BeforeEach
   void setUp() {
-    boardService = new BoardService(boardRepository, boardFactory, userService);
+    boardService = new BoardService(boardRepository, boardFactory, userService, userBoardService);
   }
 
   @Test
@@ -54,12 +57,6 @@ public class BoardServiceTest {
     assertEquals(BOARD_ID, board.getColumns().get(0).getId());
     assertEquals(columnTitle, board.getColumns().get(0).getTitle());
     assertEquals(0, board.getColumns().get(0).getCards().size());
-  }
-
-  @Test
-  void adds_user_to_board() {
-    boardService.addToBoard(USER_ID, BOARD_ID);
-    verify(boardRepository).addToBoard(USER_ID, BOARD_ID);
   }
 
   @Test
@@ -78,6 +75,6 @@ public class BoardServiceTest {
 
     verify(boardFactory).create(requestObject);
     verify(boardRepository).insert(board);
-    verify(boardRepository).addToBoard(USER_ID, board.getId());
+    verify(userBoardService).addToBoard(USER_ID, board.getId());
   }
 }
