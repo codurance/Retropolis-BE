@@ -12,6 +12,11 @@ public class Column {
   public Column() {
   }
 
+  public Column(String title, List<Card> cards) {
+    this.title = title;
+    this.cards = cards;
+  }
+
   public Column(Long id, String title, Long boardId) {
     this.id = id;
     this.title = title;

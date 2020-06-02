@@ -11,6 +11,11 @@ public class Board {
   public Board() {
   }
 
+  public Board(String title, List<Column> columns) {
+    this.title = title;
+    this.columns = columns;
+  }
+
   public Board(Long id, String title) {
     this.id = id;
     this.title = title;
