@@ -62,18 +62,18 @@ public class PostgresBoardRepository implements BoardRepository {
       return statement;
     }, key);
 
-    String boardId = key.getKey().toString();
+    Long boardId = Objects.requireNonNull(key.getKey()).longValue();
 
     for (Column column : board.getColumns()) {
       jdbcTemplate.update(connection -> {
         PreparedStatement statement = connection.prepareStatement(INSERT_COLUMN, new String[]{"id"});
         statement.setString(1, column.getTitle());
-        statement.setString(2, boardId);
+        statement.setLong(2, boardId);
 
         return statement;
       });
     }
 
-    return getBoard(Long.parseLong(boardId));
+    return getBoard(boardId);
   }
 }
