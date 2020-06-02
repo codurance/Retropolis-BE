@@ -6,6 +6,7 @@ public class UpVoteRequestObject {
 
   @NotNull(message = "Username cannot be empty")
   private String username;
+
   @NotNull(message = "addVote cannot be empty")
   private Boolean addVote;
 
