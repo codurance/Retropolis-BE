@@ -7,7 +7,10 @@ import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Column;
+import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
+import com.codurance.retropolis.requests.NewBoardRequestObject;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,15 +28,18 @@ public class BoardServiceTest {
   @Mock
   private BoardRepository boardRepository;
 
+  @Mock
+  private BoardFactory boardFactory;
+
   private BoardService boardService;
 
   @BeforeEach
   void setUp() {
-    boardService = new BoardService(boardRepository);
+    boardService = new BoardService(boardRepository, boardFactory);
   }
 
   @Test
-  void should_return_a_board() {
+  void returns_a_board() {
     String columnTitle = "Start";
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(
         new Board(BOARD_ID, "test board", List.of(new Column(COLUMN_ID, columnTitle, emptyList()))));
@@ -47,9 +53,23 @@ public class BoardServiceTest {
   }
 
   @Test
-  void add_user_to_board() {
+  void adds_user_to_board() {
     boardService.addToBoard(USER_ID, BOARD_ID);
     verify(boardRepository).addToBoard(USER_ID, BOARD_ID);
+  }
+
+  @Test
+  void creates_a_board() {
+    String testBoard = "test board";
+    NewBoardRequestObject requestObject = new NewBoardRequestObject(testBoard, "john.doe@codurance.com");
+
+    Board board = new Board(BOARD_ID, testBoard, Collections.emptyList());
+    when(boardFactory.create(requestObject)).thenReturn(board);
+
+    boardService.createBoard(requestObject);
+
+    verify(boardFactory).create(requestObject);
+    verify(boardRepository).insert(board);
   }
 
 }

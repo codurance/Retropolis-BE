@@ -46,4 +46,9 @@ public class PostgresBoardRepository implements BoardRepository {
       jdbcTemplate.update(INSERT_USER_TO_BOARD, userId, boardId);
     }
   }
+
+  @Override
+  public Board insert(Board board) {
+    throw new UnsupportedOperationException("implement me");
+  }
 }

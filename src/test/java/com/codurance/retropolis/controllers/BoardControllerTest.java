@@ -42,6 +42,7 @@ public class BoardControllerTest {
   private static final String SPECIFIC_BOARD_URL = "/boards/" + BOARD_ID;
   private static final String URL = "/boards";
   public static final String TOKEN = "SOMETOKEN";
+  public static final String USER_EMAIL = "john.doe@codurance.com";
 
   @MockBean
   private BoardService boardService;
@@ -60,8 +61,7 @@ public class BoardControllerTest {
 
   @BeforeEach
   void setUp() throws GeneralSecurityException, IOException {
-    String email = "john.doe@codurance.com";
-    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(email);
+    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
   }
 
   @Test
@@ -105,7 +105,7 @@ public class BoardControllerTest {
   @Test
   void returns_a_new_board() throws Exception {
     String boardTitle = "test board";
-    NewBoardRequestObject requestObject = new NewBoardRequestObject(boardTitle, "john.doe@codurance.com");
+    NewBoardRequestObject requestObject = new NewBoardRequestObject(boardTitle, USER_EMAIL);
     given(boardService.createBoard(any(NewBoardRequestObject.class)))
         .willReturn(new Board(BOARD_ID, boardTitle, Collections.emptyList()));
 
