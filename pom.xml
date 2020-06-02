@@ -139,6 +139,22 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <artifactId>springfox-swagger2</artifactId>
+      <groupId>io.springfox</groupId>
+      <version>2.9.2</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <artifactId>springfox-swagger-ui</artifactId>
+      <groupId>io.springfox</groupId>
+      <version>2.9.2</version>
+    </dependency>
   </dependencies>
   <description>Spring Boot Backend for Retropolis</description>
   <groupId>com.codurance</groupId>
