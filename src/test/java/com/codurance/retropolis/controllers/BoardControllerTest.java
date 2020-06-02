@@ -15,7 +15,6 @@ import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.services.BoardService;
-import com.codurance.retropolis.services.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -49,9 +48,6 @@ public class BoardControllerTest {
 
   @MockBean
   private BoardService boardService;
-
-  @MockBean
-  private UserService userService;
 
   @MockBean
   private GoogleTokenAuthenticator tokenAuthenticator;
@@ -88,7 +84,7 @@ public class BoardControllerTest {
   @Test
   void returns_board_with_columns_and_cards() throws Exception {
     String text = "hello";
-    long cardId = 1;
+    Long cardId = 1L;
     String userName = "John Doe";
     List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName));
     List<Column> columns = List.of(new Column(COLUMN_ID, "start", cards));
@@ -107,10 +103,9 @@ public class BoardControllerTest {
 
   @Test
   void returns_a_new_board() throws Exception {
-    String boardTitle = "test board";
-    NewBoardRequestObject requestObject = new NewBoardRequestObject(boardTitle, USER_EMAIL);
+    NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE, USER_EMAIL);
     given(boardService.createBoard(any(NewBoardRequestObject.class)))
-        .willReturn(new Board(BOARD_ID, boardTitle, Collections.emptyList()));
+        .willReturn(new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList()));
 
     MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
         .content(asJsonString(requestObject))
@@ -122,7 +117,7 @@ public class BoardControllerTest {
     Board boardResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
     });
 
-    assertEquals(boardTitle, boardResponse.getTitle());
+    assertEquals(BOARD_TITLE, boardResponse.getTitle());
     assertEquals(BOARD_ID, boardResponse.getId());
   }
 

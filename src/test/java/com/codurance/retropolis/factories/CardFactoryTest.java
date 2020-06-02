@@ -11,7 +11,7 @@ public class CardFactoryTest {
   @Test
   void returns_a_new_card() {
     String text = "hello";
-    long columnId = 1L;
+    Long columnId = 1L;
     String username = "John Doe";
     NewCardRequestObject newCardRequestObject = new NewCardRequestObject(text, columnId, username);
 

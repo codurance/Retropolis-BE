@@ -23,6 +23,8 @@ public class BoardServiceTest {
 
   public static final Long COLUMN_ID = 1L;
   public static final Long BOARD_ID = 1L;
+  public static final String USER_EMAIL = "john.doe@codurance.com";
+  public static final String BOARD_TITLE = "test board";
 
   @Mock
   private BoardRepository boardRepository;
@@ -43,11 +45,10 @@ public class BoardServiceTest {
   @Test
   void returns_a_board() {
     String columnTitle = "Start";
-    String email = "joe.doe@codurance.com";
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(
-        new Board(BOARD_ID, "test board", List.of(new Column(COLUMN_ID, columnTitle, emptyList()))));
+        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, columnTitle, emptyList()))));
 
-    Board board = boardService.getBoard(email, BOARD_ID);
+    Board board = boardService.getBoard(USER_EMAIL, BOARD_ID);
 
     verify(boardRepository).getBoard(BOARD_ID);
     assertEquals(BOARD_ID, board.getColumns().get(0).getId());
@@ -57,11 +58,8 @@ public class BoardServiceTest {
 
   @Test
   void creates_a_board() {
-    String testBoard = "test board";
-    String userEmail = "john.doe@codurance.com";
-    NewBoardRequestObject requestObject = new NewBoardRequestObject(testBoard,
-        userEmail);
-    Board board = new Board(BOARD_ID, testBoard, Collections.emptyList());
+    NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE, USER_EMAIL);
+    Board board = new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList());
 
     when(boardFactory.create(requestObject)).thenReturn(board);
     when(boardRepository.insert(board)).thenReturn(board);
@@ -70,6 +68,6 @@ public class BoardServiceTest {
 
     verify(boardFactory).create(requestObject);
     verify(boardRepository).insert(board);
-    verify(userService).registerUserIfNotExists(userEmail, board.getId());
+    verify(userService).registerUserIfNotExists(USER_EMAIL, board.getId());
   }
 }
