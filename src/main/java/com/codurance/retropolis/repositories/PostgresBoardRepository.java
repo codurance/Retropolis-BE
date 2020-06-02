@@ -1,8 +1,8 @@
 package com.codurance.retropolis.repositories;
 
-import com.codurance.retropolis.models.Board;
-import com.codurance.retropolis.models.Card;
-import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.entities.Card;
+import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.repositories.mappers.BoardMapper;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
 import com.codurance.retropolis.repositories.mappers.ColumnMapper;
@@ -17,6 +17,7 @@ public class PostgresBoardRepository implements BoardRepository {
   private final String SELECT_BOARD = "select * from boards where id = ?";
   private final String SELECT_COLUMNS = "select * from columns where board_id = ?";
   private final String SELECT_CARDS = "select * from cards where column_id = ? ORDER BY id ASC";
+  private final String INSERT_USER_TO_BOARD = "insert into users_boards (user_id,board_id) values (?,?)";
   private final String SELECT_USERS_BOARDS = "select boards.title, boards.id from boards inner join "
       + "users_boards on boards.id = users_boards.board_id where users_boards.user_id = ? "
       + "ORDER BY boards.id ASC";
@@ -38,6 +39,11 @@ public class PostgresBoardRepository implements BoardRepository {
       }));
     }
     return board;
+  }
+
+  @Override
+  public void addToBoard(Long userId, Long boardId) {
+    jdbcTemplate.update(INSERT_USER_TO_BOARD, userId, boardId);
   }
 
   @Override

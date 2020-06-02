@@ -34,7 +34,9 @@ public class GoogleTokenAuthenticator implements HandlerInterceptor {
   }
 
   public String getEmail(String token) throws GeneralSecurityException, IOException {
-    throw new UnsupportedOperationException();
+    GoogleIdTokenVerifier verifier = buildGoogleIdTokenVerifier();
+    GoogleIdToken idToken = verifier.verify(token);
+    return idToken.getPayload().get("email").toString();
   }
 
   private void authenticateToken(String token, HttpServletRequest request)

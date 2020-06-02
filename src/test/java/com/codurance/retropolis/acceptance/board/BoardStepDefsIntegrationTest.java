@@ -7,11 +7,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.models.Board;
-import com.codurance.retropolis.models.Card;
-import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
-import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,8 +24,11 @@ import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 
 public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
+
+  public static final String TOKEN = "token";
 
   public BoardStepDefsIntegrationTest(DataSource dataSource) {
     super(dataSource);
@@ -40,7 +41,9 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @When("^the client calls /boards/(\\d+)")
   public void theClientCallsBoard(int boardId) {
-    HttpWrapper.executeGet(url + "/boards/" + boardId);
+    HttpHeaders headers = new HttpHeaders();
+    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
+    HttpWrapper.executeGet(url + "/boards/" + boardId, headers);
   }
 
   @Then("^the client receives status code of (\\d+)$")
@@ -67,12 +70,16 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
   public void aUserHasPreviouslyAccessedTheBoard() throws JsonProcessingException {
     Board board = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
-    HttpWrapper.executeGet(url + "/boards/" + board.getId());
+    HttpHeaders headers = new HttpHeaders();
+    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
+    HttpWrapper.executeGet(url + "/boards/" + board.getId(), headers);
   }
 
   @When("the user requests all their boards")
   public void theUserRequestsAllTheirBoards() {
-    HttpWrapper.executeGet(url + "/boards");
+    HttpHeaders headers = new HttpHeaders();
+    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
+    HttpWrapper.executeGet(url + "/boards", headers);
   }
 
   @Then("the user receives a list of the boards with one called {string}")

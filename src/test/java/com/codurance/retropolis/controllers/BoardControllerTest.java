@@ -7,10 +7,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codurance.retropolis.config.GoogleTokenAuthenticator;
-import com.codurance.retropolis.models.Board;
-import com.codurance.retropolis.models.Card;
-import com.codurance.retropolis.models.Column;
-import com.codurance.retropolis.models.User;
+import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.entities.Card;
+import com.codurance.retropolis.entities.Column;
+import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -34,9 +34,9 @@ public class BoardControllerTest {
   public static final Long BOARD_ID = 1L;
   public static final Long COLUMN_ID = 1L;
   public static final String BOARD_TITLE = "test board";
+  public static final String TOKEN = "SOMETOKEN";
   private static final String BOARD_URL = "/boards/" + BOARD_ID;
   private static final String USERS_BOARDS = "/boards";
-  public static final String TOKEN = "SOMETOKEN";
   public static final String TEST_EMAIL = "john.doe@codurance.com";
 
   @MockBean
@@ -101,7 +101,7 @@ public class BoardControllerTest {
   @Test
   void returns_id_and_title_of_users_boards() throws Exception {
     long userId = 1L;
-    when(userService.findOrCreateBy(TEST_EMAIL)).thenReturn(new User(userId));
+    when(userService.findOrCreateBy(TEST_EMAIL)).thenReturn(new User(userId, TEST_EMAIL));
     when(boardService.getUsersBoards(userId))
         .thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
 
@@ -113,8 +113,7 @@ public class BoardControllerTest {
   }
 
   private Board requestBoard() throws Exception {
-    MvcResult httpResponse = mockMvc
-        .perform(MockMvcRequestBuilders.get(BOARD_URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
+    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(BOARD_URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
         .andExpect(status().isOk()).andReturn();
     String contentAsString = httpResponse.getResponse().getContentAsString();
     return objectMapper.readValue(contentAsString, new TypeReference<>() {

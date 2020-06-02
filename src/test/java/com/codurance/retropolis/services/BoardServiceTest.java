@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.codurance.retropolis.models.Board;
-import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.repositories.BoardRepository;
 import java.util.Collections;
 import java.util.List;
@@ -19,11 +19,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
 
-
+  public static final Long USER_ID = 1L;
+  public static final Long COLUMN_ID = 1L;
+  public static final Long BOARD_ID = 1L;
   public static final String BOARD_TITLE = "test board";
-  public static final long BOARD_ID = 1L;
+
   @Mock
   private BoardRepository boardRepository;
+
   private BoardService boardService;
 
   @BeforeEach
@@ -35,7 +38,7 @@ public class BoardServiceTest {
   void should_return_a_board() {
     String columnTitle = "Start";
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(
-        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(1L, columnTitle, emptyList()))));
+        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, columnTitle, emptyList()))));
 
     Board board = boardService.getBoard(BOARD_ID);
 
@@ -43,6 +46,12 @@ public class BoardServiceTest {
     assertEquals(BOARD_ID, board.getColumns().get(0).getId());
     assertEquals(columnTitle, board.getColumns().get(0).getTitle());
     assertEquals(0, board.getColumns().get(0).getCards().size());
+  }
+
+  @Test
+  void add_user_to_board() {
+    boardService.addToBoard(USER_ID, BOARD_ID);
+    verify(boardRepository).addToBoard(USER_ID, BOARD_ID);
   }
 
   @Test

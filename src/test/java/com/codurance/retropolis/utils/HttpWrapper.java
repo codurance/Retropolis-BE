@@ -1,6 +1,7 @@
 package com.codurance.retropolis.utils;
 
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -12,8 +13,9 @@ public class HttpWrapper {
 
   private static final RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 
-  public static void executeGet(String url) {
-    ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+  public static void executeGet(String url, HttpHeaders headers) {
+    ResponseEntity<String> response = restTemplate.exchange(
+        url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
     responseResult = new ResponseResults(response.getBody(), response);
   }
 

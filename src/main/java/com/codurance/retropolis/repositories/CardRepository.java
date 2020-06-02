@@ -1,6 +1,6 @@
 package com.codurance.retropolis.repositories;
 
-import com.codurance.retropolis.models.Card;
+import com.codurance.retropolis.entities.Card;
 
 public interface CardRepository {
 

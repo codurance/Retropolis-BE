@@ -1,6 +1,6 @@
 package com.codurance.retropolis.repositories.mappers;
 
-import com.codurance.retropolis.models.Column;
+import com.codurance.retropolis.entities.Column;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;

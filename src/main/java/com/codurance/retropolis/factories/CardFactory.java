@@ -1,6 +1,6 @@
 package com.codurance.retropolis.factories;
 
-import com.codurance.retropolis.models.Card;
+import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import org.springframework.stereotype.Component;
 
