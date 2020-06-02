@@ -47,7 +47,7 @@ public class PostgresBoardRepository implements BoardRepository {
   }
 
   @Override
-  public List<Board> getUsersBoards(long userId) {
+  public List<Board> getUsersBoards(Long userId) {
     return jdbcTemplate.query(SELECT_USERS_BOARDS, new Object[]{userId}, new BoardMapper());
   }
 }

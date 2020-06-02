@@ -81,7 +81,7 @@ public class BoardControllerTest {
   @Test
   void returns_board_with_columns_and_cards() throws Exception {
     String text = "hello";
-    long cardId = 1;
+    Long cardId = 1L;
     String userName = "John Doe";
     List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName));
     List<Column> columns = List.of(new Column(COLUMN_ID, "start", cards));
@@ -100,7 +100,7 @@ public class BoardControllerTest {
 
   @Test
   void returns_id_and_title_of_users_boards() throws Exception {
-    long userId = 1L;
+    Long userId = 1L;
     when(userService.findOrCreateBy(TEST_EMAIL)).thenReturn(new User(userId, TEST_EMAIL));
     when(boardService.getUsersBoards(userId))
         .thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));

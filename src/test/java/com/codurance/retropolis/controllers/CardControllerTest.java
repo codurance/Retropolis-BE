@@ -34,7 +34,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 public class CardControllerTest {
 
   private static final String URL = "/cards";
-  public static final long NON_EXISTENT_CARD_ID = 999L;
+  public static final Long NON_EXISTENT_CARD_ID = 999L;
 
   @Autowired
   private MockMvc mockMvc;

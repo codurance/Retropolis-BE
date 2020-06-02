@@ -9,5 +9,5 @@ public interface BoardRepository {
 
   void addToBoard(Long userId, Long boardId);
 
-  List<Board> getUsersBoards(long userId);
+  List<Board> getUsersBoards(Long userId);
 }

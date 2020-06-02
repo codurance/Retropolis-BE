@@ -56,7 +56,7 @@ public class BoardServiceTest {
 
   @Test
   void should_return_boards_for_a_user() {
-    long userId = 1L;
+    Long userId = 1L;
     when(boardRepository.getUsersBoards(userId)).thenReturn(List.of(
         new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList())));
 

@@ -24,7 +24,7 @@ public class BoardService {
     boardRepository.addToBoard(userId, boardId);
   }
 
-  public List<Board> getUsersBoards(long userId) {
+  public List<Board> getUsersBoards(Long userId) {
     return boardRepository.getUsersBoards(userId);
   }
 }
