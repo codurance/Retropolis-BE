@@ -152,6 +152,14 @@ public class BoardControllerTest {
     });
   }
 
+  @Test
+  void returns_bad_request_when_userEmail_is_invalid() throws Exception {
+    NewBoardRequestObject requestObject = new NewBoardRequestObject("test board", "invalid email");
+    String content = asJsonString(requestObject);
+    List<String> errorResponse = performHttpPostRequest(content, status().isBadRequest());
+    Assert.assertEquals("Email is invalid", errorResponse.get(0));
+  }
+
   //TODO Refactor
   private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
     MockHttpServletRequestBuilder post = MockMvcRequestBuilders.post(URL);
