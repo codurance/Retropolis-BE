@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class BoardFactory {
 
   public Board create(NewBoardRequestObject requestObject) {
-    return new Board(requestObject.getBoardName(), List.of(
+    return new Board(requestObject.getTitle(), List.of(
         new Column("Start", Collections.emptyList()),
         new Column("Stop", Collections.emptyList()),
         new Column("Continue", Collections.emptyList())

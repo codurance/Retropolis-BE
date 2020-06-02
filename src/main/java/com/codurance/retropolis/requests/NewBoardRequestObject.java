@@ -2,19 +2,19 @@ package com.codurance.retropolis.requests;
 
 public class NewBoardRequestObject {
 
-  private String boardName;
+  private String title;
   private String userEmail;
 
   public NewBoardRequestObject() {
   }
 
-  public NewBoardRequestObject(String boardName, String userEmail) {
-    this.boardName = boardName;
+  public NewBoardRequestObject(String title, String userEmail) {
+    this.title = title;
     this.userEmail = userEmail;
   }
 
-  public String getBoardName() {
-    return boardName;
+  public String getTitle() {
+    return title;
   }
 
   public String getUserEmail() {
