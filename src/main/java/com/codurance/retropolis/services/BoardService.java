@@ -1,7 +1,6 @@
 package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.entities.Board;
-import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
@@ -14,15 +13,13 @@ public class BoardService {
   private final BoardRepository boardRepository;
   private final BoardFactory boardFactory;
   private final UserService userService;
-  private final UserBoardService userBoardService;
 
   @Autowired
   public BoardService(BoardRepository boardRepository, BoardFactory boardFactory,
-      UserService userService, UserBoardService userBoardService) {
+      UserService userService) {
     this.boardRepository = boardRepository;
     this.boardFactory = boardFactory;
     this.userService = userService;
-    this.userBoardService = userBoardService;
   }
 
   public Board getBoard(Long id) {
@@ -30,10 +27,8 @@ public class BoardService {
   }
 
   public Board createBoard(NewBoardRequestObject requestObject) {
-    Board board = boardFactory.create(requestObject);
-    Board savedBoard = boardRepository.insert(board);
-    User user = userService.findOrCreateBy(requestObject.getUserEmail());
-    userBoardService.addToBoard(user.id, savedBoard.getId());
+    Board savedBoard = boardRepository.insert(boardFactory.create(requestObject));
+    userService.registerUserIfNotExists(requestObject.getUserEmail(), savedBoard.getId());
     return savedBoard;
   }
 }

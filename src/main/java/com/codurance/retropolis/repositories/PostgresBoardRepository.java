@@ -23,8 +23,6 @@ public class PostgresBoardRepository implements BoardRepository {
   private final String SELECT_BOARD = "select * from boards where id = ?";
   private final String SELECT_COLUMNS = "select * from columns where board_id = ?";
   private final String SELECT_CARDS = "select * from cards where column_id = ? ORDER BY id ASC";
-  private final String INSERT_USER_TO_BOARD = "insert into users_boards (user_id,board_id) values (?,?)";
-  private final String SELECT_USER_FROM_BOARD = "SELECT EXISTS(SELECT FROM users_boards WHERE user_id=? and board_id = ?)";
   private final JdbcTemplate jdbcTemplate;
 
   public PostgresBoardRepository(DataSource dataSource) {
@@ -43,14 +41,6 @@ public class PostgresBoardRepository implements BoardRepository {
       }));
     }
     return board;
-  }
-
-  @Override
-  public void addToBoard(Long userId, Long boardId) {
-    Boolean userExistsOnBoard = jdbcTemplate.queryForObject(SELECT_USER_FROM_BOARD, Boolean.class, userId, boardId);
-    if (userExistsOnBoard != null && !userExistsOnBoard) {
-      jdbcTemplate.update(INSERT_USER_TO_BOARD, userId, boardId);
-    }
   }
 
   @Override
@@ -77,8 +67,3 @@ public class PostgresBoardRepository implements BoardRepository {
     return getBoard(boardId);
   }
 }
-//
-//  insert into boards(id, title) values(1, 'test board');
-//    insert into columns(title, board_id) values('Start', 1);
-//    insert into columns(title, board_id) values('Stop', 1);
-//    insert into columns(title, board_id) values('Continue', 1);

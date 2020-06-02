@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Column;
-import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
@@ -22,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
 
-  public static final Long USER_ID = 1L;
   public static final Long COLUMN_ID = 1L;
   public static final Long BOARD_ID = 1L;
 
@@ -35,14 +33,11 @@ public class BoardServiceTest {
   @Mock
   private UserService userService;
 
-  @Mock
-  private UserBoardService userBoardService;
-
   private BoardService boardService;
 
   @BeforeEach
   void setUp() {
-    boardService = new BoardService(boardRepository, boardFactory, userService, userBoardService);
+    boardService = new BoardService(boardRepository, boardFactory, userService);
   }
 
   @Test
@@ -68,13 +63,12 @@ public class BoardServiceTest {
     Board board = new Board(BOARD_ID, testBoard, Collections.emptyList());
 
     when(boardFactory.create(requestObject)).thenReturn(board);
-    when(userService.findOrCreateBy(userEmail)).thenReturn(new User(USER_ID, userEmail));
     when(boardRepository.insert(board)).thenReturn(board);
 
     boardService.createBoard(requestObject);
 
     verify(boardFactory).create(requestObject);
     verify(boardRepository).insert(board);
-    verify(userBoardService).addToBoard(USER_ID, board.getId());
+    verify(userService).registerUserIfNotExists(userEmail, board.getId());
   }
 }
