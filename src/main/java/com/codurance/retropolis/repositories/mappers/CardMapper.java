@@ -1,10 +1,9 @@
 package com.codurance.retropolis.repositories.mappers;
 
-import com.codurance.retropolis.models.Card;
+import com.codurance.retropolis.entities.Card;
 import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 

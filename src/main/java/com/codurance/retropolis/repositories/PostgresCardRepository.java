@@ -1,7 +1,7 @@
 package com.codurance.retropolis.repositories;
 
+import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.exceptions.UserUpvotedException;
-import com.codurance.retropolis.models.Card;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
 import java.sql.PreparedStatement;
 import java.util.Objects;
