@@ -1,15 +1,14 @@
 package com.codurance.retropolis.acceptance.board;
 
 import static com.codurance.retropolis.utils.Convert.asJsonString;
-import static com.codurance.retropolis.utils.HttpWrapper.executePost;
 import static com.codurance.retropolis.utils.HttpWrapper.responseResult;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Column;
-import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -23,7 +22,6 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
 public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
@@ -60,19 +58,18 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
             new Column(3L, thirdTitle, Collections.emptyList()))))));
   }
 
-  @Given("a board exists called {string}")
-  public void aBoardExistsCalled(String title) {
-    String email = "test@example.com";
-    executePost(url + "/boards", new HttpEntity<>(new NewBoardRequestObject(title, email)));
-  }
-
-  @Given("a user has previously accessed the board")
-  public void aUserHasPreviouslyAccessedTheBoard() throws JsonProcessingException {
-    Board board = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
-    });
+  @Given("a user has accessed the test board")
+  public void aUserHasAccessedTheTestBoard() {
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
-    HttpWrapper.executeGet(url + "/boards/" + board.getId(), headers);
+    HttpWrapper.executeGet(url + "/boards/1", headers);
+  }
+
+  @And("a user has previously accessed the board")
+  public void aUserHasPreviouslyAccessedTheBoard() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
+    HttpWrapper.executeGet(url + "/boards/1", headers);
   }
 
   @When("the user requests all their boards")
@@ -91,6 +88,16 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
     });
 
     assertThat(boards.size(), is(1));
-    assertThat(boards.get(0).getTitle(), is(title));
+    assertThat(boards.get(0).getTitle(), is("test board"));
+  }
+
+  @Then("the user receives a empty list of boards")
+  public void theUserReceivesAEmptyList() throws JsonProcessingException {
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(200));
+
+    List<Board> boards = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
+
+    assertTrue(boards.isEmpty());
   }
 }
