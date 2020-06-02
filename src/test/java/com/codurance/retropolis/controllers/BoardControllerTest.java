@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,7 +13,6 @@ import com.codurance.retropolis.config.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.Column;
-import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.UserService;
@@ -71,7 +69,7 @@ public class BoardControllerTest {
 
   @Test
   void returns_a_board() throws Exception {
-    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, emptyList()));
+    when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, emptyList()));
     Board board = requestBoard();
     assertNotNull(board);
   }
@@ -79,7 +77,7 @@ public class BoardControllerTest {
   @Test
   void returns_board_with_columns() throws Exception {
     List<Column> columns = List.of(new Column(COLUMN_ID, "start", emptyList()));
-    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
+    when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     Board board = requestBoard();
 
@@ -94,7 +92,7 @@ public class BoardControllerTest {
     String userName = "John Doe";
     List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName));
     List<Column> columns = List.of(new Column(COLUMN_ID, "start", cards));
-    when(boardService.getBoard(BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
+    when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     Board board = requestBoard();
 

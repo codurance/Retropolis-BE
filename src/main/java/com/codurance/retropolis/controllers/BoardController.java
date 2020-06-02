@@ -5,7 +5,6 @@ import com.codurance.retropolis.config.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.services.BoardService;
-import com.codurance.retropolis.services.UserService;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import javax.validation.Valid;
@@ -27,20 +26,17 @@ public class BoardController extends BaseController {
 
   private final BoardService boardService;
   private final GoogleTokenAuthenticator tokenAuthenticator;
-  private final UserService userService;
 
   @Autowired
-  public BoardController(BoardService boardService, GoogleTokenAuthenticator tokenAuthenticator, UserService userService) {
+  public BoardController(BoardService boardService, GoogleTokenAuthenticator tokenAuthenticator) {
     this.boardService = boardService;
     this.tokenAuthenticator = tokenAuthenticator;
-    this.userService = userService;
   }
 
   @GetMapping(value = "/{id}")
   public Board getBoard(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
-    userService.registerUserIfNotExists(tokenAuthenticator.getEmail(token), id);
-    return boardService.getBoard(id);
+    return boardService.getBoard(tokenAuthenticator.getEmail(token), id);
   }
 
   @PostMapping

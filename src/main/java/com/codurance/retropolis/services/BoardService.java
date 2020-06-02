@@ -22,8 +22,9 @@ public class BoardService {
     this.userService = userService;
   }
 
-  public Board getBoard(Long id) {
-    return boardRepository.getBoard(id);
+  public Board getBoard(String email, Long boardId) {
+    userService.registerUserIfNotExists(email, boardId);
+    return boardRepository.getBoard(boardId);
   }
 
   public Board createBoard(NewBoardRequestObject requestObject) {

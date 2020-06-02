@@ -43,10 +43,11 @@ public class BoardServiceTest {
   @Test
   void returns_a_board() {
     String columnTitle = "Start";
+    String email = "joe.doe@codurance.com";
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(
         new Board(BOARD_ID, "test board", List.of(new Column(COLUMN_ID, columnTitle, emptyList()))));
 
-    Board board = boardService.getBoard(BOARD_ID);
+    Board board = boardService.getBoard(email, BOARD_ID);
 
     verify(boardRepository).getBoard(BOARD_ID);
     assertEquals(BOARD_ID, board.getColumns().get(0).getId());
