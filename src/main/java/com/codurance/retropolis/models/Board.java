@@ -22,6 +22,10 @@ public class Board {
     this.columns = columns;
   }
 
+  public String getTitle() {
+    return title;
+  }
+
   public List<Column> getColumns() {
     return columns;
   }
