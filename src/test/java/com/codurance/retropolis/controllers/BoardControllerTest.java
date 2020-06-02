@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,6 +14,7 @@ import com.codurance.retropolis.config.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.Column;
+import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.UserService;
@@ -23,6 +25,7 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import org.apache.http.HttpHeaders;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @WebMvcTest(BoardController.class)
@@ -123,12 +128,40 @@ public class BoardControllerTest {
     assertEquals(BOARD_ID, boardResponse.getId());
   }
 
+  @Test
+  void returns_bad_request_when_title_is_empty() throws Exception {
+    NewBoardRequestObject requestObject = new NewBoardRequestObject("", "john.doe@codurance.com");
+    String content = asJsonString(requestObject);
+    List<String> errorResponse = performHttpPostRequest(content, status().isBadRequest());
+    Assert.assertEquals("Title must not be less than 1 character", errorResponse.get(0));
+  }
+
+  @Test
+  void returns_bad_request_when_title_is_null() throws Exception {
+    List<String> errorResponse = performHttpPostRequest("{\"userEmail\":\"john.doe@codurance.com\"}",
+        status().isBadRequest());
+    Assert.assertEquals("Title cannot be empty", errorResponse.get(0));
+  }
+
   private Board requestBoard() throws Exception {
     MvcResult httpResponse = mockMvc
         .perform(MockMvcRequestBuilders.get(SPECIFIC_BOARD_URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
         .andExpect(status().isOk()).andReturn();
     String contentAsString = httpResponse.getResponse().getContentAsString();
     return objectMapper.readValue(contentAsString, new TypeReference<>() {
+    });
+  }
+
+  //TODO Refactor
+  private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
+    MockHttpServletRequestBuilder post = MockMvcRequestBuilders.post(URL);
+    String responseBody = mockMvc.perform(post
+        .content(content)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(response).andReturn().getResponse().getContentAsString();
+
+    return objectMapper.readValue(responseBody, new TypeReference<>() {
     });
   }
 }

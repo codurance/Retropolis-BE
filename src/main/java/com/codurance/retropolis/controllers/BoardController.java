@@ -8,6 +8,7 @@ import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.UserService;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import javax.validation.Valid;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class BoardController extends BaseController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Board postBoard(@RequestBody NewBoardRequestObject request) {
+  public Board postBoard(@RequestBody @Valid NewBoardRequestObject request) {
     return boardService.createBoard(request);
   }
 }
