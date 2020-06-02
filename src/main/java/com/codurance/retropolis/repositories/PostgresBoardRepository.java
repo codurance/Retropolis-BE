@@ -6,14 +6,20 @@ import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.repositories.mappers.BoardMapper;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
 import com.codurance.retropolis.repositories.mappers.ColumnMapper;
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class PostgresBoardRepository implements BoardRepository {
 
+  private final String INSERT_COLUMN = "insert into columns(title, board_id) values(?, ?)";
+  private final String INSERT_BOARD = "insert into boards(title) values(?)";
   private final String SELECT_BOARD = "select * from boards where id = ?";
   private final String SELECT_COLUMNS = "select * from columns where board_id = ?";
   private final String SELECT_CARDS = "select * from cards where column_id = ? ORDER BY id ASC";
@@ -49,6 +55,25 @@ public class PostgresBoardRepository implements BoardRepository {
 
   @Override
   public Board insert(Board board) {
-    throw new UnsupportedOperationException("implement me");
+    KeyHolder key = new GeneratedKeyHolder();
+    jdbcTemplate.update(connection -> {
+      PreparedStatement statement = connection.prepareStatement(INSERT_BOARD, new String[]{"id"});
+      statement.setString(1, board.getTitle());
+      return statement;
+    }, key);
+
+    String boardId = key.getKey().toString();
+
+    for (Column column : board.getColumns()) {
+      jdbcTemplate.update(connection -> {
+        PreparedStatement statement = connection.prepareStatement(INSERT_COLUMN, new String[]{"id"});
+        statement.setString(1, column.getTitle());
+        statement.setString(2, boardId);
+
+        return statement;
+      });
+    }
+
+    return getBoard(Long.parseLong(boardId));
   }
 }
