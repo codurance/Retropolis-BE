@@ -8,8 +8,4 @@ public class User {
     this.id = id;
     this.email = email;
   }
-
-  public Long getId() {
-    return id;
-  }
 }

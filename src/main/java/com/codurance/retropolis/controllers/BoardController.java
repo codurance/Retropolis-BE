@@ -32,13 +32,13 @@ public class BoardController extends BaseController {
     this.userService = userService;
   }
 
-  @GetMapping(value = "")
+  @GetMapping
   public List<Board> getUsersBoards(@RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
     String email = tokenAuthenticator.getEmail(token);
     User user = userService.findOrCreateBy(email);
 
-    return boardService.getUsersBoards(user.getId());
+    return boardService.getUsersBoards(user.id);
   }
 
   @GetMapping(value = "/{id}")

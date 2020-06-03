@@ -56,11 +56,10 @@ public class BoardServiceTest {
 
   @Test
   void should_return_boards_for_a_user() {
-    Long userId = 1L;
-    when(boardRepository.getUsersBoards(userId)).thenReturn(List.of(
+    when(boardRepository.getUsersBoards(USER_ID)).thenReturn(List.of(
         new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList())));
 
-    List<Board> boards = boardService.getUsersBoards(userId);
+    List<Board> boards = boardService.getUsersBoards(USER_ID);
 
     assertEquals(1, boards.size());
     assertEquals(BOARD_ID, boards.get(0).getId());

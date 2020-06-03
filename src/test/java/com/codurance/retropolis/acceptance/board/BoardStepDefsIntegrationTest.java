@@ -23,10 +23,12 @@ import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   public static final String TOKEN = "token";
+  private HttpHeaders headers;
 
   public BoardStepDefsIntegrationTest(DataSource dataSource) {
     super(dataSource);
@@ -35,12 +37,12 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
   @Before
   public void cleanUpDatabase() throws SQLException {
     cleanUp();
+    headers = new HttpHeaders();
+    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
   }
 
   @When("^the client calls /boards/(\\d+)")
   public void theClientCallsBoard(int boardId) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
     HttpWrapper.executeGet(url + "/boards/" + boardId, headers);
   }
 
@@ -60,40 +62,29 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @Given("a user has accessed the test board")
   public void aUserHasAccessedTheTestBoard() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
-    HttpWrapper.executeGet(url + "/boards/1", headers);
-  }
-
-  @And("a user has previously accessed the board")
-  public void aUserHasPreviouslyAccessedTheBoard() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
     HttpWrapper.executeGet(url + "/boards/1", headers);
   }
 
   @When("the user requests all their boards")
   public void theUserRequestsAllTheirBoards() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
     HttpWrapper.executeGet(url + "/boards", headers);
   }
 
   @Then("the user receives a list of the boards with one called {string}")
   public void theUserReceivesAListOfTheBoardsWithOneCalled(String title)
       throws JsonProcessingException {
-    assertThat(HttpWrapper.responseResult.getResponseCode(), is(200));
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
 
     List<Board> boards = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 
     assertThat(boards.size(), is(1));
-    assertThat(boards.get(0).getTitle(), is("test board"));
+    assertThat(boards.get(0).getTitle(), is(title));
   }
 
   @Then("the user receives a empty list of boards")
   public void theUserReceivesAEmptyList() throws JsonProcessingException {
-    assertThat(HttpWrapper.responseResult.getResponseCode(), is(200));
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
 
     List<Board> boards = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
