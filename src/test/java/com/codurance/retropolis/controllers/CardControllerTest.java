@@ -51,10 +51,9 @@ public class CardControllerTest {
 
   @Test
   public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
-    String TEXT = "hello";
-    NewCardRequestObject requestObject = new NewCardRequestObject(CardControllerTest.TEXT, COLUMN_ID, USERNAME);
+    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME);
     given(cardService.addCard(any(NewCardRequestObject.class)))
-        .willReturn(new Card(CARD_ID, CardControllerTest.TEXT, COLUMN_ID, USERNAME));
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME));
 
     MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
         .content(asJsonString(requestObject))
@@ -66,7 +65,7 @@ public class CardControllerTest {
     Card cardResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
     });
 
-    assertEquals(CardControllerTest.TEXT, cardResponse.getText());
+    assertEquals(TEXT, cardResponse.getText());
     assertEquals(CARD_ID, cardResponse.getId());
     assertEquals(COLUMN_ID, cardResponse.getColumnId());
     assertEquals(USERNAME, cardResponse.getUsername());
