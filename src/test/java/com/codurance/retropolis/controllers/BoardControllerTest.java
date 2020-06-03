@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,6 +15,7 @@ import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.entities.ColumnType;
+import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.services.BoardService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -45,6 +47,7 @@ public class BoardControllerTest {
   private static final String BOARDS_URL = "/boards";
   public static final String TOKEN = "SOMETOKEN";
   public static final String USER_EMAIL = "john.doe@codurance.com";
+  private static final Long NON_EXISTENT_BOARD_ID = 999L;
 
   @MockBean
   private BoardService boardService;
@@ -134,6 +137,13 @@ public class BoardControllerTest {
   }
 
   @Test
+  public void returns_bad_request_on_delete_when_board_does_not_exist() throws Exception {
+    doThrow(new BoardNotFoundException()).when(boardService).getBoard(USER_EMAIL, NON_EXISTENT_BOARD_ID);
+    List<String> response = performHttpGetRequest(status().isBadRequest(), BOARDS_URL + "/" + NON_EXISTENT_BOARD_ID);
+    Assert.assertEquals("Board Id is not valid", response.get(0));
+  }
+
+  @Test
   void returns_bad_request_when_title_is_empty() throws Exception {
     NewBoardRequestObject requestObject = new NewBoardRequestObject("", "john.doe@codurance.com");
     String content = asJsonString(requestObject);
@@ -147,7 +157,6 @@ public class BoardControllerTest {
         status().isBadRequest());
     Assert.assertEquals("Title cannot be empty", errorResponse.get(0));
   }
-
 
   @Test
   void returns_bad_request_when_userEmail_is_invalid() throws Exception {
@@ -169,6 +178,17 @@ public class BoardControllerTest {
   private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
     String responseBody = mockMvc.perform(MockMvcRequestBuilders.post(BOARDS_URL)
         .content(content)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(response).andReturn().getResponse().getContentAsString();
+
+    return objectMapper.readValue(responseBody, new TypeReference<>() {
+    });
+  }
+
+  private <T> T performHttpGetRequest(ResultMatcher response, String url) throws Exception {
+    String responseBody = mockMvc.perform(MockMvcRequestBuilders.get(url)
+        .header(HttpHeaders.AUTHORIZATION, TOKEN)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(response).andReturn().getResponse().getContentAsString();

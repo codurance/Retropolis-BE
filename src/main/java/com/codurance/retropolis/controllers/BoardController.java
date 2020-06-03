@@ -3,15 +3,18 @@ package com.codurance.retropolis.controllers;
 
 import com.codurance.retropolis.config.web.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.services.BoardService;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Collections;
 import java.util.List;
 import javax.validation.Valid;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +53,11 @@ public class BoardController extends BaseController {
   @ResponseStatus(HttpStatus.CREATED)
   public Board postBoard(@RequestBody @Valid NewBoardRequestObject request) {
     return boardService.createBoard(request);
+  }
+
+  @ExceptionHandler(BoardNotFoundException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public List<String> handleCardNotFound(BoardNotFoundException exception) {
+    return Collections.singletonList(exception.getMessage());
   }
 }

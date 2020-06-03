@@ -2,6 +2,8 @@ package com.codurance.retropolis.services;
 
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -9,6 +11,7 @@ import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.entities.ColumnType;
 import com.codurance.retropolis.entities.User;
+import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
@@ -87,5 +90,10 @@ public class BoardServiceTest {
     assertEquals(BOARD_TITLE, boards.get(0).getTitle());
   }
 
+  @Test
+  public void should_throw_BoardNotFoundException_when_boardId_is_invalid_on_() {
+    doThrow(new RuntimeException()).when(userService).registerUserIfNotExists(USER_EMAIL, BOARD_ID);
+    assertThrows(BoardNotFoundException.class, () -> boardService.getBoard(USER_EMAIL, BOARD_ID));
+  }
 
 }
