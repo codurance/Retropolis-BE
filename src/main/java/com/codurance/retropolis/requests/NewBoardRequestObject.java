@@ -10,6 +10,7 @@ public class NewBoardRequestObject {
   @Size(min = 1, message = "Title must not be less than 1 character")
   private String title;
 
+  @NotNull(message = "Email is required")
   @Email(message = "Email is invalid")
   private String userEmail;
 

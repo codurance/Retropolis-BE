@@ -157,6 +157,14 @@ public class BoardControllerTest {
     Assert.assertEquals("Email is invalid", errorResponse.get(0));
   }
 
+  @Test
+  void returns_bad_request_when_email_is_null() throws Exception {
+    List<String> errorResponse = performHttpPostRequest("{\"title\":\"new board\"}",
+        status().isBadRequest());
+    Assert.assertEquals("Email is required", errorResponse.get(0));
+  }
+
+
   //TODO #2. Refactor: Same with #1 (duplicated)
   private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
     String responseBody = mockMvc.perform(MockMvcRequestBuilders.post(BOARDS_URL)
