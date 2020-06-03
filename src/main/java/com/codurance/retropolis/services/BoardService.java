@@ -2,6 +2,7 @@ package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.User;
+import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
@@ -25,8 +26,12 @@ public class BoardService {
   }
 
   public Board getBoard(String email, Long boardId) {
-    userService.registerUserIfNotExists(email, boardId);
-    return boardRepository.getBoard(boardId);
+    try {
+      userService.registerUserIfNotExists(email, boardId);
+      return boardRepository.getBoard(boardId);
+    } catch (RuntimeException exc) {
+      throw new BoardNotFoundException();
+    }
   }
 
   public Board createBoard(NewBoardRequestObject requestObject) {
