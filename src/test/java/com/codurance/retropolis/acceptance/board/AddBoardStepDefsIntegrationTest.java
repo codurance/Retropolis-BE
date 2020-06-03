@@ -28,7 +28,7 @@ public class AddBoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @Given("a user is logged in")
   public void aUserIsLoggedIn() {
-    userEmail = "johnDoe@codurance.com";
+    userEmail = "john.doe@codurance.com";
   }
 
   @When("the client sends the title of the board {string} and their email")
