@@ -21,6 +21,7 @@ public class PostgresBoardRepository implements BoardRepository {
   private final String SELECT_USERS_BOARDS = "select boards.title, boards.id from boards inner join "
       + "users_boards on boards.id = users_boards.board_id where users_boards.user_id = ? "
       + "ORDER BY boards.id ASC";
+  private final String SELECT_USER_FROM_BOARD = "SELECT EXISTS(SELECT FROM users_boards WHERE user_id=? and board_id = ?)";
   private final JdbcTemplate jdbcTemplate;
 
   public PostgresBoardRepository(DataSource dataSource) {
@@ -43,7 +44,10 @@ public class PostgresBoardRepository implements BoardRepository {
 
   @Override
   public void addToBoard(Long userId, Long boardId) {
-    jdbcTemplate.update(INSERT_USER_TO_BOARD, userId, boardId);
+    Boolean userExistsOnBoard = jdbcTemplate.queryForObject(SELECT_USER_FROM_BOARD, Boolean.class, userId, boardId);
+    if (userExistsOnBoard != null && !userExistsOnBoard) {
+      jdbcTemplate.update(INSERT_USER_TO_BOARD, userId, boardId);
+    }
   }
 
   @Override
