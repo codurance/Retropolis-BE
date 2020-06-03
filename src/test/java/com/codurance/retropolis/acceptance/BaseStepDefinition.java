@@ -1,15 +1,14 @@
 package com.codurance.retropolis.acceptance;
 
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.Objects;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
-
-import javax.sql.DataSource;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import java.util.Objects;
 
 public class BaseStepDefinition {
 

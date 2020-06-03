@@ -42,7 +42,7 @@ public class BoardControllerTest {
   public static final Long COLUMN_ID = 1L;
   public static final String BOARD_TITLE = "test board";
   private static final String SPECIFIC_BOARD_URL = "/boards/" + BOARD_ID;
-  private static final String URL = "/boards";
+  private static final String BOARDS_URL = "/boards";
   public static final String TOKEN = "SOMETOKEN";
   public static final String USER_EMAIL = "john.doe@codurance.com";
 
@@ -102,12 +102,24 @@ public class BoardControllerTest {
   }
 
   @Test
+  void returns_id_and_title_of_users_boards() throws Exception {
+    when(boardService.getUsersBoards(USER_EMAIL))
+        .thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
+
+    List<Board> boards = requestUsersBoards();
+
+    assertEquals(1, boards.size());
+    assertEquals(BOARD_TITLE, boards.get(0).getTitle());
+    assertEquals(BOARD_ID, boards.get(0).getId());
+  }
+
+  @Test
   void returns_a_new_board() throws Exception {
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE, USER_EMAIL);
     given(boardService.createBoard(any(NewBoardRequestObject.class)))
         .willReturn(new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList()));
 
-    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
+    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(BOARDS_URL)
         .content(asJsonString(requestObject))
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
@@ -136,14 +148,6 @@ public class BoardControllerTest {
     Assert.assertEquals("Title cannot be empty", errorResponse.get(0));
   }
 
-  private Board requestBoard() throws Exception {
-    MvcResult httpResponse = mockMvc
-        .perform(MockMvcRequestBuilders.get(SPECIFIC_BOARD_URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
-        .andExpect(status().isOk()).andReturn();
-    String contentAsString = httpResponse.getResponse().getContentAsString();
-    return objectMapper.readValue(contentAsString, new TypeReference<>() {
-    });
-  }
 
   @Test
   void returns_bad_request_when_userEmail_is_invalid() throws Exception {
@@ -155,13 +159,31 @@ public class BoardControllerTest {
 
   //TODO #2. Refactor: Same with #1 (duplicated)
   private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
-    String responseBody = mockMvc.perform(MockMvcRequestBuilders.post(URL)
+    String responseBody = mockMvc.perform(MockMvcRequestBuilders.post(BOARDS_URL)
         .content(content)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(response).andReturn().getResponse().getContentAsString();
 
     return objectMapper.readValue(responseBody, new TypeReference<>() {
+    });
+  }
+
+  private Board requestBoard() throws Exception {
+    MvcResult httpResponse = mockMvc
+        .perform(MockMvcRequestBuilders.get(SPECIFIC_BOARD_URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
+        .andExpect(status().isOk()).andReturn();
+    String contentAsString = httpResponse.getResponse().getContentAsString();
+    return objectMapper.readValue(contentAsString, new TypeReference<>() {
+    });
+  }
+
+  private List<Board> requestUsersBoards() throws Exception {
+    MvcResult httpResponse = mockMvc
+        .perform(MockMvcRequestBuilders.get(BOARDS_URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
+        .andExpect(status().isOk()).andReturn();
+    String contentAsString = httpResponse.getResponse().getContentAsString();
+    return objectMapper.readValue(contentAsString, new TypeReference<>() {
     });
   }
 }
