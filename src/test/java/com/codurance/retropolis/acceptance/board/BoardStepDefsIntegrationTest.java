@@ -1,15 +1,21 @@
 package com.codurance.retropolis.acceptance.board;
 
 import static com.codurance.retropolis.utils.Convert.asJsonString;
+import static com.codurance.retropolis.utils.HttpWrapper.responseResult;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.utils.HttpWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.sql.SQLException;
@@ -17,10 +23,12 @@ import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   public static final String TOKEN = "token";
+  private HttpHeaders headers;
 
   public BoardStepDefsIntegrationTest(DataSource dataSource) {
     super(dataSource);
@@ -29,12 +37,12 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
   @Before
   public void cleanUpDatabase() throws SQLException {
     cleanUp();
+    headers = new HttpHeaders();
+    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
   }
 
   @When("^the client calls /boards/(\\d+)")
   public void theClientCallsBoard(int boardId) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
     HttpWrapper.executeGet(url + "/boards/" + boardId, headers);
   }
 
@@ -52,4 +60,35 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
             new Column(3L, thirdTitle, Collections.emptyList()))))));
   }
 
+  @Given("a user has accessed the test board")
+  public void aUserHasAccessedTheTestBoard() {
+    HttpWrapper.executeGet(url + "/boards/1", headers);
+  }
+
+  @When("the user requests all their boards")
+  public void theUserRequestsAllTheirBoards() {
+    HttpWrapper.executeGet(url + "/boards", headers);
+  }
+
+  @Then("the user receives a list of the boards with one called {string}")
+  public void theUserReceivesAListOfTheBoardsWithOneCalled(String title)
+      throws JsonProcessingException {
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
+
+    List<Board> boards = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
+
+    assertThat(boards.size(), is(1));
+    assertThat(boards.get(0).getTitle(), is(title));
+  }
+
+  @Then("the user receives a empty list of boards")
+  public void theUserReceivesAEmptyList() throws JsonProcessingException {
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
+
+    List<Board> boards = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
+
+    assertTrue(boards.isEmpty());
+  }
 }

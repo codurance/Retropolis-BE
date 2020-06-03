@@ -33,4 +33,8 @@ public class Board {
   public void setColumns(List<Column> columns) {
     this.columns = columns;
   }
+
+  public String getTitle() {
+    return title;
+  }
 }

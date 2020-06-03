@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.repositories.BoardRepository;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ public class BoardServiceTest {
   public static final Long USER_ID = 1L;
   public static final Long COLUMN_ID = 1L;
   public static final Long BOARD_ID = 1L;
+  public static final String BOARD_TITLE = "test board";
 
   @Mock
   private BoardRepository boardRepository;
@@ -36,7 +38,7 @@ public class BoardServiceTest {
   void should_return_a_board() {
     String columnTitle = "Start";
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(
-        new Board(BOARD_ID, "test board", List.of(new Column(COLUMN_ID, columnTitle, emptyList()))));
+        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, columnTitle, emptyList()))));
 
     Board board = boardService.getBoard(BOARD_ID);
 
@@ -50,6 +52,18 @@ public class BoardServiceTest {
   void add_user_to_board() {
     boardService.addToBoard(USER_ID, BOARD_ID);
     verify(boardRepository).addToBoard(USER_ID, BOARD_ID);
+  }
+
+  @Test
+  void should_return_boards_for_a_user() {
+    when(boardRepository.getUsersBoards(USER_ID)).thenReturn(List.of(
+        new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList())));
+
+    List<Board> boards = boardService.getUsersBoards(USER_ID);
+
+    assertEquals(1, boards.size());
+    assertEquals(BOARD_ID, boards.get(0).getId());
+    assertEquals(BOARD_TITLE, boards.get(0).getTitle());
   }
 
 }

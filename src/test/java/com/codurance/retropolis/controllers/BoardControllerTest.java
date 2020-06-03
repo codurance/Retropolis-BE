@@ -10,6 +10,7 @@ import com.codurance.retropolis.config.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.Column;
+import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -33,8 +34,10 @@ public class BoardControllerTest {
   public static final Long BOARD_ID = 1L;
   public static final Long COLUMN_ID = 1L;
   public static final String BOARD_TITLE = "test board";
-  private static final String URL = "/boards/" + BOARD_ID;
   public static final String TOKEN = "SOMETOKEN";
+  private static final String BOARD_URL = "/boards/" + BOARD_ID;
+  private static final String USERS_BOARDS = "/boards";
+  public static final String TEST_EMAIL = "john.doe@codurance.com";
 
   @MockBean
   private BoardService boardService;
@@ -78,7 +81,7 @@ public class BoardControllerTest {
   @Test
   void returns_board_with_columns_and_cards() throws Exception {
     String text = "hello";
-    long cardId = 1;
+    Long cardId = 1L;
     String userName = "John Doe";
     List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName));
     List<Column> columns = List.of(new Column(COLUMN_ID, "start", cards));
@@ -95,8 +98,31 @@ public class BoardControllerTest {
     assertEquals(userName, cardResponse.getUsername());
   }
 
+  @Test
+  void returns_id_and_title_of_users_boards() throws Exception {
+    Long userId = 1L;
+    when(userService.findOrCreateBy(TEST_EMAIL)).thenReturn(new User(userId, TEST_EMAIL));
+    when(boardService.getUsersBoards(userId))
+        .thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
+
+    List<Board> boards = requestUsersBoards();
+
+    assertEquals(1, boards.size());
+    assertEquals(BOARD_TITLE, boards.get(0).getTitle());
+    assertEquals(BOARD_ID, boards.get(0).getId());
+  }
+
   private Board requestBoard() throws Exception {
-    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
+    MvcResult httpResponse = mockMvc.perform(MockMvcRequestBuilders.get(BOARD_URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
+        .andExpect(status().isOk()).andReturn();
+    String contentAsString = httpResponse.getResponse().getContentAsString();
+    return objectMapper.readValue(contentAsString, new TypeReference<>() {
+    });
+  }
+
+  private List<Board> requestUsersBoards() throws Exception {
+    MvcResult httpResponse = mockMvc
+        .perform(MockMvcRequestBuilders.get(USERS_BOARDS).header(HttpHeaders.AUTHORIZATION, TOKEN))
         .andExpect(status().isOk()).andReturn();
     String contentAsString = httpResponse.getResponse().getContentAsString();
     return objectMapper.readValue(contentAsString, new TypeReference<>() {

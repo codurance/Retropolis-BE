@@ -3,10 +3,12 @@ package com.codurance.retropolis.controllers;
 
 import com.codurance.retropolis.config.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.UserService;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,15 @@ public class BoardController extends BaseController {
     this.boardService = boardService;
     this.tokenAuthenticator = tokenAuthenticator;
     this.userService = userService;
+  }
+
+  @GetMapping
+  public List<Board> getUsersBoards(@RequestHeader(HttpHeaders.AUTHORIZATION) String token)
+      throws GeneralSecurityException, IOException {
+    String email = tokenAuthenticator.getEmail(token);
+    User user = userService.findOrCreateBy(email);
+
+    return boardService.getUsersBoards(user.id);
   }
 
   @GetMapping(value = "/{id}")

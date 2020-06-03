@@ -25,8 +25,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class CardServiceTest {
 
-  public static final long NON_EXISTENT_CARD_ID = 999L;
-  public static final long CARD_ID = 1L;
+  public static final Long NON_EXISTENT_CARD_ID = 999L;
+  public static final Long CARD_ID = 1L;
   public static final String USERNAME = "John Doe";
 
   @Mock

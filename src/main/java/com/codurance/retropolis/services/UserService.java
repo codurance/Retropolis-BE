@@ -22,7 +22,7 @@ public class UserService {
     boardService.addToBoard(user.id, boardId);
   }
 
-  private User findOrCreateBy(String email) {
+  public User findOrCreateBy(String email) {
     try {
       return userRepository.findByEmail(email);
     } catch (UserNotFoundException userNotFoundException) {
