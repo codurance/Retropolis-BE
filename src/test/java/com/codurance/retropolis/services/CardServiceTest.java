@@ -27,7 +27,10 @@ public class CardServiceTest {
 
   public static final Long NON_EXISTENT_CARD_ID = 999L;
   public static final Long CARD_ID = 1L;
+  public static final Long COLUMN_ID = 1L;
   public static final String USERNAME = "John Doe";
+  public static final String TEXT = "Hello";
+  public static final String NEW_TEXT = "updated hello";
 
   @Mock
   private CardFactory cardFactory;
@@ -44,12 +47,9 @@ public class CardServiceTest {
 
   @Test
   public void should_add_and_return_new_card() {
-    String text = "new card";
-    Long columnId = 1L;
-    Long cardId = 1L;
-    NewCardRequestObject requestObject = new NewCardRequestObject(text, columnId, USERNAME);
+    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME);
+    Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME);
 
-    Card card = new Card(cardId, text, columnId, USERNAME);
     when(cardFactory.create(requestObject)).thenReturn(card);
 
     cardService.addCard(requestObject);
@@ -60,9 +60,8 @@ public class CardServiceTest {
 
   @Test
   public void should_delete_card_from_the_repository() {
-    Long cardId = 1L;
-    cardService.delete(cardId);
-    verify(cardRepository).delete(cardId);
+    cardService.delete(CARD_ID);
+    verify(cardRepository).delete(CARD_ID);
   }
 
   @Test
@@ -73,27 +72,23 @@ public class CardServiceTest {
 
   @Test
   void should_change_card_text_and_return_edited_card() {
-    Long cardId = 1L;
-    String newText = "updated hello";
-    UpdateCardRequestObject requestObject = new UpdateCardRequestObject(newText);
-    Card editedCard = new Card(cardId, newText, 1L, USERNAME);
-    when(cardRepository.updateText(cardId, requestObject.getNewText())).thenReturn(editedCard);
+    UpdateCardRequestObject requestObject = new UpdateCardRequestObject(NEW_TEXT);
+    Card editedCard = new Card(CARD_ID, NEW_TEXT, COLUMN_ID, USERNAME);
+    when(cardRepository.updateText(CARD_ID, requestObject.getNewText())).thenReturn(editedCard);
 
-    Card card = cardService.update(cardId, requestObject);
+    Card card = cardService.update(CARD_ID, requestObject);
 
-    assertEquals(newText, card.getText());
+    assertEquals(NEW_TEXT, card.getText());
   }
 
   @Test
   void should_add_card_voter_and_return_card() {
-    Long cardId = 1L;
     String voter = "Jane Doe";
-    String text = "Hello";
     UpVoteRequestObject requestObject = new UpVoteRequestObject(voter, true);
-    Card editedCard = new Card(cardId, text, 1L, USERNAME, Collections.singletonList(voter));
-    when(cardRepository.addVoter(cardId, requestObject.getUsername())).thenReturn(editedCard);
+    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(voter));
+    when(cardRepository.addVoter(CARD_ID, requestObject.getUsername())).thenReturn(editedCard);
 
-    Card card = cardService.updateVotes(cardId, requestObject);
+    Card card = cardService.updateVotes(CARD_ID, requestObject);
 
     assertEquals(1, card.getVoters().size());
     assertEquals(voter, card.getVoters().get(0));
@@ -119,17 +114,15 @@ public class CardServiceTest {
 
   @Test
   public void should_throw_CardNotFoundException_on_edit_card_text() {
-    String updatedText = "updated text";
-    doThrow(new RuntimeException()).when(cardRepository).updateText(NON_EXISTENT_CARD_ID, updatedText);
+    doThrow(new RuntimeException()).when(cardRepository).updateText(NON_EXISTENT_CARD_ID, NEW_TEXT);
     assertThrows(CardNotFoundException.class,
-        () -> cardService.update(NON_EXISTENT_CARD_ID, new UpdateCardRequestObject(updatedText)));
+        () -> cardService.update(NON_EXISTENT_CARD_ID, new UpdateCardRequestObject(NEW_TEXT)));
   }
 
   @Test
   public void should_throw_ColumnNotFoundException_on_add_card() {
     doThrow(new RuntimeException()).when(cardRepository).addCard(new Card());
-    assertThrows(ColumnNotFoundException.class, () -> cardService.addCard(new NewCardRequestObject("text", 1L, USERNAME)));
+    assertThrows(ColumnNotFoundException.class, () -> cardService.addCard(new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME)));
   }
-
 
 }

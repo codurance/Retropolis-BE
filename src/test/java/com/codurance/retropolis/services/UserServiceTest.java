@@ -23,22 +23,25 @@ public class UserServiceTest {
   @Mock
   private UserRepository userRepository;
 
-  @Mock
-  private BoardService boardService;
-
   private UserService userService;
 
   @BeforeEach
   void setUp() {
-    userService = new UserService(userRepository, boardService);
+    userService = new UserService(userRepository);
   }
 
   @Test
-  void calls_board_service_addToBoard() {
+  void calls_addToBoard_after_registration() {
     when(userRepository.findByEmail(EMAIL)).thenReturn(new User(USER_ID, EMAIL));
 
     userService.registerUserIfNotExists(EMAIL, BOARD_ID);
-    verify(boardService).addToBoard(USER_ID, BOARD_ID);
+    verify(userRepository).addToBoard(USER_ID, BOARD_ID);
+  }
+
+  @Test
+  void adds_user_to_board() {
+    userService.addToBoard(USER_ID, BOARD_ID);
+    verify(userRepository).addToBoard(USER_ID, BOARD_ID);
   }
 
   @Test
@@ -47,6 +50,6 @@ public class UserServiceTest {
     given(userRepository.register(EMAIL)).willReturn(new User(USER_ID, EMAIL));
     userService.registerUserIfNotExists(EMAIL, BOARD_ID);
     verify(userRepository).register(EMAIL);
-    verify(boardService).addToBoard(USER_ID, BOARD_ID);
+    verify(userRepository).addToBoard(USER_ID, BOARD_ID);
   }
 }

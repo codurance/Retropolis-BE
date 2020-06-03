@@ -33,8 +33,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @WebMvcTest(CardController.class)
 public class CardControllerTest {
 
-  private static final String URL = "/cards";
   public static final Long NON_EXISTENT_CARD_ID = 999L;
+  public static final Long CARD_ID = 1L;
+  public static final Long COLUMN_ID = 1L;
+  private static final String URL = "/cards";
+  public static final String TEXT = "hello";
+  public static final String USERNAME = "John Doe";
 
   @Autowired
   private MockMvc mockMvc;
@@ -47,12 +51,9 @@ public class CardControllerTest {
 
   @Test
   public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
-    Long cardId = 1L;
-    Long columnId = 1L;
-    String cardText = "hello";
-    String userName = "John Doe";
-    NewCardRequestObject requestObject = new NewCardRequestObject(cardText, columnId, userName);
-    given(cardService.addCard(any(NewCardRequestObject.class))).willReturn(new Card(cardId, cardText, columnId, userName));
+    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME);
+    given(cardService.addCard(any(NewCardRequestObject.class)))
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME));
 
     MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post(URL)
         .content(asJsonString(requestObject))
@@ -64,35 +65,30 @@ public class CardControllerTest {
     Card cardResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
     });
 
-    assertEquals(cardText, cardResponse.getText());
-    assertEquals(cardId, cardResponse.getId());
-    assertEquals(columnId, cardResponse.getColumnId());
-    assertEquals(userName, cardResponse.getUsername());
+    assertEquals(TEXT, cardResponse.getText());
+    assertEquals(CARD_ID, cardResponse.getId());
+    assertEquals(COLUMN_ID, cardResponse.getColumnId());
+    assertEquals(USERNAME, cardResponse.getUsername());
   }
 
   @Test
   public void delete_card_should_return_200_status_code() throws Exception {
-    Long cardId = 1L;
-    mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/" + cardId)
+    mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/" + CARD_ID)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk()).andReturn();
 
-    verify(cardService).delete(cardId);
+    verify(cardService).delete(CARD_ID);
   }
 
   @Test
   public void update_card_with_new_text_should_return_updated_card() throws Exception {
-    Long cardId = 1L;
-    Long columnId = 1L;
-    String cardText = "hello";
-    String userName = "John Doe";
-    UpdateCardRequestObject requestObject = new UpdateCardRequestObject(cardText);
+    UpdateCardRequestObject requestObject = new UpdateCardRequestObject(TEXT);
 
     given(cardService.update(any(), any(UpdateCardRequestObject.class)))
-        .willReturn(new Card(cardId, cardText, columnId, userName));
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME));
 
-    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.patch(URL + "/" + cardId)
+    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.patch(URL + "/" + CARD_ID)
         .content(asJsonString(requestObject))
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
@@ -102,22 +98,18 @@ public class CardControllerTest {
     Card cardResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
     });
 
-    assertEquals(cardText, cardResponse.getText());
+    assertEquals(TEXT, cardResponse.getText());
   }
 
   @Test
   void update_card_vote_with_username_should_return_card_with_voter() throws Exception {
-    Long cardId = 1L;
-    Long columnId = 1L;
-    String cardText = "hello";
-    String userName = "John Doe";
     String voter = "tom";
     UpVoteRequestObject requestObject = new UpVoteRequestObject(voter, true);
 
     given(cardService.updateVotes(any(), any(UpVoteRequestObject.class)))
-        .willReturn(new Card(cardId, cardText, columnId, userName, Collections.singletonList(voter)));
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(voter)));
 
-    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.patch(URL + "/" + cardId + "/vote")
+    MvcResult response = mockMvc.perform(MockMvcRequestBuilders.patch(URL + "/" + CARD_ID + "/vote")
         .content(asJsonString(requestObject))
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
@@ -202,7 +194,7 @@ public class CardControllerTest {
     assertEquals("addVote cannot be empty", errorResponse.get(0));
   }
 
-  //TODO Refactor
+  //TODO #1. Refactor: maybe extract this function to a separate file
   private <T> T performHttpPostRequest(String content, ResultMatcher response) throws Exception {
     MockHttpServletRequestBuilder post = MockMvcRequestBuilders.post(URL);
     String responseBody = mockMvc.perform(post
@@ -216,8 +208,7 @@ public class CardControllerTest {
   }
 
   private <T> T performHttpPatchRequest(String content, ResultMatcher response, String url) throws Exception {
-    MockHttpServletRequestBuilder post = MockMvcRequestBuilders.patch(url);
-    String responseBody = mockMvc.perform(post
+    String responseBody = mockMvc.perform(MockMvcRequestBuilders.patch(url)
         .content(content)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))

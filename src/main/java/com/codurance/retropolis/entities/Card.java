@@ -26,10 +26,9 @@ public class Card {
     this.username = username;
   }
 
-  // FIXME do we need another constructor for voters
-  public Card(Long cardId, String cardText, Long columnId, String username, List<String> voters) {
-    id = cardId;
-    text = cardText;
+  public Card(Long id, String text, Long columnId, String username, List<String> voters) {
+    this.id = id;
+    this.text = text;
     this.columnId = columnId;
     this.username = username;
     this.voters = voters;

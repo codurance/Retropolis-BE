@@ -1,4 +1,5 @@
 Feature: all users boards are retrieved
+
   Scenario: user has visited a board
     Given a user has accessed the test board
     When the user requests all their boards

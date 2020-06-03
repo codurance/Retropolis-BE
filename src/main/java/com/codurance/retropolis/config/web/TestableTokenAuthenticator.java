@@ -1,5 +1,6 @@
-package com.codurance.retropolis.config;
+package com.codurance.retropolis.config.web;
 
+import com.codurance.retropolis.config.Environment;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 

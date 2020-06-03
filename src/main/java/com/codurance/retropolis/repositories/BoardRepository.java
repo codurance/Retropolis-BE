@@ -7,7 +7,7 @@ public interface BoardRepository {
 
   Board getBoard(Long id);
 
-  void addToBoard(Long userId, Long boardId);
-
   List<Board> getUsersBoards(Long userId);
+
+  Board insert(Board board);
 }

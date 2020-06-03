@@ -7,4 +7,6 @@ public interface UserRepository {
   User findByEmail(String email);
 
   User register(String email);
+
+  void addToBoard(Long userId, Long boardId);
 }

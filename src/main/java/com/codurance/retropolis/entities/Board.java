@@ -11,6 +11,11 @@ public class Board {
   public Board() {
   }
 
+  public Board(String title, List<Column> columns) {
+    this.title = title;
+    this.columns = columns;
+  }
+
   public Board(Long id, String title) {
     this.id = id;
     this.title = title;
@@ -20,6 +25,10 @@ public class Board {
     this.id = id;
     this.title = title;
     this.columns = columns;
+  }
+
+  public String getTitle() {
+    return title;
   }
 
   public List<Column> getColumns() {
@@ -34,7 +43,4 @@ public class Board {
     this.columns = columns;
   }
 
-  public String getTitle() {
-    return title;
-  }
 }

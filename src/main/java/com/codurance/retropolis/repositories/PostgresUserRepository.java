@@ -17,6 +17,8 @@ public class PostgresUserRepository implements UserRepository {
   private final String SELECT_USER_BY_EMAIL = "select * from users where email = ?";
   private final String SELECT_USER_BY_ID = "select * from users where id = ?";
   private final String INSERT_USER = "insert into users (email) values (?)";
+  private final String INSERT_USER_TO_BOARD = "insert into users_boards (user_id,board_id) values (?,?)";
+  private final String SELECT_USER_FROM_BOARD = "SELECT EXISTS(SELECT FROM users_boards WHERE user_id= ? and board_id = ?)";
 
   private final JdbcTemplate jdbcTemplate;
 
@@ -44,6 +46,14 @@ public class PostgresUserRepository implements UserRepository {
 
     Long id = Objects.requireNonNull(key.getKey()).longValue();
     return findById(id);
+  }
+
+  @Override
+  public void addToBoard(Long userId, Long boardId) {
+    Boolean userExistsOnBoard = jdbcTemplate.queryForObject(SELECT_USER_FROM_BOARD, Boolean.class, userId, boardId);
+    if (userExistsOnBoard != null && !userExistsOnBoard) {
+      jdbcTemplate.update(INSERT_USER_TO_BOARD, userId, boardId);
+    }
   }
 
   private User findById(Long id) {
