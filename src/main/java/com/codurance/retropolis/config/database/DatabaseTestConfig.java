@@ -1,5 +1,6 @@
-package com.codurance.retropolis.config;
+package com.codurance.retropolis.config.database;
 
+import com.codurance.retropolis.config.Environment;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

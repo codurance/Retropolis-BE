@@ -1,5 +1,6 @@
-package com.codurance.retropolis.config;
+package com.codurance.retropolis.config.web;
 
+import com.codurance.retropolis.config.Environment;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-@Profile(Environment.PROD)
+@Profile({Environment.PROD, Environment.DEV})
 public class GoogleTokenAuthenticator implements HandlerInterceptor {
 
   private final String CLIENT_ID = "582070750046-gn9mvl54av9j8b3mo3ea807c18di9ees.apps.googleusercontent.com";
