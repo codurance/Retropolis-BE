@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.is;
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Column;
+import com.codurance.retropolis.entities.ColumnType;
 import com.codurance.retropolis.utils.HttpWrapper;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
@@ -47,9 +48,9 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
   public void theClientReceivesBoardWithThreeColumnsAnd(String firstTitle, String secondTitle, String thirdTitle) {
     assertThat(HttpWrapper.responseResult.getBody(),
         is(asJsonString(new Board(1L, "test board", List.of(
-            new Column(1L, firstTitle, Collections.emptyList()),
-            new Column(2L, secondTitle, Collections.emptyList()),
-            new Column(3L, thirdTitle, Collections.emptyList()))))));
+            new Column(1L, ColumnType.of(firstTitle), Collections.emptyList()),
+            new Column(2L, ColumnType.of(secondTitle), Collections.emptyList()),
+            new Column(3L, ColumnType.of(thirdTitle), Collections.emptyList()))))));
   }
 
 }

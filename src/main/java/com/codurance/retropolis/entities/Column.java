@@ -6,24 +6,24 @@ public class Column {
 
   private Long id;
   private Long boardId;
-  private String title;
+  private ColumnType title;
   private List<Card> cards;
 
   public Column() {
   }
 
-  public Column(String title, List<Card> cards) {
+  public Column(ColumnType title, List<Card> cards) {
     this.title = title;
     this.cards = cards;
   }
 
-  public Column(Long id, String title, Long boardId) {
+  public Column(Long id, ColumnType title, Long boardId){
     this.id = id;
     this.title = title;
     this.boardId = boardId;
   }
 
-  public Column(Long id, String title, List<Card> cards) {
+  public Column(Long id, ColumnType title, List<Card> cards) {
     this.id = id;
     this.title = title;
     this.cards = cards;
@@ -34,7 +34,7 @@ public class Column {
   }
 
   public String getTitle() {
-    return title;
+    return title.getTitle();
   }
 
   public List<Card> getCards() {

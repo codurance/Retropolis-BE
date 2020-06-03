@@ -13,6 +13,7 @@ import com.codurance.retropolis.config.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.Column;
+import com.codurance.retropolis.entities.ColumnType;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.services.BoardService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -71,7 +72,7 @@ public class BoardControllerTest {
 
   @Test
   void returns_board_with_columns() throws Exception {
-    List<Column> columns = List.of(new Column(COLUMN_ID, "start", emptyList()));
+    List<Column> columns = List.of(new Column(COLUMN_ID, ColumnType.START, emptyList()));
     when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     Board board = requestBoard();
@@ -86,7 +87,7 @@ public class BoardControllerTest {
     Long cardId = 1L;
     String userName = "John Doe";
     List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName));
-    List<Column> columns = List.of(new Column(COLUMN_ID, "start", cards));
+    List<Column> columns = List.of(new Column(COLUMN_ID, ColumnType.START, cards));
     when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     Board board = requestBoard();

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Column;
+import com.codurance.retropolis.entities.ColumnType;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
@@ -46,7 +47,7 @@ public class BoardServiceTest {
   void returns_a_board() {
     String columnTitle = "Start";
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(
-        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, columnTitle, emptyList()))));
+        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, ColumnType.START, emptyList()))));
 
     Board board = boardService.getBoard(USER_EMAIL, BOARD_ID);
 
