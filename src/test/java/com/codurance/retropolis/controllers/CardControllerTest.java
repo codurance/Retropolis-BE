@@ -1,6 +1,7 @@
 package com.codurance.retropolis.controllers;
 
 import static com.codurance.retropolis.utils.Convert.asJsonString;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -55,7 +56,7 @@ public class CardControllerTest {
   public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME);
     given(cardService.addCard(any(NewCardRequestObject.class)))
-        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME));
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, emptyList()));
 
     String jsonResponse = mockMvcWrapper
         .postRequest(URL, asJsonString(requestObject), status().isCreated());
@@ -79,7 +80,7 @@ public class CardControllerTest {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(TEXT);
 
     given(cardService.update(any(), any(UpdateCardRequestObject.class)))
-        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME));
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, emptyList()));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID, asJsonString(requestObject), status().isOk());

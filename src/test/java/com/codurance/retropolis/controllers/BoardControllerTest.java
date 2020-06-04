@@ -91,7 +91,7 @@ public class BoardControllerTest {
     String text = "hello";
     Long cardId = 1L;
     String userName = "John Doe";
-    List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName));
+    List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName, emptyList()));
     List<Column> columns = List.of(new Column(COLUMN_ID, ColumnType.START, cards));
     when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 

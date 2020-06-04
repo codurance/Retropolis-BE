@@ -1,5 +1,6 @@
 package com.codurance.retropolis.services;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
@@ -48,7 +49,7 @@ public class CardServiceTest {
   @Test
   public void should_add_and_return_new_card() {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME);
-    Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME);
+    Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, emptyList());
 
     when(cardFactory.create(requestObject)).thenReturn(card);
 
@@ -73,7 +74,7 @@ public class CardServiceTest {
   @Test
   void should_change_card_text_and_return_edited_card() {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(NEW_TEXT);
-    Card editedCard = new Card(CARD_ID, NEW_TEXT, COLUMN_ID, USERNAME);
+    Card editedCard = new Card(CARD_ID, NEW_TEXT, COLUMN_ID, USERNAME, emptyList());
     when(cardRepository.updateText(CARD_ID, requestObject.getNewText())).thenReturn(editedCard);
 
     Card card = cardService.update(CARD_ID, requestObject);

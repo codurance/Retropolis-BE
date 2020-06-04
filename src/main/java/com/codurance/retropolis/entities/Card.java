@@ -13,17 +13,11 @@ public class Card {
   public Card() {
   }
 
-  public Card(Long id, String text, Long columnId, String username) {
-    this.id = id;
+  public Card(String text, Long columnId, String username, List<String> voters) {
     this.text = text;
     this.columnId = columnId;
     this.username = username;
-  }
-
-  public Card(String text, Long columnId, String username) {
-    this.text = text;
-    this.columnId = columnId;
-    this.username = username;
+    this.voters = voters;
   }
 
   public Card(Long id, String text, Long columnId, String username, List<String> voters) {
