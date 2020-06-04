@@ -7,7 +7,7 @@ public class Column {
 
   private Long id;
   private ColumnType title;
-  private List<Card> cards = new ArrayList<>();
+  private List<Card> cards;
 
   public Column() {
   }
@@ -19,6 +19,7 @@ public class Column {
   public Column(Long id, ColumnType title){
     this.id = id;
     this.title = title;
+    this.cards = new ArrayList<>();
   }
 
   public Long getId() {
