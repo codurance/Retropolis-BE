@@ -14,8 +14,7 @@ CREATE TABLE IF NOT EXISTS boards (
   title varchar
 );
 
-CREATE TABLE IF NOT EXISTS users_boards
-(
+CREATE TABLE IF NOT EXISTS users_boards (
     user_id  int,
     board_id int,
     PRIMARY KEY (user_id, board_id),
