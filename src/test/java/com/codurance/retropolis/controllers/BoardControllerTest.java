@@ -87,7 +87,6 @@ public class BoardControllerTest {
 
   @Test
   void returns_board_with_columns_and_cards() throws Exception {
-    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
     String text = "hello";
     Long cardId = 1L;
     String userName = "John Doe";
@@ -95,6 +94,8 @@ public class BoardControllerTest {
     Column column = new Column(COLUMN_ID, ColumnType.START);
     column.setCards(cards);
     List<Column> columns = List.of(column);
+
+    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
     when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     String jsonResponse = mockMvcWrapper.getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
@@ -179,6 +180,5 @@ public class BoardControllerTest {
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     Assert.assertEquals("Email is required", errorResponse.get(0));
   }
-  //TODO #2. Refactor: Same with #1 (duplicated)
 
 }
