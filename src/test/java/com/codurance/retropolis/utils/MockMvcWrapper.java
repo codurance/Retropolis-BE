@@ -30,79 +30,44 @@ public class MockMvcWrapper {
     return headers;
   }
 
-  public <T> T postRequest(String url, String content, ResultMatcher response) throws Exception {
-    String responseBody = mockMvc.perform(MockMvcRequestBuilders.post(url)
+  public String postRequest(String url, String content, ResultMatcher response) throws Exception {
+    return mockMvc.perform(MockMvcRequestBuilders.post(url)
         .content(content)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON))
         .andExpect(response)
         .andReturn().getResponse().getContentAsString();
-    return buildObject(responseBody);
   }
 
-  public <T> T postRequest(String url, String content, ResultMatcher response, Class<T> objectType) throws Exception {
-    String responseBody = mockMvc.perform(MockMvcRequestBuilders.post(url)
-        .content(content)
-        .contentType(APPLICATION_JSON)
-        .accept(APPLICATION_JSON))
-        .andExpect(response)
-        .andReturn().getResponse().getContentAsString();
-    return buildObject(responseBody, objectType);
-  }
-
-  public <T> T getRequest(String url, ResultMatcher response, HttpHeaders headers) throws Exception {
-    String responseBody = mockMvc.perform(MockMvcRequestBuilders.get(url)
+  public String getRequest(String url, ResultMatcher response, HttpHeaders headers) throws Exception {
+    return mockMvc.perform(MockMvcRequestBuilders.get(url)
         .headers(headers)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON))
         .andExpect(response).andReturn().getResponse().getContentAsString();
-    return buildObject(responseBody);
   }
 
-  public <T> T getRequest(String url, ResultMatcher response, HttpHeaders headers, Class<T> objectType) throws Exception {
-    String responseBody = mockMvc.perform(MockMvcRequestBuilders.get(url)
-        .headers(headers)
-        .contentType(APPLICATION_JSON)
-        .accept(APPLICATION_JSON))
-        .andExpect(response).andReturn().getResponse().getContentAsString();
-    return buildObject(responseBody, objectType);
-  }
-
-  public <T> T deleteRequest(String url, ResultMatcher response) throws Exception {
-    String responseBody = mockMvc.perform(MockMvcRequestBuilders.delete(url)
+  public String deleteRequest(String url, ResultMatcher response) throws Exception {
+    return mockMvc.perform(MockMvcRequestBuilders.delete(url)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(response).andReturn().getResponse().getContentAsString();
-
-    return buildObject(responseBody);
   }
 
-  public <T> T patchRequest(String url, String content, ResultMatcher response, Class<T> objectType) throws Exception {
-    String responseBody = mockMvc.perform(MockMvcRequestBuilders.patch(url)
+  public String patchRequest(String url, String content, ResultMatcher response) throws Exception {
+    return mockMvc.perform(MockMvcRequestBuilders.patch(url)
         .content(content)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(response).andReturn().getResponse().getContentAsString();
-
-    return buildObject(responseBody, objectType);
   }
 
-  public <T> T patchRequest(String url, String content, ResultMatcher response) throws Exception {
-    String responseBody = mockMvc.perform(MockMvcRequestBuilders.patch(url)
-        .content(content)
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON))
-        .andExpect(response).andReturn().getResponse().getContentAsString();
-
-    return buildObject(responseBody);
-  }
-
-  private <T> T buildObject(String responseBody) throws JsonProcessingException {
+  public <T> T buildObject(String responseBody) throws JsonProcessingException {
     return objectMapper.readValue(responseBody, new TypeReference<>() {
     });
   }
 
-  private <T> T buildObject(String responseBody, Class<T> objectType)
+  public <T> T buildObject(String responseBody, Class<T> objectType)
       throws JsonProcessingException {
     return objectMapper.readValue(responseBody, objectType);
   }
