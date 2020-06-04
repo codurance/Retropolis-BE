@@ -25,6 +25,10 @@ import org.springframework.http.HttpEntity;
 
 public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition {
 
+  private final String CARD_TEXT = "Hello";
+  private final long COLUMN_ID = 1L;
+  private final String USERNAME = "John Doe";
+
   public UpdateCardStepDefinitionIntegrationTest(DataSource dataSource) {
     super(dataSource);
   }
@@ -36,15 +40,18 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
 
   @When("the card exists with an id")
   public void theCardExistsWithId() {
-    executePost("http://localhost:5000/cards", new HttpEntity<>(new NewCardRequestObject("Hello", 1L, "John Doe")));
+    executePost("http://localhost:5000/cards", new HttpEntity<>(new NewCardRequestObject(CARD_TEXT,
+        COLUMN_ID, USERNAME)));
   }
 
   @And("the client updates to cards with this id and changes the text to {string}")
-  public void theClientUpdatesToCardsWithThisIdAndChangesTheTextFromTo(String newText) throws JsonProcessingException {
+  public void theClientUpdatesToCardsWithThisIdAndChangesTheTextFromTo(String newText)
+      throws JsonProcessingException {
     Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 
-    executePatch("http://localhost:5000/cards/" + card.getId(), new HttpEntity<>(new UpdateCardRequestObject(newText)));
+    executePatch("http://localhost:5000/cards/" + card.getId(),
+        new HttpEntity<>(new UpdateCardRequestObject(newText)));
   }
 
   @And("the client receives the card with the text:{string}")

@@ -23,6 +23,10 @@ import org.springframework.http.HttpEntity;
 
 public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition {
 
+  private final String USERNAME = "John Doe";
+  private final long COLUMN_ID = 1L;
+  private final String CARD_TEXT = "Hello";
+
   public DeleteCardStepDefinitionIntegrationTest(DataSource dataSource) {
     super(dataSource);
   }
@@ -34,7 +38,8 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
 
   @When("the card exists with id")
   public void theCardExistsWithId() {
-    executePost(url + "/cards", new HttpEntity<>(new NewCardRequestObject("Hello", 1L, "John Doe")));
+    executePost(url + "/cards",
+        new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USERNAME)));
   }
 
   @When("the client deletes to cards with this id passing it as path variable to endpoint")
