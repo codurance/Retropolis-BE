@@ -13,9 +13,9 @@ public class BoardFactory {
 
   public Board create(NewBoardRequestObject requestObject) {
     return new Board(requestObject.getTitle(), List.of(
-        new Column(ColumnType.START, Collections.emptyList()),
-        new Column(ColumnType.STOP, Collections.emptyList()),
-        new Column(ColumnType.CONTINUE, Collections.emptyList())
+        new Column(ColumnType.START),
+        new Column(ColumnType.STOP),
+        new Column(ColumnType.CONTINUE)
     ));
   }
 }

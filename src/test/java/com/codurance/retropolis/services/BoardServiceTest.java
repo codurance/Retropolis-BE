@@ -52,7 +52,7 @@ public class BoardServiceTest {
   void returns_a_board() {
     String columnTitle = "Start";
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(
-        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, ColumnType.START, emptyList()))));
+        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, ColumnType.START))));
 
     Board board = boardService.getBoard(USER_EMAIL, BOARD_ID);
 

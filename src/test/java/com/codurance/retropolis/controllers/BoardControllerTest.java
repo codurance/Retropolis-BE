@@ -75,7 +75,7 @@ public class BoardControllerTest {
   @Test
   void returns_board_with_columns() throws Exception {
     when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
-    List<Column> columns = List.of(new Column(COLUMN_ID, ColumnType.START, emptyList()));
+    List<Column> columns = List.of(new Column(COLUMN_ID, ColumnType.START));
     when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     String jsonResponse = mockMvcWrapper.getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
@@ -92,7 +92,9 @@ public class BoardControllerTest {
     Long cardId = 1L;
     String userName = "John Doe";
     List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName, emptyList()));
-    List<Column> columns = List.of(new Column(COLUMN_ID, ColumnType.START, cards));
+    Column column = new Column(COLUMN_ID, ColumnType.START);
+    column.setCards(cards);
+    List<Column> columns = List.of(column);
     when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     String jsonResponse = mockMvcWrapper.getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
