@@ -38,9 +38,6 @@ public class CardControllerTest {
   public static final String TEXT = "hello";
   public static final String USERNAME = "John Doe";
 
-  @Autowired
-  private MockMvc mockMvc;
-
   @MockBean
   private CardService cardService;
 
@@ -72,10 +69,7 @@ public class CardControllerTest {
 
   @Test
   public void delete_card_should_return_200_status_code() throws Exception {
-    mockMvc.perform(delete(URL + "/" + CARD_ID)
-        .contentType(APPLICATION_JSON)
-        .accept(APPLICATION_JSON))
-        .andExpect(status().isOk()).andReturn();
+    mockMvcWrapper.deleteRequest(URL + "/" + CARD_ID, status().isOk());
 
     verify(cardService).delete(CARD_ID);
   }
