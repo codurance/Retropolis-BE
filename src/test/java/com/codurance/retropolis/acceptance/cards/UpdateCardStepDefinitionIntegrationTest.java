@@ -26,7 +26,7 @@ import org.springframework.http.HttpEntity;
 public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition {
 
   private final String CARD_TEXT = "Hello";
-  private final long COLUMN_ID = 1L;
+  private final Long COLUMN_ID = 1L;
   private final String USERNAME = "John Doe";
 
   public UpdateCardStepDefinitionIntegrationTest(DataSource dataSource) {
@@ -40,7 +40,7 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
 
   @When("the card exists with an id")
   public void theCardExistsWithId() {
-    executePost("http://localhost:5000/cards", new HttpEntity<>(new NewCardRequestObject(CARD_TEXT,
+    executePost(url + "/cards", new HttpEntity<>(new NewCardRequestObject(CARD_TEXT,
         COLUMN_ID, USERNAME)));
   }
 
@@ -50,7 +50,7 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
     Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 
-    executePatch("http://localhost:5000/cards/" + card.getId(),
+    executePatch(url + "/cards/" + card.getId(),
         new HttpEntity<>(new UpdateCardRequestObject(newText)));
   }
 

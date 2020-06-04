@@ -36,7 +36,7 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
       throws JsonProcessingException {
     Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
-    executePatch("http://localhost:5000/cards/" + card.getId() + "/vote",
+    executePatch(url + "/cards/" + card.getId() + "/vote",
         new HttpEntity<>(new UpVoteRequestObject(username)));
   }
 

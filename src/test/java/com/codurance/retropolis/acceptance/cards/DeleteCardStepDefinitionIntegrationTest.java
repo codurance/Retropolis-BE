@@ -24,7 +24,7 @@ import org.springframework.http.HttpEntity;
 public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition {
 
   private final String USERNAME = "John Doe";
-  private final long COLUMN_ID = 1L;
+  private final Long COLUMN_ID = 1L;
   private final String CARD_TEXT = "Hello";
 
   public DeleteCardStepDefinitionIntegrationTest(DataSource dataSource) {
