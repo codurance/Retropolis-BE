@@ -27,7 +27,8 @@ import org.springframework.http.HttpStatus;
 
 public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
-  public static final String TOKEN = "token";
+  private final String TOKEN = "token";
+  private final int TEST_BOARD_ID = 1;
   private HttpHeaders headers;
 
   public BoardStepDefsIntegrationTest(DataSource dataSource) {
@@ -62,7 +63,7 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @Given("a user has accessed the test board")
   public void aUserHasAccessedTheTestBoard() {
-    HttpWrapper.executeGet(url + "/boards/1", headers);
+    HttpWrapper.executeGet(url + "/boards/" + TEST_BOARD_ID, headers);
   }
 
   @When("the user requests all their boards")
