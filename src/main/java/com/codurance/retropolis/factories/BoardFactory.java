@@ -4,7 +4,6 @@ import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.entities.ColumnType;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
-import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
