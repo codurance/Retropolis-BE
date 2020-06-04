@@ -30,10 +30,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(BoardController.class)
@@ -53,9 +49,6 @@ public class BoardControllerTest {
 
   @MockBean
   private GoogleTokenAuthenticator tokenAuthenticator;
-
-  @Autowired
-  private MockMvc mockMvc;
 
   @Autowired
   private WebApplicationContext context;
@@ -120,7 +113,9 @@ public class BoardControllerTest {
     when(boardService.getUsersBoards(USER_EMAIL))
         .thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
 
-    List<Board> boards = requestUsersBoards();
+    String jsonResponse = mockMvcWrapper.getRequest(BOARDS_URL, status().isOk(), getAuthHeader(TOKEN));
+    List<Board> boards = objectMapper.readValue(jsonResponse, new TypeReference<>() {
+    });
 
     assertEquals(1, boards.size());
     assertEquals(BOARD_TITLE, boards.get(0).getTitle());
@@ -182,15 +177,6 @@ public class BoardControllerTest {
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     Assert.assertEquals("Email is required", errorResponse.get(0));
   }
-
   //TODO #2. Refactor: Same with #1 (duplicated)
-  private List<Board> requestUsersBoards() throws Exception {
-    MvcResult httpResponse = mockMvc
-        .perform(MockMvcRequestBuilders.get(BOARDS_URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
-        .andExpect(status().isOk()).andReturn();
-    String contentAsString = httpResponse.getResponse().getContentAsString();
-    return objectMapper.readValue(contentAsString, new TypeReference<>() {
-    });
-  }
 
 }
