@@ -37,12 +37,14 @@ public class PostgresBoardRepository implements BoardRepository {
     if (board != null) {
       List<Column> columns = jdbcTemplate.query(SELECT_COLUMNS, new Object[]{id}, new ColumnMapper());
       board.setColumns(columns);
-      columns.forEach((column -> {
-        List<Card> columnCards = jdbcTemplate.query(SELECT_CARDS, new Object[]{column.getId()}, new CardMapper());
-        column.setCards(columnCards);
-      }));
+      columns.forEach((this::getCards));
     }
     return board;
+  }
+
+  private void getCards(Column column) {
+    List<Card> columnCards = jdbcTemplate.query(SELECT_CARDS, new Object[]{column.getId()}, new CardMapper());
+    column.setCards(columnCards);
   }
 
   @Override
@@ -55,18 +57,17 @@ public class PostgresBoardRepository implements BoardRepository {
     }, key);
 
     Long boardId = Objects.requireNonNull(key.getKey()).longValue();
-
-    for (Column column : board.getColumns()) {
-      jdbcTemplate.update(connection -> {
-        PreparedStatement statement = connection.prepareStatement(INSERT_COLUMN, new String[]{"id"});
-        statement.setString(1, column.getTitle());
-        statement.setLong(2, boardId);
-
-        return statement;
-      });
-    }
-
+    board.getColumns().forEach(c -> insertColumn(boardId, c));
     return getBoard(boardId);
+  }
+
+  private void insertColumn(Long boardId, Column column) {
+    jdbcTemplate.update(connection -> {
+      PreparedStatement statement = connection.prepareStatement(INSERT_COLUMN, new String[]{"id"});
+      statement.setString(1, column.getTitle());
+      statement.setLong(2, boardId);
+      return statement;
+    });
   }
 
   @Override

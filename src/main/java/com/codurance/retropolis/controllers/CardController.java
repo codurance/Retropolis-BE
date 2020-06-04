@@ -64,7 +64,7 @@ public class CardController extends BaseController {
 
   @ExceptionHandler(CardNotFoundException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public List<String> handleBoardNotFound(CardNotFoundException exception) {
+  public List<String> handleCardNotFound(CardNotFoundException exception) {
     return Collections.singletonList(exception.getMessage());
   }
 
