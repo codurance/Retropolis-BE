@@ -35,14 +35,14 @@ import org.springframework.web.context.WebApplicationContext;
 @WebMvcTest(BoardController.class)
 public class BoardControllerTest {
 
-  public static final Long BOARD_ID = 1L;
-  public static final Long COLUMN_ID = 1L;
-  public static final String BOARD_TITLE = "test board";
-  private static final String SPECIFIC_BOARD_URL = "/boards/" + BOARD_ID;
-  private static final String BOARDS_URL = "/boards";
-  public static final String TOKEN = "SOMETOKEN";
-  public static final String USER_EMAIL = "john.doe@codurance.com";
-  private static final Long NON_EXISTENT_BOARD_ID = 999L;
+  private final Long BOARD_ID = 1L;
+  private final Long COLUMN_ID = 1L;
+  private final String BOARD_TITLE = "test board";
+  private final String SPECIFIC_BOARD_URL = "/boards/" + BOARD_ID;
+  private final String BOARDS_URL = "/boards";
+  private final String TOKEN = "SOMETOKEN";
+  private final String USER_EMAIL = "john.doe@codurance.com";
+  private final Long NON_EXISTENT_BOARD_ID = 999L;
 
   @MockBean
   private BoardService boardService;

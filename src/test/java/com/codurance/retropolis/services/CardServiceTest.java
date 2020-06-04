@@ -26,12 +26,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class CardServiceTest {
 
-  public static final Long NON_EXISTENT_CARD_ID = 999L;
-  public static final Long CARD_ID = 1L;
-  public static final Long COLUMN_ID = 1L;
-  public static final String USERNAME = "John Doe";
-  public static final String TEXT = "Hello";
-  public static final String NEW_TEXT = "updated hello";
+  private final Long NON_EXISTENT_CARD_ID = 999L;
+  private final Long CARD_ID = 1L;
+  private final Long COLUMN_ID = 1L;
+  private final String USERNAME = "John Doe";
+  private final String UPVOTING_USERNAME = "John Doe";
+  private final String TEXT = "Hello";
+  private final String NEW_TEXT = "updated hello";
 
   @Mock
   private CardFactory cardFactory;
@@ -84,15 +85,14 @@ public class CardServiceTest {
 
   @Test
   void should_add_card_voter_and_return_card() {
-    String voter = "Jane Doe";
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter);
-    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(voter));
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(UPVOTING_USERNAME);
+    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(UPVOTING_USERNAME));
     when(cardRepository.addVoter(CARD_ID, requestObject.getUsername())).thenReturn(editedCard);
 
     Card card = cardService.updateVotes(CARD_ID, requestObject);
 
     assertEquals(1, card.getVoters().size());
-    assertEquals(voter, card.getVoters().get(0));
+    assertEquals(UPVOTING_USERNAME, card.getVoters().get(0));
   }
 
   @Test
