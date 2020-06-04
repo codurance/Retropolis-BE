@@ -89,7 +89,7 @@ public class CardControllerTest {
   @Test
   void update_card_vote_with_username_should_return_card_with_voter() throws Exception {
     String voter = "tom";
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter, true);
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter);
 
     given(cardService.updateVotes(any(), any(UpVoteRequestObject.class)))
         .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(voter)));
@@ -172,17 +172,9 @@ public class CardControllerTest {
   @Test
   public void return_bad_request_when_username_is_empty_on_add_vote() throws Exception {
     String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote",
-        "{\"addVote\":\"true\"}", status().isBadRequest());
+        "{}", status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Username cannot be empty", errorResponse.get(0));
-  }
-
-  @Test
-  public void return_bad_request_when_addVote_is_empty_on_add_vote() throws Exception {
-    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote",
-        "{\"username\":\"John Doe\"}", status().isBadRequest());
-    List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
-    assertEquals("addVote cannot be empty", errorResponse.get(0));
   }
 
 }

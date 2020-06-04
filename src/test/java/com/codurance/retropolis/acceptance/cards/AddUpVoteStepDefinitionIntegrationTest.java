@@ -2,7 +2,6 @@ package com.codurance.retropolis.acceptance.cards;
 
 import static com.codurance.retropolis.utils.HttpWrapper.executePatch;
 import static com.codurance.retropolis.utils.HttpWrapper.responseResult;
-import static java.lang.Boolean.getBoolean;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -38,7 +37,7 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
     Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
     executePatch("http://localhost:5000/cards/" + card.getId() + "/vote",
-        new HttpEntity<>(new UpVoteRequestObject(username, getBoolean(addVote))));
+        new HttpEntity<>(new UpVoteRequestObject(username)));
   }
 
   @Then("the client receives a status code of {int} after update")

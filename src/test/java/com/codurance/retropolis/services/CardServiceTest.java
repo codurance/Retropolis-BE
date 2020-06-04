@@ -85,7 +85,7 @@ public class CardServiceTest {
   @Test
   void should_add_card_voter_and_return_card() {
     String voter = "Jane Doe";
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter, true);
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter);
     Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(voter));
     when(cardRepository.addVoter(CARD_ID, requestObject.getUsername())).thenReturn(editedCard);
 
@@ -99,7 +99,7 @@ public class CardServiceTest {
   public void should_throw_UserUpvotedException_when_username_exists_on_update_votes() {
     doThrow(new UserUpvotedException()).when(cardRepository).addVoter(CARD_ID, USERNAME);
     assertThrows(UserUpvotedException.class, () -> {
-      UpVoteRequestObject requestObject = new UpVoteRequestObject(USERNAME, true);
+      UpVoteRequestObject requestObject = new UpVoteRequestObject(USERNAME);
       cardService.updateVotes(CARD_ID, requestObject);
     });
   }
@@ -108,7 +108,7 @@ public class CardServiceTest {
   public void should_throw_CardNotFoundException_on_update_votes() {
     doThrow(new RuntimeException()).when(cardRepository).addVoter(NON_EXISTENT_CARD_ID, USERNAME);
     assertThrows(CardNotFoundException.class, () -> {
-      UpVoteRequestObject requestObject = new UpVoteRequestObject(USERNAME, true);
+      UpVoteRequestObject requestObject = new UpVoteRequestObject(USERNAME);
       cardService.updateVotes(NON_EXISTENT_CARD_ID, requestObject);
     });
   }
