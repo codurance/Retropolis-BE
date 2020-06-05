@@ -6,10 +6,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile(Environment.TEST)
-public class TestableTokenAuthenticator extends GoogleTokenAuthenticator {
+public class TestableTokenAuthenticator implements TokenAuthenticator {
 
   @Override
   public String getEmail(String token) {
     return "john.doe@codurance.com";
+  }
+
+  @Override
+  public String getUsername(String token) {
+    return "John Doe";
   }
 }

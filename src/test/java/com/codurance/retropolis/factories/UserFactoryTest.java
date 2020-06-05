@@ -25,7 +25,7 @@ public class UserFactoryTest {
   @Test
   void creates_a_new_user_from_token() throws GeneralSecurityException, IOException {
     when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(EMAIL);
-    when(tokenAuthenticator.getUserName(TOKEN)).thenReturn(USER_NAME);
+    when(tokenAuthenticator.getUsername(TOKEN)).thenReturn(USER_NAME);
 
     UserFactory userFactory = new UserFactory(tokenAuthenticator);
     User user = userFactory.create(TOKEN);
