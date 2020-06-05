@@ -16,7 +16,7 @@ public class PostgresUserRepository implements UserRepository {
 
   private final String SELECT_USER_BY_EMAIL = "select * from users where email = ?";
   private final String SELECT_USER_BY_ID = "select * from users where id = ?";
-  private final String INSERT_USER = "insert into users (email) values (?)";
+  private final String INSERT_USER = "insert into users (email,username) values (?,?)";
   private final String INSERT_USER_TO_BOARD = "insert into users_boards (user_id,board_id) values (?,?)";
   private final String SELECT_USER_FROM_BOARD = "SELECT EXISTS(SELECT FROM users_boards WHERE user_id = ? and board_id = ?)";
 
@@ -36,11 +36,12 @@ public class PostgresUserRepository implements UserRepository {
   }
 
   @Override
-  public User register(String email) {
+  public User register(User user) {
     KeyHolder key = new GeneratedKeyHolder();
     jdbcTemplate.update(connection -> {
       PreparedStatement statement = connection.prepareStatement(INSERT_USER, new String[]{"id"});
-      statement.setString(1, email);
+      statement.setString(1, user.email);
+      statement.setString(2, user.username);
       return statement;
     }, key);
 

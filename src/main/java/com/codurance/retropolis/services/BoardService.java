@@ -41,7 +41,7 @@ public class BoardService {
   }
 
   public List<Board> getUsersBoards(User requestUser) {
-    User user = userService.findOrCreateBy(requestUser.email);
+    User user = userService.findOrCreateBy(requestUser);
     return boardRepository.getUsersBoards(user.getId());
   }
 }

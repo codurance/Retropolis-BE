@@ -15,7 +15,7 @@ public class UserService {
   }
 
   public void registerUserIfNotExists(User requestUser, Long boardId) {
-    User user = findOrCreateBy(requestUser.email);
+    User user = findOrCreateBy(requestUser);
     addToBoard(user.getId(), boardId);
   }
 
@@ -23,11 +23,11 @@ public class UserService {
     userRepository.addToBoard(userId, boardId);
   }
 
-  public User findOrCreateBy(String email) {
+  public User findOrCreateBy(User user) {
     try {
-      return userRepository.findByEmail(email);
+      return userRepository.findByEmail(user.email);
     } catch (UserNotFoundException userNotFoundException) {
-      return userRepository.register(email);
+      return userRepository.register(user);
     }
   }
 }

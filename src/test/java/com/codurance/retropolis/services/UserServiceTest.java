@@ -49,9 +49,9 @@ public class UserServiceTest {
   @Test
   void calls_userRepository_RegisterByEmail_when_UserNotFoundException() {
     given(userRepository.findByEmail(EMAIL)).willThrow(new UserNotFoundException());
-    given(userRepository.register(EMAIL)).willReturn(new User(USER_ID, EMAIL, NAME));
+    given(userRepository.register(USER)).willReturn(new User(USER_ID, EMAIL, NAME));
     userService.registerUserIfNotExists(USER, BOARD_ID);
-    verify(userRepository).register(EMAIL);
+    verify(userRepository).register(USER);
     verify(userRepository).addToBoard(USER_ID, BOARD_ID);
   }
 }

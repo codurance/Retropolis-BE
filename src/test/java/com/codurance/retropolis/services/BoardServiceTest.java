@@ -83,7 +83,7 @@ public class BoardServiceTest {
   void should_return_boards_for_a_user() {
     when(boardRepository.getUsersBoards(USER_ID)).thenReturn(List.of(
         new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList())));
-    when(userService.findOrCreateBy(USER_EMAIL))
+    when(userService.findOrCreateBy(USER))
         .thenReturn(new User(USER_ID, USER_EMAIL, USER_NAME));
 
     List<Board> boards = boardService.getUsersBoards(USER);
