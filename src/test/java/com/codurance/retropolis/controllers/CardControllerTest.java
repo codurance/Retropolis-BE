@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(CardController.class)
@@ -56,7 +57,7 @@ public class CardControllerTest {
         .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, emptyList()));
 
     String jsonResponse = mockMvcWrapper
-        .postRequest(URL, asJsonString(requestObject), status().isCreated());
+        .postRequest(URL, asJsonString(requestObject), status().isCreated(), new HttpHeaders());
     Card cardResponse = mockMvcWrapper.buildObject(jsonResponse, Card.class);
 
     assertEquals(TEXT, cardResponse.getText());
@@ -114,7 +115,8 @@ public class CardControllerTest {
   public void returns_bad_request_when_column_is_not_found() throws Exception {
     given(cardService.addCard(any(NewCardRequestObject.class))).willThrow(new ColumnNotFoundException());
     NewCardRequestObject requestObject = new NewCardRequestObject("hello", 1L, "John Doe");
-    String jsonResponse = mockMvcWrapper.postRequest(URL, asJsonString(requestObject), status().isBadRequest());
+    String jsonResponse = mockMvcWrapper
+        .postRequest(URL, asJsonString(requestObject), status().isBadRequest(), new HttpHeaders());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Column Id is not valid", errorResponse.get(0));
   }
@@ -123,7 +125,7 @@ public class CardControllerTest {
   public void return_bad_request_when_text_is_empty_on_post_card() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject("", 1L, "John Doe");
     String content = asJsonString(requestObject);
-    String jsonResponse = mockMvcWrapper.postRequest(URL, content, status().isBadRequest());
+    String jsonResponse = mockMvcWrapper.postRequest(URL, content, status().isBadRequest(), new HttpHeaders());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Text must not be less than 1 character", errorResponse.get(0));
   }
@@ -131,7 +133,7 @@ public class CardControllerTest {
   @Test
   public void return_bad_request_when_columnId_is_null() throws Exception {
     String jsonResponse = mockMvcWrapper.postRequest(URL, "{\"text\":\"hello\",\"username\":\"John Doe\"}",
-        status().isBadRequest());
+        status().isBadRequest(), new HttpHeaders());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Column id cannot be empty", errorResponse.get(0));
   }
@@ -139,7 +141,7 @@ public class CardControllerTest {
   @Test
   public void return_bad_request_when_no_text_is_sent_on_post_card() throws Exception {
     String jsonResponse = mockMvcWrapper.postRequest(URL, "{\"columnId\":\"1\",\"username\":\"John Doe\"}",
-        status().isBadRequest());
+        status().isBadRequest(), new HttpHeaders());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Text cannot be empty", errorResponse.get(0));
   }
@@ -164,7 +166,7 @@ public class CardControllerTest {
   @Test
   public void return_bad_request_when_no_username_is_sent() throws Exception {
     String jsonResponse = mockMvcWrapper
-        .postRequest(URL, "{\"text\":\"hello\",\"columnId\":\"1\"}", status().isBadRequest());
+        .postRequest(URL, "{\"text\":\"hello\",\"columnId\":\"1\"}", status().isBadRequest(), new HttpHeaders());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Username cannot be null", errorResponse.get(0));
   }

@@ -1,12 +1,13 @@
 package com.codurance.retropolis.controllers;
 
 
-import com.codurance.retropolis.config.web.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
+import com.codurance.retropolis.exceptions.UnauthorizedException;
 import com.codurance.retropolis.factories.UserFactory;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.services.BoardService;
+import com.codurance.retropolis.services.LoginService;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
@@ -31,11 +32,13 @@ public class BoardController extends BaseController {
 
   private final BoardService boardService;
   private UserFactory userFactory;
+  private final LoginService loginService;
 
   @Autowired
-  public BoardController(BoardService boardService, UserFactory userFactory) {
+  public BoardController(BoardService boardService, UserFactory userFactory, LoginService loginService) {
     this.boardService = boardService;
     this.userFactory = userFactory;
+    this.loginService = loginService;
   }
 
   @GetMapping
@@ -54,6 +57,9 @@ public class BoardController extends BaseController {
   @ResponseStatus(HttpStatus.CREATED)
   public Board postBoard(@RequestBody @Valid NewBoardRequestObject request, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
+    if (!loginService.isAuthorized(request.getUserEmail(), token)) {
+      throw new UnauthorizedException();
+    }
     request.setUser(userFactory.create(token));
     return boardService.createBoard(request);
   }
@@ -61,6 +67,12 @@ public class BoardController extends BaseController {
   @ExceptionHandler(BoardNotFoundException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public List<String> handleBoardNotFound(BoardNotFoundException exception) {
+    return Collections.singletonList(exception.getMessage());
+  }
+
+  @ExceptionHandler(UnauthorizedException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public List<String> handleUnauthorized(UnauthorizedException exception) {
     return Collections.singletonList(exception.getMessage());
   }
 }
