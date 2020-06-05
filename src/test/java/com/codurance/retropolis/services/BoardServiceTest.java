@@ -30,6 +30,7 @@ public class BoardServiceTest {
   private final Long BOARD_ID = 1L;
   private final String USER_NAME = "John Doe";
   private final String USER_EMAIL = "john.doe@codurance.com";
+  private final User USER = new User(USER_EMAIL, USER_NAME);
   private final String BOARD_TITLE = "test board";
 
   @Mock
@@ -54,7 +55,7 @@ public class BoardServiceTest {
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(
         new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, ColumnType.START))));
 
-    Board board = boardService.getBoard(USER_EMAIL, BOARD_ID);
+    Board board = boardService.getBoard(USER, BOARD_ID);
 
     verify(boardRepository).getBoard(BOARD_ID);
     assertEquals(BOARD_ID, board.getColumns().get(0).getId());
@@ -65,6 +66,7 @@ public class BoardServiceTest {
   @Test
   void creates_a_board() {
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE, USER_EMAIL);
+    requestObject.setUser(USER);
     Board board = new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList());
 
     when(boardFactory.create(requestObject)).thenReturn(board);
@@ -74,7 +76,7 @@ public class BoardServiceTest {
 
     verify(boardFactory).create(requestObject);
     verify(boardRepository).insert(board);
-    verify(userService).registerUserIfNotExists(USER_EMAIL, board.getId());
+    verify(userService).registerUserIfNotExists(USER, board.getId());
   }
 
   @Test
@@ -84,7 +86,7 @@ public class BoardServiceTest {
     when(userService.findOrCreateBy(USER_EMAIL))
         .thenReturn(new User(USER_ID, USER_EMAIL, USER_NAME));
 
-    List<Board> boards = boardService.getUsersBoards(USER_EMAIL);
+    List<Board> boards = boardService.getUsersBoards(USER);
 
     assertEquals(1, boards.size());
     assertEquals(BOARD_ID, boards.get(0).getId());
@@ -93,8 +95,8 @@ public class BoardServiceTest {
 
   @Test
   public void should_throw_BoardNotFoundException_when_boardId_is_invalid_on_() {
-    doThrow(new RuntimeException()).when(userService).registerUserIfNotExists(USER_EMAIL, BOARD_ID);
-    assertThrows(BoardNotFoundException.class, () -> boardService.getBoard(USER_EMAIL, BOARD_ID));
+    doThrow(new RuntimeException()).when(userService).registerUserIfNotExists(USER, BOARD_ID);
+    assertThrows(BoardNotFoundException.class, () -> boardService.getBoard(USER, BOARD_ID));
   }
 
 }

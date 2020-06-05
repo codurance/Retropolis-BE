@@ -20,6 +20,7 @@ public class UserServiceTest {
   private final Long USER_ID = 1L;
   private final String NAME = "John Doe";
   private final String EMAIL = "john.doe@codurance.com";
+  private final User USER = new User(EMAIL, NAME);
 
   @Mock
   private UserRepository userRepository;
@@ -35,7 +36,7 @@ public class UserServiceTest {
   void calls_addToBoard_after_registration() {
     when(userRepository.findByEmail(EMAIL)).thenReturn(new User(USER_ID, EMAIL, NAME));
 
-    userService.registerUserIfNotExists(EMAIL, BOARD_ID);
+    userService.registerUserIfNotExists(USER, BOARD_ID);
     verify(userRepository).addToBoard(USER_ID, BOARD_ID);
   }
 
@@ -49,7 +50,7 @@ public class UserServiceTest {
   void calls_userRepository_RegisterByEmail_when_UserNotFoundException() {
     given(userRepository.findByEmail(EMAIL)).willThrow(new UserNotFoundException());
     given(userRepository.register(EMAIL)).willReturn(new User(USER_ID, EMAIL, NAME));
-    userService.registerUserIfNotExists(EMAIL, BOARD_ID);
+    userService.registerUserIfNotExists(USER, BOARD_ID);
     verify(userRepository).register(EMAIL);
     verify(userRepository).addToBoard(USER_ID, BOARD_ID);
   }

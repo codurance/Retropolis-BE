@@ -14,8 +14,8 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  public void registerUserIfNotExists(String email, Long boardId) {
-    User user = findOrCreateBy(email);
+  public void registerUserIfNotExists(User requestUser, Long boardId) {
+    User user = findOrCreateBy(requestUser.email);
     addToBoard(user.getId(), boardId);
   }
 

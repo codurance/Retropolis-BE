@@ -4,6 +4,7 @@ package com.codurance.retropolis.controllers;
 import com.codurance.retropolis.config.web.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
+import com.codurance.retropolis.factories.UserFactory;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.services.BoardService;
 import java.io.IOException;
@@ -29,32 +30,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController extends BaseController {
 
   private final BoardService boardService;
-  private final GoogleTokenAuthenticator tokenAuthenticator;
+  private UserFactory userFactory;
 
   @Autowired
-  public BoardController(BoardService boardService, GoogleTokenAuthenticator tokenAuthenticator) {
+  public BoardController(BoardService boardService, UserFactory userFactory) {
     this.boardService = boardService;
-    this.tokenAuthenticator = tokenAuthenticator;
+    this.userFactory = userFactory;
   }
 
   @GetMapping
   public List<Board> getUsersBoards(@RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
-    return boardService.getUsersBoards(tokenAuthenticator.getEmail(token));
+    return boardService.getUsersBoards(userFactory.create(token));
   }
 
   @GetMapping(value = "/{id}")
   public Board getBoard(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
-    return boardService.getBoard(tokenAuthenticator.getEmail(token), id);
+    return boardService.getBoard(userFactory.create(token), id);
   }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Board postBoard(@RequestBody @Valid NewBoardRequestObject request)
+  public Board postBoard(@RequestBody @Valid NewBoardRequestObject request, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
-//    User user = userFactory.create(token);
-//    request.setUser(userEntity);
+    request.setUser(userFactory.create(token));
     return boardService.createBoard(request);
   }
 

@@ -25,9 +25,9 @@ public class BoardService {
     this.userService = userService;
   }
 
-  public Board getBoard(String email, Long boardId) {
+  public Board getBoard(User user, Long boardId) {
     try {
-      userService.registerUserIfNotExists(email, boardId);
+      userService.registerUserIfNotExists(user, boardId);
       return boardRepository.getBoard(boardId);
     } catch (RuntimeException exc) {
       throw new BoardNotFoundException();
@@ -36,12 +36,12 @@ public class BoardService {
 
   public Board createBoard(NewBoardRequestObject requestObject) {
     Board savedBoard = boardRepository.insert(boardFactory.create(requestObject));
-    userService.registerUserIfNotExists(requestObject.getUserEmail(), savedBoard.getId());
+    userService.registerUserIfNotExists(requestObject.getUser(), savedBoard.getId());
     return savedBoard;
   }
 
-  public List<Board> getUsersBoards(String email) {
-    User user = userService.findOrCreateBy(email);
+  public List<Board> getUsersBoards(User requestUser) {
+    User user = userService.findOrCreateBy(requestUser.email);
     return boardRepository.getUsersBoards(user.getId());
   }
 }

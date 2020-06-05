@@ -11,12 +11,13 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.codurance.retropolis.config.web.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.entities.ColumnType;
+import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
+import com.codurance.retropolis.factories.UserFactory;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.utils.MockMvcWrapper;
@@ -42,13 +43,15 @@ public class BoardControllerTest {
   private final String BOARDS_URL = "/boards";
   private final String TOKEN = "SOMETOKEN";
   private final String USER_EMAIL = "john.doe@codurance.com";
+  private final String USER_NAME = "John Doe";
   private final Long NON_EXISTENT_BOARD_ID = 999L;
+  private final User USER = new User(USER_EMAIL, USER_NAME);
 
   @MockBean
   private BoardService boardService;
 
   @MockBean
-  private GoogleTokenAuthenticator tokenAuthenticator;
+  private UserFactory userFactory;
 
   @Autowired
   private WebApplicationContext context;
@@ -65,20 +68,24 @@ public class BoardControllerTest {
 
   @Test
   void returns_a_board() throws Exception {
-    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
-    when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, emptyList()));
-    String jsonResponse = mockMvcWrapper.getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
+    when(userFactory.create(TOKEN)).thenReturn(USER);
+    when(boardService.getBoard(USER, BOARD_ID))
+        .thenReturn(new Board(BOARD_ID, BOARD_TITLE, emptyList()));
+    String jsonResponse = mockMvcWrapper
+        .getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
     Board boardResponse = mockMvcWrapper.buildObject(jsonResponse, Board.class);
     assertNotNull(boardResponse);
   }
 
   @Test
   void returns_board_with_columns() throws Exception {
-    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
+    when(userFactory.create(TOKEN)).thenReturn(USER);
     List<Column> columns = List.of(new Column(COLUMN_ID, ColumnType.START));
-    when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
+    when(boardService.getBoard(USER, BOARD_ID))
+        .thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
-    String jsonResponse = mockMvcWrapper.getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
+    String jsonResponse = mockMvcWrapper
+        .getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
     Board boardResponse = mockMvcWrapper.buildObject(jsonResponse, Board.class);
 
     assertEquals(columns.size(), boardResponse.getColumns().size());
@@ -95,10 +102,12 @@ public class BoardControllerTest {
     column.setCards(cards);
     List<Column> columns = List.of(column);
 
-    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
-    when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
+    when(userFactory.create(TOKEN)).thenReturn(USER);
+    when(boardService.getBoard(USER, BOARD_ID))
+        .thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
-    String jsonResponse = mockMvcWrapper.getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
+    String jsonResponse = mockMvcWrapper
+        .getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
     Board boardResponse = mockMvcWrapper.buildObject(jsonResponse, Board.class);
 
     Column columnResponse = boardResponse.getColumns().get(0);
@@ -112,11 +121,12 @@ public class BoardControllerTest {
 
   @Test
   void returns_id_and_title_of_users_boards() throws Exception {
-    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
-    when(boardService.getUsersBoards(USER_EMAIL))
+    when(userFactory.create(TOKEN)).thenReturn(USER);
+    when(boardService.getUsersBoards(USER))
         .thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
 
-    String jsonResponse = mockMvcWrapper.getRequest(BOARDS_URL, status().isOk(), getAuthHeader(TOKEN));
+    String jsonResponse = mockMvcWrapper
+        .getRequest(BOARDS_URL, status().isOk(), getAuthHeader(TOKEN));
     List<Board> boards = objectMapper.readValue(jsonResponse, new TypeReference<>() {
     });
 
@@ -127,10 +137,10 @@ public class BoardControllerTest {
 
   @Test
   void returns_a_new_board() throws Exception {
+    when(userFactory.create(TOKEN)).thenReturn(USER);
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE, USER_EMAIL);
     given(boardService.createBoard(any(NewBoardRequestObject.class)
-    ))
-        .willReturn(new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList()));
+    )).willReturn(new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList()));
 
     String jsonResponse = mockMvcWrapper
         .postRequest(BOARDS_URL, asJsonString(requestObject), status().isCreated());
@@ -142,10 +152,11 @@ public class BoardControllerTest {
 
   @Test
   public void returns_bad_request_when_board_does_not_exist() throws Exception {
-    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
-    doThrow(new BoardNotFoundException()).when(boardService).getBoard(USER_EMAIL, NON_EXISTENT_BOARD_ID);
+    when(userFactory.create(TOKEN)).thenReturn(USER);
+    doThrow(new BoardNotFoundException()).when(boardService).getBoard(USER, NON_EXISTENT_BOARD_ID);
     String jsonResponse = mockMvcWrapper
-        .getRequest(BOARDS_URL + "/" + NON_EXISTENT_BOARD_ID, status().isBadRequest(), getAuthHeader(TOKEN));
+        .getRequest(BOARDS_URL + "/" + NON_EXISTENT_BOARD_ID, status().isBadRequest(),
+            getAuthHeader(TOKEN));
     List<String> response = mockMvcWrapper.buildObject(jsonResponse);
     Assert.assertEquals("Board Id is not valid", response.get(0));
   }
@@ -162,7 +173,8 @@ public class BoardControllerTest {
   @Test
   void returns_bad_request_when_title_is_null() throws Exception {
     String jsonResponse = mockMvcWrapper
-        .postRequest(BOARDS_URL, "{\"userEmail\":\"john.doe@codurance.com\"}", status().isBadRequest());
+        .postRequest(BOARDS_URL, "{\"userEmail\":\"john.doe@codurance.com\"}",
+            status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     Assert.assertEquals("Title cannot be empty", errorResponse.get(0));
   }
@@ -178,7 +190,8 @@ public class BoardControllerTest {
 
   @Test
   void returns_bad_request_when_email_is_null() throws Exception {
-    String jsonResponse = mockMvcWrapper.postRequest(BOARDS_URL, "{\"title\":\"new board\"}", status().isBadRequest());
+    String jsonResponse = mockMvcWrapper
+        .postRequest(BOARDS_URL, "{\"title\":\"new board\"}", status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     Assert.assertEquals("Email is required", errorResponse.get(0));
   }
