@@ -40,6 +40,12 @@ public class GoogleTokenAuthenticator implements HandlerInterceptor {
     return idToken.getPayload().get("email").toString();
   }
 
+  public String getUserName(String token) throws GeneralSecurityException, IOException {
+    GoogleIdTokenVerifier verifier = buildGoogleIdTokenVerifier();
+    GoogleIdToken idToken = verifier.verify(token);
+    return idToken.getPayload().get("name").toString();
+  }
+
   private void authenticateToken(String token, HttpServletRequest request)
       throws GeneralSecurityException, IOException {
     GoogleIdTokenVerifier verifier = buildGoogleIdTokenVerifier();
