@@ -1,13 +1,12 @@
 package com.codurance.retropolis.controllers;
 
 import static com.codurance.retropolis.utils.Convert.asJsonString;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codurance.retropolis.entities.Card;
@@ -25,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(CardController.class)
@@ -37,9 +35,6 @@ public class CardControllerTest {
   private static final String URL = "/cards";
   public static final String TEXT = "hello";
   public static final String USERNAME = "John Doe";
-
-  @Autowired
-  private MockMvc mockMvc;
 
   @MockBean
   private CardService cardService;
@@ -58,7 +53,7 @@ public class CardControllerTest {
   public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME);
     given(cardService.addCard(any(NewCardRequestObject.class)))
-        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME));
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, emptyList()));
 
     String jsonResponse = mockMvcWrapper
         .postRequest(URL, asJsonString(requestObject), status().isCreated());
@@ -72,10 +67,7 @@ public class CardControllerTest {
 
   @Test
   public void delete_card_should_return_200_status_code() throws Exception {
-    mockMvc.perform(delete(URL + "/" + CARD_ID)
-        .contentType(APPLICATION_JSON)
-        .accept(APPLICATION_JSON))
-        .andExpect(status().isOk()).andReturn();
+    mockMvcWrapper.deleteRequest(URL + "/" + CARD_ID, status().isOk());
 
     verify(cardService).delete(CARD_ID);
   }
@@ -85,7 +77,7 @@ public class CardControllerTest {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(TEXT);
 
     given(cardService.update(any(), any(UpdateCardRequestObject.class)))
-        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME));
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, emptyList()));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID, asJsonString(requestObject), status().isOk());
@@ -97,7 +89,7 @@ public class CardControllerTest {
   @Test
   void update_card_vote_with_username_should_return_card_with_voter() throws Exception {
     String voter = "tom";
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter, true);
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter);
 
     given(cardService.updateVotes(any(), any(UpVoteRequestObject.class)))
         .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(voter)));
@@ -180,17 +172,9 @@ public class CardControllerTest {
   @Test
   public void return_bad_request_when_username_is_empty_on_add_vote() throws Exception {
     String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote",
-        "{\"addVote\":\"true\"}", status().isBadRequest());
+        "{}", status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Username cannot be empty", errorResponse.get(0));
-  }
-
-  @Test
-  public void return_bad_request_when_addVote_is_empty_on_add_vote() throws Exception {
-    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote",
-        "{\"username\":\"John Doe\"}", status().isBadRequest());
-    List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
-    assertEquals("addVote cannot be empty", errorResponse.get(0));
   }
 
 }

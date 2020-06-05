@@ -1,32 +1,25 @@
 package com.codurance.retropolis.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Column {
 
   private Long id;
-  private Long boardId;
   private ColumnType title;
   private List<Card> cards;
 
   public Column() {
   }
 
-  public Column(ColumnType title, List<Card> cards) {
+  public Column(ColumnType title) {
     this.title = title;
-    this.cards = cards;
   }
 
-  public Column(Long id, ColumnType title, Long boardId){
+  public Column(Long id, ColumnType title){
     this.id = id;
     this.title = title;
-    this.boardId = boardId;
-  }
-
-  public Column(Long id, ColumnType title, List<Card> cards) {
-    this.id = id;
-    this.title = title;
-    this.cards = cards;
+    this.cards = new ArrayList<>();
   }
 
   public Long getId() {

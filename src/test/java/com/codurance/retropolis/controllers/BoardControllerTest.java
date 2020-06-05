@@ -30,32 +30,25 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(BoardController.class)
 public class BoardControllerTest {
 
-  public static final Long BOARD_ID = 1L;
-  public static final Long COLUMN_ID = 1L;
-  public static final String BOARD_TITLE = "test board";
-  private static final String SPECIFIC_BOARD_URL = "/boards/" + BOARD_ID;
-  private static final String BOARDS_URL = "/boards";
-  public static final String TOKEN = "SOMETOKEN";
-  public static final String USER_EMAIL = "john.doe@codurance.com";
-  private static final Long NON_EXISTENT_BOARD_ID = 999L;
+  private final Long BOARD_ID = 1L;
+  private final Long COLUMN_ID = 1L;
+  private final String BOARD_TITLE = "test board";
+  private final String SPECIFIC_BOARD_URL = "/boards/" + BOARD_ID;
+  private final String BOARDS_URL = "/boards";
+  private final String TOKEN = "SOMETOKEN";
+  private final String USER_EMAIL = "john.doe@codurance.com";
+  private final Long NON_EXISTENT_BOARD_ID = 999L;
 
   @MockBean
   private BoardService boardService;
 
   @MockBean
   private GoogleTokenAuthenticator tokenAuthenticator;
-
-  @Autowired
-  private MockMvc mockMvc;
 
   @Autowired
   private WebApplicationContext context;
@@ -82,7 +75,7 @@ public class BoardControllerTest {
   @Test
   void returns_board_with_columns() throws Exception {
     when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
-    List<Column> columns = List.of(new Column(COLUMN_ID, ColumnType.START, emptyList()));
+    List<Column> columns = List.of(new Column(COLUMN_ID, ColumnType.START));
     when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     String jsonResponse = mockMvcWrapper.getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
@@ -94,12 +87,15 @@ public class BoardControllerTest {
 
   @Test
   void returns_board_with_columns_and_cards() throws Exception {
-    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
     String text = "hello";
     Long cardId = 1L;
     String userName = "John Doe";
-    List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName));
-    List<Column> columns = List.of(new Column(COLUMN_ID, ColumnType.START, cards));
+    List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName, emptyList()));
+    Column column = new Column(COLUMN_ID, ColumnType.START);
+    column.setCards(cards);
+    List<Column> columns = List.of(column);
+
+    when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
     when(boardService.getBoard(USER_EMAIL, BOARD_ID)).thenReturn(new Board(BOARD_ID, BOARD_TITLE, columns));
 
     String jsonResponse = mockMvcWrapper.getRequest(SPECIFIC_BOARD_URL, status().isOk(), getAuthHeader(TOKEN));
@@ -120,7 +116,9 @@ public class BoardControllerTest {
     when(boardService.getUsersBoards(USER_EMAIL))
         .thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
 
-    List<Board> boards = requestUsersBoards();
+    String jsonResponse = mockMvcWrapper.getRequest(BOARDS_URL, status().isOk(), getAuthHeader(TOKEN));
+    List<Board> boards = objectMapper.readValue(jsonResponse, new TypeReference<>() {
+    });
 
     assertEquals(1, boards.size());
     assertEquals(BOARD_TITLE, boards.get(0).getTitle());
@@ -181,16 +179,6 @@ public class BoardControllerTest {
     String jsonResponse = mockMvcWrapper.postRequest(BOARDS_URL, "{\"title\":\"new board\"}", status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     Assert.assertEquals("Email is required", errorResponse.get(0));
-  }
-
-  //TODO #2. Refactor: Same with #1 (duplicated)
-  private List<Board> requestUsersBoards() throws Exception {
-    MvcResult httpResponse = mockMvc
-        .perform(MockMvcRequestBuilders.get(BOARDS_URL).header(HttpHeaders.AUTHORIZATION, TOKEN))
-        .andExpect(status().isOk()).andReturn();
-    String contentAsString = httpResponse.getResponse().getContentAsString();
-    return objectMapper.readValue(contentAsString, new TypeReference<>() {
-    });
   }
 
 }

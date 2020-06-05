@@ -1,5 +1,6 @@
 package com.codurance.retropolis.services;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
@@ -25,12 +26,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class CardServiceTest {
 
-  public static final Long NON_EXISTENT_CARD_ID = 999L;
-  public static final Long CARD_ID = 1L;
-  public static final Long COLUMN_ID = 1L;
-  public static final String USERNAME = "John Doe";
-  public static final String TEXT = "Hello";
-  public static final String NEW_TEXT = "updated hello";
+  private final Long NON_EXISTENT_CARD_ID = 999L;
+  private final Long CARD_ID = 1L;
+  private final Long COLUMN_ID = 1L;
+  private final String USERNAME = "John Doe";
+  private final String UPVOTING_USERNAME = "John Doe";
+  private final String TEXT = "Hello";
+  private final String NEW_TEXT = "updated hello";
 
   @Mock
   private CardFactory cardFactory;
@@ -48,7 +50,7 @@ public class CardServiceTest {
   @Test
   public void should_add_and_return_new_card() {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME);
-    Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME);
+    Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, emptyList());
 
     when(cardFactory.create(requestObject)).thenReturn(card);
 
@@ -73,7 +75,7 @@ public class CardServiceTest {
   @Test
   void should_change_card_text_and_return_edited_card() {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(NEW_TEXT);
-    Card editedCard = new Card(CARD_ID, NEW_TEXT, COLUMN_ID, USERNAME);
+    Card editedCard = new Card(CARD_ID, NEW_TEXT, COLUMN_ID, USERNAME, emptyList());
     when(cardRepository.updateText(CARD_ID, requestObject.getNewText())).thenReturn(editedCard);
 
     Card card = cardService.update(CARD_ID, requestObject);
@@ -83,22 +85,21 @@ public class CardServiceTest {
 
   @Test
   void should_add_card_voter_and_return_card() {
-    String voter = "Jane Doe";
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter, true);
-    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(voter));
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(UPVOTING_USERNAME);
+    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(UPVOTING_USERNAME));
     when(cardRepository.addVoter(CARD_ID, requestObject.getUsername())).thenReturn(editedCard);
 
     Card card = cardService.updateVotes(CARD_ID, requestObject);
 
     assertEquals(1, card.getVoters().size());
-    assertEquals(voter, card.getVoters().get(0));
+    assertEquals(UPVOTING_USERNAME, card.getVoters().get(0));
   }
 
   @Test
   public void should_throw_UserUpvotedException_when_username_exists_on_update_votes() {
     doThrow(new UserUpvotedException()).when(cardRepository).addVoter(CARD_ID, USERNAME);
     assertThrows(UserUpvotedException.class, () -> {
-      UpVoteRequestObject requestObject = new UpVoteRequestObject(USERNAME, true);
+      UpVoteRequestObject requestObject = new UpVoteRequestObject(USERNAME);
       cardService.updateVotes(CARD_ID, requestObject);
     });
   }
@@ -107,7 +108,7 @@ public class CardServiceTest {
   public void should_throw_CardNotFoundException_on_update_votes() {
     doThrow(new RuntimeException()).when(cardRepository).addVoter(NON_EXISTENT_CARD_ID, USERNAME);
     assertThrows(CardNotFoundException.class, () -> {
-      UpVoteRequestObject requestObject = new UpVoteRequestObject(USERNAME, true);
+      UpVoteRequestObject requestObject = new UpVoteRequestObject(USERNAME);
       cardService.updateVotes(NON_EXISTENT_CARD_ID, requestObject);
     });
   }

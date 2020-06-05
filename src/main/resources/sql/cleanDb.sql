@@ -14,17 +14,19 @@ CREATE TABLE IF NOT EXISTS boards (
   title varchar
 );
 
-CREATE TABLE IF NOT EXISTS users_boards
-(
+CREATE TABLE IF NOT EXISTS users_boards (
     user_id  int,
     board_id int,
-    PRIMARY KEY (user_id, board_id)
+    PRIMARY KEY (user_id, board_id),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (board_id) REFERENCES boards (id)
 );
 
 CREATE TABLE IF NOT EXISTS columns (
   id SERIAL PRIMARY KEY,
   title varchar,
-  board_id int
+  board_id int,
+  FOREIGN KEY (board_id) REFERENCES boards (id)
 );
 
 CREATE TABLE IF NOT EXISTS cards (
@@ -32,16 +34,9 @@ CREATE TABLE IF NOT EXISTS cards (
   text varchar,
   username varchar,
   column_id int,
-  voters ARRAY
+  voters ARRAY,
+  FOREIGN KEY (column_id) REFERENCES columns (id)
 );
-
-ALTER TABLE users_boards ADD FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE users_boards ADD FOREIGN KEY (board_id) REFERENCES boards (id);
-
-ALTER TABLE columns ADD FOREIGN KEY (board_id) REFERENCES boards (id);
-
-ALTER TABLE cards ADD FOREIGN KEY (column_id) REFERENCES columns (id);
 
 insert into boards(id, title) values(1, 'test board');
 insert into columns(title, board_id) values('Start', 1);

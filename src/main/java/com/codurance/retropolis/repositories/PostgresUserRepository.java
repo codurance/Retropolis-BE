@@ -18,7 +18,7 @@ public class PostgresUserRepository implements UserRepository {
   private final String SELECT_USER_BY_ID = "select * from users where id = ?";
   private final String INSERT_USER = "insert into users (email) values (?)";
   private final String INSERT_USER_TO_BOARD = "insert into users_boards (user_id,board_id) values (?,?)";
-  private final String SELECT_USER_FROM_BOARD = "SELECT EXISTS(SELECT FROM users_boards WHERE user_id= ? and board_id = ?)";
+  private final String SELECT_USER_FROM_BOARD = "SELECT EXISTS(SELECT FROM users_boards WHERE user_id = ? and board_id = ?)";
 
   private final JdbcTemplate jdbcTemplate;
 

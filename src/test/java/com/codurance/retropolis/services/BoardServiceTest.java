@@ -1,6 +1,5 @@
 package com.codurance.retropolis.services;
 
-import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
@@ -26,11 +25,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
 
-  public static final Long COLUMN_ID = 1L;
-  public static final Long USER_ID = 1L;
-  public static final Long BOARD_ID = 1L;
-  public static final String USER_EMAIL = "john.doe@codurance.com";
-  public static final String BOARD_TITLE = "test board";
+  private final Long COLUMN_ID = 1L;
+  private final Long USER_ID = 1L;
+  private final Long BOARD_ID = 1L;
+  private final String USER_EMAIL = "john.doe@codurance.com";
+  private final String BOARD_TITLE = "test board";
 
   @Mock
   private BoardRepository boardRepository;
@@ -52,7 +51,7 @@ public class BoardServiceTest {
   void returns_a_board() {
     String columnTitle = "Start";
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(
-        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, ColumnType.START, emptyList()))));
+        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, ColumnType.START))));
 
     Board board = boardService.getBoard(USER_EMAIL, BOARD_ID);
 

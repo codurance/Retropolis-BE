@@ -16,9 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
-  public static final Long BOARD_ID = 1L;
-  public static final Long USER_ID = 1L;
-  public static final String EMAIL = "john.doe@codurance.com";
+  private final Long BOARD_ID = 1L;
+  private final Long USER_ID = 1L;
+  private final String EMAIL = "john.doe@codurance.com";
 
   @Mock
   private UserRepository userRepository;

@@ -20,7 +20,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +27,8 @@ import org.springframework.http.HttpStatus;
 
 public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
 
-  public static final String TOKEN = "token";
+  private final String TOKEN = "token";
+  private final int TEST_BOARD_ID = 1;
   private HttpHeaders headers;
 
   public BoardStepDefsIntegrationTest(DataSource dataSource) {
@@ -56,14 +56,14 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
   public void theClientReceivesBoardWithThreeColumnsAnd(String firstTitle, String secondTitle, String thirdTitle) {
     assertThat(HttpWrapper.responseResult.getBody(),
         is(asJsonString(new Board(1L, "test board", List.of(
-            new Column(1L, ColumnType.of(firstTitle), Collections.emptyList()),
-            new Column(2L, ColumnType.of(secondTitle), Collections.emptyList()),
-            new Column(3L, ColumnType.of(thirdTitle), Collections.emptyList()))))));
+            new Column(1L, ColumnType.of(firstTitle)),
+            new Column(2L, ColumnType.of(secondTitle)),
+            new Column(3L, ColumnType.of(thirdTitle)))))));
   }
 
   @Given("a user has accessed the test board")
   public void aUserHasAccessedTheTestBoard() {
-    HttpWrapper.executeGet(url + "/boards/1", headers);
+    HttpWrapper.executeGet(url + "/boards/" + TEST_BOARD_ID, headers);
   }
 
   @When("the user requests all their boards")
