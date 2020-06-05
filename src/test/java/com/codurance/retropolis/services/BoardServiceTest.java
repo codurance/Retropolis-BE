@@ -28,6 +28,7 @@ public class BoardServiceTest {
   private final Long COLUMN_ID = 1L;
   private final Long USER_ID = 1L;
   private final Long BOARD_ID = 1L;
+  private final String USER_NAME = "John Doe";
   private final String USER_EMAIL = "john.doe@codurance.com";
   private final String BOARD_TITLE = "test board";
 
@@ -80,7 +81,8 @@ public class BoardServiceTest {
   void should_return_boards_for_a_user() {
     when(boardRepository.getUsersBoards(USER_ID)).thenReturn(List.of(
         new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList())));
-    when(userService.findOrCreateBy(USER_EMAIL)).thenReturn(new User(USER_ID, USER_EMAIL));
+    when(userService.findOrCreateBy(USER_EMAIL))
+        .thenReturn(new User(USER_ID, USER_EMAIL, USER_NAME));
 
     List<Board> boards = boardService.getUsersBoards(USER_EMAIL);
 

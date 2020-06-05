@@ -1,6 +1,7 @@
-CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
-  email varchar UNIQUE
+CREATE TABLE IF NOT EXISTS users(
+                                    id       SERIAL PRIMARY KEY,
+                                    email    varchar UNIQUE,
+                                    username varchar
 );
 
 CREATE TABLE IF NOT EXISTS boards (
