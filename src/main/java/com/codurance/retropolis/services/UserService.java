@@ -16,7 +16,7 @@ public class UserService {
 
   public void registerUserIfNotExists(String email, Long boardId) {
     User user = findOrCreateBy(email);
-    addToBoard(user.id, boardId);
+    addToBoard(user.getId(), boardId);
   }
 
   public void addToBoard(Long userId, Long boardId) {

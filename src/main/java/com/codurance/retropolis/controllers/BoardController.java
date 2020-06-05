@@ -51,7 +51,10 @@ public class BoardController extends BaseController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Board postBoard(@RequestBody @Valid NewBoardRequestObject request) {
+  public Board postBoard(@RequestBody @Valid NewBoardRequestObject request)
+      throws GeneralSecurityException, IOException {
+//    User user = userFactory.create(token);
+//    request.setUser(userEntity);
     return boardService.createBoard(request);
   }
 

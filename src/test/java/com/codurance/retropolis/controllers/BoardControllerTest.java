@@ -128,10 +128,12 @@ public class BoardControllerTest {
   @Test
   void returns_a_new_board() throws Exception {
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE, USER_EMAIL);
-    given(boardService.createBoard(any(NewBoardRequestObject.class)))
+    given(boardService.createBoard(any(NewBoardRequestObject.class)
+    ))
         .willReturn(new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList()));
 
-    String jsonResponse = mockMvcWrapper.postRequest(BOARDS_URL, asJsonString(requestObject), status().isCreated());
+    String jsonResponse = mockMvcWrapper
+        .postRequest(BOARDS_URL, asJsonString(requestObject), status().isCreated());
     Board boardResponse = mockMvcWrapper.buildObject(jsonResponse, Board.class);
 
     assertEquals(BOARD_TITLE, boardResponse.getTitle());
