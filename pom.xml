@@ -21,7 +21,7 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
           <excludes>
-            <exclude>**/config/*</exclude>
+            <exclude>**/config/**</exclude>
             <exclude>**/*Retropolis.*</exclude>
           </excludes>
         </configuration>
