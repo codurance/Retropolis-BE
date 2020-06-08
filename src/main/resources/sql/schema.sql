@@ -29,6 +29,6 @@ CREATE TABLE IF NOT EXISTS cards (
   text varchar,
   username varchar,
   column_id int,
-  voters varchar[],
+  voters int[],
   FOREIGN KEY (column_id) REFERENCES columns (id)
 );

@@ -20,8 +20,8 @@ public class CardMapper implements RowMapper<Card> {
     );
   }
 
-    private String[] getVoters(ResultSet resultSet) throws SQLException {
+    private Long[] getVoters(ResultSet resultSet) throws SQLException {
         Array sqlArray = resultSet.getArray("voters");
-        return (String[]) sqlArray.getArray();
+        return (Long[]) sqlArray.getArray();
     }
 }

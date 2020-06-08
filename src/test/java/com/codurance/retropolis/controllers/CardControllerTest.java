@@ -89,8 +89,9 @@ public class CardControllerTest {
 
   @Test
   void update_card_vote_with_username_should_return_card_with_voter() throws Exception {
-    String voter = "tom";
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(voter);
+    Long voter = 2L;
+    String voterEmail = "jane.doe@codurance.com";
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(voterEmail);
 
     given(cardService.updateVotes(any(), any(UpVoteRequestObject.class)))
         .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(voter)));
@@ -172,11 +173,19 @@ public class CardControllerTest {
   }
 
   @Test
-  public void return_bad_request_when_username_is_empty_on_add_vote() throws Exception {
+  public void return_bad_request_when_email_is_empty_on_add_vote() throws Exception {
     String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote",
         "{}", status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
-    assertEquals("Username cannot be empty", errorResponse.get(0));
+    assertEquals("Email is required", errorResponse.get(0));
+  }
+
+  @Test
+  public void return_bad_request_when_email_is_invalid() throws Exception {
+    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote",
+        "{\"email\":\"hello\"}", status().isBadRequest());
+    List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
+    assertEquals("Email is invalid", errorResponse.get(0));
   }
 
 }

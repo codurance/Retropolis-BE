@@ -31,13 +31,13 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
     cleanUp();
   }
 
-  @And("the client updates cards vote with this id in path and voter:{string} and addVote:{string} in body")
-  public void theClientUpdatesToCardsWithThisIdInPathAndAddUpVoteInBody(String username, String addVote)
+  @And("the client updates cards vote with this id in path and voter:{string} in body")
+  public void theClientUpdatesToCardsWithThisIdInPathAndAddUpVoteInBody(String email)
       throws JsonProcessingException {
     Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
     executePatch(url + "/cards/" + card.getId() + "/vote",
-        new HttpEntity<>(new UpVoteRequestObject(username)));
+        new HttpEntity<>(new UpVoteRequestObject(email)));
   }
 
   @Then("the client receives a status code of {int} after update")

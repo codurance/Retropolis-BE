@@ -25,9 +25,13 @@ public class UserService {
 
   public User findOrCreateBy(User user) {
     try {
-      return userRepository.findByEmail(user.email);
+      return findByEmail(user.email);
     } catch (UserNotFoundException userNotFoundException) {
       return userRepository.register(user);
     }
+  }
+
+  public User findByEmail(String email) {
+    return userRepository.findByEmail(email);
   }
 }

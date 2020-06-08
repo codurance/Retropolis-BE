@@ -1,20 +1,22 @@
 package com.codurance.retropolis.requests;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 public class UpVoteRequestObject {
 
-  @NotNull(message = "Username cannot be empty")
-  private String username;
+  @NotNull(message = "Email is required")
+  @Email(message = "Email is invalid")
+  private String email;
 
   public UpVoteRequestObject() {
   }
 
-  public UpVoteRequestObject(String username) {
-    this.username = username;
+  public UpVoteRequestObject(String email) {
+    this.email = email;
   }
 
-  public String getUsername() {
-    return username;
+  public String getEmail() {
+    return email;
   }
 }

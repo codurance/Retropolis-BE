@@ -17,11 +17,13 @@ public class CardService {
 
   private final CardFactory cardFactory;
   private final CardRepository cardRepository;
+  private final UserService userService;
 
   @Autowired
-  public CardService(CardFactory cardFactory, CardRepository cardRepository) {
+  public CardService(CardFactory cardFactory, CardRepository cardRepository, UserService userService) {
     this.cardFactory = cardFactory;
     this.cardRepository = cardRepository;
+    this.userService = userService;
   }
 
   public Card addCard(NewCardRequestObject requestObject) {
@@ -51,7 +53,7 @@ public class CardService {
 
   public Card updateVotes(Long cardId, UpVoteRequestObject requestObject) {
     try {
-      return cardRepository.addVoter(cardId, requestObject.getUsername());
+      return cardRepository.addVoter(cardId, userService.findByEmail(requestObject.getEmail()).getId());
     } catch (UserUpvotedException userUpvotedException) {
       throw userUpvotedException;
     } catch (RuntimeException invalidCardId) {

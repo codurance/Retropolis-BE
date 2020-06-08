@@ -18,7 +18,7 @@ public class PostgresCardRepository implements CardRepository {
   private final String SELECT_CARD = "select * from cards where id = ?";
   private final String DELETE_CARD = "delete from cards where id = ?";
   private final String UPDATE_CARD = "update cards set text = ? where id = ?";
-  private final String ADD_VOTER = "update cards set voters = array_append(voters, ?::varchar) where id = ?";
+  private final String ADD_VOTER = "update cards set voters = array_append(voters, ?) where id = ?";
   private final JdbcTemplate jdbcTemplate;
 
 
@@ -34,7 +34,7 @@ public class PostgresCardRepository implements CardRepository {
       statement.setString(1, newCard.getText());
       statement.setString(2, newCard.getUsername());
       statement.setLong(3, newCard.getColumnId());
-      statement.setArray(4, connection.createArrayOf("varchar", new String[]{}));
+      statement.setArray(4, connection.createArrayOf("int", new Long[]{}));
       return statement;
     }, key);
 
@@ -58,13 +58,13 @@ public class PostgresCardRepository implements CardRepository {
   }
 
   @Override
-  public Card addVoter(Long cardId, String username) {
+  public Card addVoter(Long cardId, Long userId) {
     Card card = getCard(cardId);
-    if (card.getVoters().contains(username)) {
+    if (card.getVoters().contains(userId)) {
       throw new UserUpvotedException();
     }
 
-    jdbcTemplate.update(ADD_VOTER, username, cardId);
+    jdbcTemplate.update(ADD_VOTER, userId, cardId);
     return getCard(cardId);
   }
 }

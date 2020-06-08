@@ -8,19 +8,19 @@ public class Card {
   private Long columnId;
   private String text;
   private String username;
-  private List<String> voters;
+  private List<Long> voters;
 
   public Card() {
   }
 
-  public Card(String text, Long columnId, String username, List<String> voters) {
+  public Card(String text, Long columnId, String username, List<Long> voters) {
     this.text = text;
     this.columnId = columnId;
     this.username = username;
     this.voters = voters;
   }
 
-  public Card(Long id, String text, Long columnId, String username, List<String> voters) {
+  public Card(Long id, String text, Long columnId, String username, List<Long> voters) {
     this.id = id;
     this.text = text;
     this.columnId = columnId;
@@ -44,7 +44,7 @@ public class Card {
     return username;
   }
 
-  public List<String> getVoters() {
+  public List<Long> getVoters() {
     return voters;
   }
 }
