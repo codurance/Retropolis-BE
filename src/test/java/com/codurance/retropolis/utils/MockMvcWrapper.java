@@ -30,9 +30,10 @@ public class MockMvcWrapper {
     return headers;
   }
 
-  public String postRequest(String url, String content, ResultMatcher response) throws Exception {
+  public String postRequest(String url, String content, ResultMatcher response, HttpHeaders headers) throws Exception {
     return mockMvc.perform(MockMvcRequestBuilders.post(url)
         .content(content)
+        .headers(headers)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON))
         .andExpect(response)
