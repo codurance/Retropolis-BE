@@ -47,6 +47,7 @@ public class BoardControllerTest {
   private final String TOKEN = "SOMETOKEN";
   private final String USER_EMAIL = "john.doe@codurance.com";
   private final String USER_NAME = "John Doe";
+  private final Long USER_ID = 1L;
   private final User USER = new User(USER_EMAIL, USER_NAME);
   private final Long NON_EXISTENT_BOARD_ID = 999L;
 
@@ -102,8 +103,7 @@ public class BoardControllerTest {
   void returns_board_with_columns_and_cards() throws Exception {
     String text = "hello";
     Long cardId = 1L;
-    String userName = "John Doe";
-    List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, userName, emptyList()));
+    List<Card> cards = List.of(new Card(cardId, text, COLUMN_ID, USER_ID, emptyList()));
     Column column = new Column(COLUMN_ID, ColumnType.START);
     column.setCards(cards);
     List<Column> columns = List.of(column);
@@ -122,7 +122,7 @@ public class BoardControllerTest {
     assertEquals(text, cardResponse.getText());
     assertEquals(cardId, cardResponse.getId());
     assertEquals(COLUMN_ID, cardResponse.getColumnId());
-    assertEquals(userName, cardResponse.getUsername());
+    assertEquals(USER_ID, cardResponse.getUserId());
   }
 
   @Test

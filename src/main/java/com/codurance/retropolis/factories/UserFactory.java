@@ -21,4 +21,5 @@ public class UserFactory {
   public User create(String token) throws GeneralSecurityException, IOException {
     return new User(tokenAuthenticator.getEmail(token), tokenAuthenticator.getUsername(token));
   }
+
 }

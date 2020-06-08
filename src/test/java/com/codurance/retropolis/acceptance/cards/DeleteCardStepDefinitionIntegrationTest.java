@@ -19,13 +19,17 @@ import io.cucumber.java.en.When;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 
 
 public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition {
 
-  private final String USERNAME = "John Doe";
+  private final String USER_EMAIL = "john.doe@codurance.com";
   private final Long COLUMN_ID = 1L;
   private final String CARD_TEXT = "Hello";
+  private final String TOKEN = "token";
+  private HttpHeaders headers;
+
 
   public DeleteCardStepDefinitionIntegrationTest(DataSource dataSource) {
     super(dataSource);
@@ -34,12 +38,15 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
   @Before
   public void cleanUpDatabase() throws SQLException {
     cleanUp();
+    headers = new HttpHeaders();
+    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
   }
 
   @When("the card exists with id")
   public void theCardExistsWithId() {
-    executePost(url + "/cards",
-        new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USERNAME)));
+    HttpEntity<NewCardRequestObject> request = new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USER_EMAIL),
+        headers);
+    executePost(url + "/cards", request);
   }
 
   @When("the client deletes to cards with this id passing it as path variable to endpoint")

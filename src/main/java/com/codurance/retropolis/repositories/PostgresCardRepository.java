@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PostgresCardRepository implements CardRepository {
 
-  private final String INSERT_CARD = "insert into cards (text, username, column_id, voters) values (?,?,?,?)";
+  private final String INSERT_CARD = "insert into cards (text, user_id, column_id, voters) values (?,?,?,?)";
   private final String SELECT_CARD = "select * from cards where id = ?";
   private final String DELETE_CARD = "delete from cards where id = ?";
   private final String UPDATE_CARD = "update cards set text = ? where id = ?";
@@ -32,7 +32,7 @@ public class PostgresCardRepository implements CardRepository {
     jdbcTemplate.update(connection -> {
       PreparedStatement statement = connection.prepareStatement(INSERT_CARD, new String[]{"id"});
       statement.setString(1, newCard.getText());
-      statement.setString(2, newCard.getUsername());
+      statement.setLong(2, newCard.getUserId());
       statement.setLong(3, newCard.getColumnId());
       statement.setArray(4, connection.createArrayOf("int", new Long[]{}));
       return statement;

@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController extends BaseController {
 
   private final BoardService boardService;
-  private UserFactory userFactory;
+  private final UserFactory userFactory;
   private final LoginService loginService;
 
   @Autowired

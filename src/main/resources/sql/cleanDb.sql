@@ -33,10 +33,11 @@ CREATE TABLE IF NOT EXISTS columns (
 CREATE TABLE IF NOT EXISTS cards (
   id SERIAL PRIMARY KEY,
   text varchar,
-  username varchar,
+  user_id int,
   column_id int,
   voters ARRAY,
-  FOREIGN KEY (column_id) REFERENCES columns (id)
+  FOREIGN KEY (column_id) REFERENCES columns (id),
+  FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 insert into boards(id, title) values(1, 'test board');

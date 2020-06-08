@@ -56,8 +56,9 @@ public class CardServiceTest {
 
   @Test
   public void should_add_and_return_new_card() {
-    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME);
-    Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, emptyList());
+    when(userService.findByEmail(USER_EMAIL)).thenReturn(new User(USER_ID, USER_EMAIL, USERNAME));
+    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL);
+    Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID, emptyList());
 
     when(cardFactory.create(requestObject)).thenReturn(card);
 
@@ -82,7 +83,7 @@ public class CardServiceTest {
   @Test
   void should_change_card_text_and_return_edited_card() {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(NEW_TEXT);
-    Card editedCard = new Card(CARD_ID, NEW_TEXT, COLUMN_ID, USERNAME, emptyList());
+    Card editedCard = new Card(CARD_ID, NEW_TEXT, COLUMN_ID, USER_ID, emptyList());
     when(cardRepository.updateText(CARD_ID, requestObject.getNewText())).thenReturn(editedCard);
 
     Card card = cardService.update(CARD_ID, requestObject);
@@ -93,7 +94,7 @@ public class CardServiceTest {
   @Test
   void should_add_card_voter_and_return_card() {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER_EMAIL);
-    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(USER.getId()));
+    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID, Collections.singletonList(USER.getId()));
     when(userService.findByEmail(USER_EMAIL)).thenReturn(USER);
     when(cardRepository.addVoter(CARD_ID, USER.getId())).thenReturn(editedCard);
 
@@ -132,8 +133,9 @@ public class CardServiceTest {
 
   @Test
   public void should_throw_ColumnNotFoundException_on_add_card() {
+    when(userService.findByEmail(USER_EMAIL)).thenReturn(new User(USER_ID, USER_EMAIL, USERNAME));
     doThrow(new RuntimeException()).when(cardRepository).addCard(new Card());
-    assertThrows(ColumnNotFoundException.class, () -> cardService.addCard(new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME)));
+    assertThrows(ColumnNotFoundException.class, () -> cardService.addCard(new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL)));
   }
 
 }

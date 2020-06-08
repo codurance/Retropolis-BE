@@ -12,12 +12,12 @@ public class CardMapper implements RowMapper<Card> {
   @Override
   public Card mapRow(ResultSet resultSet, int i) throws SQLException {
       return new Card(
-        resultSet.getLong("id"),
-        resultSet.getString("text"),
-        resultSet.getLong("column_id"),
-        resultSet.getString("username"),
-        List.of(getVoters(resultSet))
-    );
+          resultSet.getLong("id"),
+          resultSet.getString("text"),
+          resultSet.getLong("column_id"),
+          resultSet.getLong("user_id"),
+          List.of(getVoters(resultSet))
+      );
   }
 
     private Long[] getVoters(ResultSet resultSet) throws SQLException {

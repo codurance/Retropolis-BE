@@ -1,12 +1,14 @@
 package com.codurance.retropolis.controllers;
 
 import static com.codurance.retropolis.utils.Convert.asJsonString;
+import static com.codurance.retropolis.utils.MockMvcWrapper.getAuthHeader;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codurance.retropolis.entities.Card;
@@ -16,6 +18,7 @@ import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.services.CardService;
+import com.codurance.retropolis.services.LoginService;
 import com.codurance.retropolis.utils.MockMvcWrapper;
 import java.util.Collections;
 import java.util.List;
@@ -35,13 +38,18 @@ public class CardControllerTest {
   public static final Long COLUMN_ID = 1L;
   private static final String URL = "/cards";
   public static final String TEXT = "hello";
-  public static final String USERNAME = "John Doe";
+  public static final Long USER_ID = 1L;
+  private final String TOKEN = "SOMETOKEN";
+  private final String USER_EMAIL = "john.doe@codurance.com";
 
   @MockBean
   private CardService cardService;
 
   @Autowired
   private WebApplicationContext context;
+
+  @MockBean
+  private LoginService loginService;
 
   private MockMvcWrapper mockMvcWrapper;
 
@@ -52,18 +60,19 @@ public class CardControllerTest {
 
   @Test
   public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
-    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USERNAME);
+    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL);
     given(cardService.addCard(any(NewCardRequestObject.class)))
-        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, emptyList()));
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID, emptyList()));
+    when(loginService.isAuthorized(USER_EMAIL, TOKEN)).thenReturn(true);
 
     String jsonResponse = mockMvcWrapper
-        .postRequest(URL, asJsonString(requestObject), status().isCreated(), new HttpHeaders());
+        .postRequest(URL, asJsonString(requestObject), status().isCreated(), getAuthHeader(TOKEN));
     Card cardResponse = mockMvcWrapper.buildObject(jsonResponse, Card.class);
 
     assertEquals(TEXT, cardResponse.getText());
     assertEquals(CARD_ID, cardResponse.getId());
     assertEquals(COLUMN_ID, cardResponse.getColumnId());
-    assertEquals(USERNAME, cardResponse.getUsername());
+    assertEquals(USER_ID, cardResponse.getUserId());
   }
 
   @Test
@@ -78,7 +87,7 @@ public class CardControllerTest {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(TEXT);
 
     given(cardService.update(any(), any(UpdateCardRequestObject.class)))
-        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, emptyList()));
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID, emptyList()));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID, asJsonString(requestObject), status().isOk());
@@ -94,7 +103,7 @@ public class CardControllerTest {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(voterEmail);
 
     given(cardService.updateVotes(any(), any(UpVoteRequestObject.class)))
-        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USERNAME, Collections.singletonList(voter)));
+        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID, Collections.singletonList(voter)));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
@@ -114,17 +123,18 @@ public class CardControllerTest {
 
   @Test
   public void returns_bad_request_when_column_is_not_found() throws Exception {
+    when(loginService.isAuthorized(USER_EMAIL, TOKEN)).thenReturn(true);
     given(cardService.addCard(any(NewCardRequestObject.class))).willThrow(new ColumnNotFoundException());
-    NewCardRequestObject requestObject = new NewCardRequestObject("hello", 1L, "John Doe");
+    NewCardRequestObject requestObject = new NewCardRequestObject("hello", 1L, USER_EMAIL);
     String jsonResponse = mockMvcWrapper
-        .postRequest(URL, asJsonString(requestObject), status().isBadRequest(), new HttpHeaders());
+        .postRequest(URL, asJsonString(requestObject), status().isBadRequest(), getAuthHeader(TOKEN));
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Column Id is not valid", errorResponse.get(0));
   }
 
   @Test
   public void return_bad_request_when_text_is_empty_on_post_card() throws Exception {
-    NewCardRequestObject requestObject = new NewCardRequestObject("", 1L, "John Doe");
+    NewCardRequestObject requestObject = new NewCardRequestObject("", COLUMN_ID, USER_EMAIL);
     String content = asJsonString(requestObject);
     String jsonResponse = mockMvcWrapper.postRequest(URL, content, status().isBadRequest(), new HttpHeaders());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
@@ -133,7 +143,7 @@ public class CardControllerTest {
 
   @Test
   public void return_bad_request_when_columnId_is_null() throws Exception {
-    String jsonResponse = mockMvcWrapper.postRequest(URL, "{\"text\":\"hello\",\"username\":\"John Doe\"}",
+    String jsonResponse = mockMvcWrapper.postRequest(URL, "{\"text\":\"hello\",\"email\":\"john.doe@codurance.com\"}",
         status().isBadRequest(), new HttpHeaders());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Column id cannot be empty", errorResponse.get(0));
@@ -141,7 +151,7 @@ public class CardControllerTest {
 
   @Test
   public void return_bad_request_when_no_text_is_sent_on_post_card() throws Exception {
-    String jsonResponse = mockMvcWrapper.postRequest(URL, "{\"columnId\":\"1\",\"username\":\"John Doe\"}",
+    String jsonResponse = mockMvcWrapper.postRequest(URL, "{\"columnId\":\"1\",\"email\":\"john.doe@codurance.com\"}",
         status().isBadRequest(), new HttpHeaders());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Text cannot be empty", errorResponse.get(0));
@@ -169,7 +179,7 @@ public class CardControllerTest {
     String jsonResponse = mockMvcWrapper
         .postRequest(URL, "{\"text\":\"hello\",\"columnId\":\"1\"}", status().isBadRequest(), new HttpHeaders());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
-    assertEquals("Username cannot be null", errorResponse.get(0));
+    assertEquals("Email is required", errorResponse.get(0));
   }
 
   @Test

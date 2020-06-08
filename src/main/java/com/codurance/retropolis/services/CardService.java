@@ -1,6 +1,7 @@
 package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.entities.Card;
+import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.exceptions.UserUpvotedException;
@@ -27,6 +28,8 @@ public class CardService {
   }
 
   public Card addCard(NewCardRequestObject requestObject) {
+    User user = userService.findByEmail(requestObject.getEmail());
+    requestObject.setUserId(user.getId());
     Card newCard = cardFactory.create(requestObject);
     try {
       return cardRepository.addCard(newCard);
