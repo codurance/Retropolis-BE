@@ -6,6 +6,7 @@ import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.exceptions.UnauthorizedException;
 import com.codurance.retropolis.factories.UserFactory;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
+import com.codurance.retropolis.responses.BoardResponseObject;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.LoginService;
 import java.io.IOException;
@@ -48,8 +49,10 @@ public class BoardController extends BaseController {
   }
 
   @GetMapping(value = "/{id}")
-  public Board getBoard(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
+  public BoardResponseObject getBoard(@PathVariable Long id,
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
+
     return boardService.getBoard(userFactory.create(token), id);
   }
 

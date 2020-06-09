@@ -1,5 +1,6 @@
 package com.codurance.retropolis.services;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
@@ -14,7 +15,8 @@ import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
-import java.util.Collections;
+import com.codurance.retropolis.responses.BoardResponseObject;
+import com.codurance.retropolis.responses.BoardResponseObjectFactory;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,32 +44,38 @@ public class BoardServiceTest {
   @Mock
   private UserService userService;
 
+  @Mock
+  private BoardResponseObjectFactory boardResponseFactory;
+
   private BoardService boardService;
 
   @BeforeEach
   void setUp() {
-    boardService = new BoardService(boardRepository, boardFactory, userService);
+    boardService = new BoardService(boardRepository, boardFactory, userService,
+        boardResponseFactory);
   }
 
   @Test
   void returns_a_board() {
-    String columnTitle = "Start";
+    Board board = new Board(BOARD_ID, BOARD_TITLE,
+        List.of(new Column(COLUMN_ID, ColumnType.START)));
+    when(userService.findByEmail(USER_EMAIL)).thenReturn(USER);
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(
-        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, ColumnType.START))));
+        board);
+    when(boardResponseFactory.create(board, USER.getId()))
+        .thenReturn(new BoardResponseObject(BOARD_ID, BOARD_TITLE, emptyList()));
 
-    Board board = boardService.getBoard(USER, BOARD_ID);
+    BoardResponseObject boardResponse = boardService.getBoard(USER, BOARD_ID);
 
     verify(boardRepository).getBoard(BOARD_ID);
-    assertEquals(BOARD_ID, board.getColumns().get(0).getId());
-    assertEquals(columnTitle, board.getColumns().get(0).getTitle());
-    assertEquals(0, board.getColumns().get(0).getCards().size());
+    assertEquals(BOARD_ID, boardResponse.getId());
   }
 
   @Test
   void creates_a_board() {
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE, USER_EMAIL);
     requestObject.setUser(USER);
-    Board board = new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList());
+    Board board = new Board(BOARD_ID, BOARD_TITLE, emptyList());
 
     when(boardFactory.create(requestObject)).thenReturn(board);
     when(boardRepository.insert(board)).thenReturn(board);
@@ -82,7 +90,7 @@ public class BoardServiceTest {
   @Test
   void should_return_boards_for_a_user() {
     when(boardRepository.getUsersBoards(USER_ID)).thenReturn(List.of(
-        new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList())));
+        new Board(BOARD_ID, BOARD_TITLE, emptyList())));
     when(userService.findOrCreateBy(USER))
         .thenReturn(new User(USER_ID, USER_EMAIL, USER_NAME));
 
