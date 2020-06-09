@@ -18,9 +18,8 @@ public class PostgresCardRepository implements CardRepository {
   private final String SELECT_CARD = "select * from cards where id = ?";
   private final String DELETE_CARD = "delete from cards where id = ?";
   private final String UPDATE_CARD = "update cards set text = ? where id = ?";
-  private final String ADD_VOTER = "update cards set voters = array_append(voters, ?) where id = ?";
+  private final String ADD_VOTER = "update cards set voters = array_append(voters, ?::integer) where id = ?";
   private final JdbcTemplate jdbcTemplate;
-
 
   public PostgresCardRepository(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -34,7 +33,7 @@ public class PostgresCardRepository implements CardRepository {
       statement.setString(1, newCard.getText());
       statement.setLong(2, newCard.getUserId());
       statement.setLong(3, newCard.getColumnId());
-      statement.setArray(4, connection.createArrayOf("int", new Long[]{}));
+      statement.setArray(4, connection.createArrayOf("int", new Integer[]{}));
       return statement;
     }, key);
 

@@ -1,5 +1,7 @@
 package com.codurance.retropolis.repositories.mappers;
 
+import static java.util.stream.Collectors.toList;
+
 import com.codurance.retropolis.entities.Card;
 import java.sql.Array;
 import java.sql.ResultSet;
@@ -11,17 +13,17 @@ public class CardMapper implements RowMapper<Card> {
 
   @Override
   public Card mapRow(ResultSet resultSet, int i) throws SQLException {
-      return new Card(
-          resultSet.getLong("id"),
-          resultSet.getString("text"),
-          resultSet.getLong("column_id"),
-          resultSet.getLong("user_id"),
-          List.of(getVoters(resultSet))
-      );
+    return new Card(
+        resultSet.getLong("id"),
+        resultSet.getString("text"),
+        resultSet.getLong("column_id"),
+        resultSet.getLong("user_id"),
+        List.of(getVoters(resultSet)).stream().map(Long::valueOf).collect(toList())
+    );
   }
 
-    private Long[] getVoters(ResultSet resultSet) throws SQLException {
-        Array sqlArray = resultSet.getArray("voters");
-        return (Long[]) sqlArray.getArray();
-    }
+  private Integer[] getVoters(ResultSet resultSet) throws SQLException {
+    Array sqlArray = resultSet.getArray("voters");
+    return (Integer[]) sqlArray.getArray();
+  }
 }

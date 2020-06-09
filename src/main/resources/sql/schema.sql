@@ -30,6 +30,6 @@ CREATE TABLE IF NOT EXISTS cards (
   user_id int,
   column_id int,
   voters int[],
-  FOREIGN KEY (column_id) REFERENCES columns (id)
+  FOREIGN KEY (column_id) REFERENCES columns (id),
   FOREIGN KEY (user_id) REFERENCES users (id)
 );
