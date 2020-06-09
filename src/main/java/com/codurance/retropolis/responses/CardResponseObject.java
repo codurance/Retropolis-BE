@@ -7,17 +7,19 @@ public class CardResponseObject {
   private Long columnId;
   private Boolean haveVoted;
   private Integer totalVoters;
+  private String author;
 
   public CardResponseObject() {
   }
 
   public CardResponseObject(String text, Long cardId, Long columnId, Boolean haveVoted,
-      Integer totalVoters) {
+      Integer totalVoters, String author) {
     this.text = text;
     this.cardId = cardId;
     this.columnId = columnId;
     this.haveVoted = haveVoted;
     this.totalVoters = totalVoters;
+    this.author = author;
   }
 
   public String getText() {
@@ -38,5 +40,9 @@ public class CardResponseObject {
 
   public Integer getTotalVoters() {
     return totalVoters;
+  }
+
+  public String getAuthor() {
+    return author;
   }
 }

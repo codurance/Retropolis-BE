@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.is;
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
+import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -34,9 +35,10 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
   @And("the client updates cards vote with this id in path and voter:{string} in body")
   public void theClientUpdatesToCardsWithThisIdInPathAndAddUpVoteInBody(String email)
       throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
-    });
-    executePatch(url + "/cards/" + card.getId() + "/vote",
+    CardResponseObject cardResponseObject = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
+        });
+    executePatch(url + "/cards/" + cardResponseObject.getCardId() + "/vote",
         new HttpEntity<>(new UpVoteRequestObject(email)));
   }
 

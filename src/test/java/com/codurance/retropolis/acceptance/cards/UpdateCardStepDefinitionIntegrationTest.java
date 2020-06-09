@@ -10,6 +10,7 @@ import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -51,10 +52,11 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
   @And("the client updates to cards with this id and changes the text to {string}")
   public void theClientUpdatesToCardsWithThisIdAndChangesTheTextFromTo(String newText)
       throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
-    });
+    CardResponseObject cardResponseObject = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
+        });
 
-    executePatch(url + "/cards/" + card.getId(),
+    executePatch(url + "/cards/" + cardResponseObject.getCardId(),
         new HttpEntity<>(new UpdateCardRequestObject(newText)));
   }
 

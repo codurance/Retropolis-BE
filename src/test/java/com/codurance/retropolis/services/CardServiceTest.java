@@ -17,6 +17,7 @@ import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.responses.CardResponseObjectFactory;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class CardServiceTest {
 
+  private final Boolean HAVE_VOTED = false;
   private final Long NON_EXISTENT_CARD_ID = 999L;
   private final Long CARD_ID = 1L;
   private final Long COLUMN_ID = 1L;
@@ -61,9 +63,20 @@ public class CardServiceTest {
 
   @Test
   public void should_add_and_return_new_card() {
-    when(userService.findByEmail(USER_EMAIL)).thenReturn(new User(USER_ID, USER_EMAIL, USERNAME));
-    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL);
     Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID, emptyList());
+    User author = new User(USER_ID, USER_EMAIL, USERNAME);
+
+    when(userService.findByEmail(USER_EMAIL)).thenReturn(author);
+    when(userService.findById(USER_ID)).thenReturn(author);
+
+    CardResponseObject cardResponseObject = new CardResponseObject(card.getText(), card.getId(),
+        card.getColumnId(), HAVE_VOTED, card.getVoters().size(), author.username);
+
+    when(cardResponseObjectFactory.create(card, USER_ID, author.username))
+        .thenReturn(cardResponseObject);
+    when(cardRepository.addCard(card)).thenReturn(card);
+
+    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL);
 
     when(cardFactory.create(requestObject)).thenReturn(card);
 
@@ -99,7 +112,8 @@ public class CardServiceTest {
   @Test
   void should_add_card_voter_and_return_card() {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER_EMAIL);
-    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID, Collections.singletonList(USER.getId()));
+    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID,
+        Collections.singletonList(USER.getId()));
     when(userService.findByEmail(USER_EMAIL)).thenReturn(USER);
     when(cardRepository.addVoter(CARD_ID, USER.getId())).thenReturn(editedCard);
 
@@ -122,7 +136,8 @@ public class CardServiceTest {
   @Test
   public void should_throw_CardNotFoundException_on_update_votes() {
     when(userService.findByEmail(USER_EMAIL)).thenReturn(USER);
-    doThrow(new RuntimeException()).when(cardRepository).addVoter(NON_EXISTENT_CARD_ID, USER.getId());
+    doThrow(new RuntimeException()).when(cardRepository)
+        .addVoter(NON_EXISTENT_CARD_ID, USER.getId());
     assertThrows(CardNotFoundException.class, () -> {
       UpVoteRequestObject requestObject = new UpVoteRequestObject(USER_EMAIL);
       cardService.updateVotes(NON_EXISTENT_CARD_ID, requestObject);
@@ -140,7 +155,8 @@ public class CardServiceTest {
   public void should_throw_ColumnNotFoundException_on_add_card() {
     when(userService.findByEmail(USER_EMAIL)).thenReturn(new User(USER_ID, USER_EMAIL, USERNAME));
     doThrow(new RuntimeException()).when(cardRepository).addCard(new Card());
-    assertThrows(ColumnNotFoundException.class, () -> cardService.addCard(new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL)));
+    assertThrows(ColumnNotFoundException.class,
+        () -> cardService.addCard(new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL)));
   }
 
 }

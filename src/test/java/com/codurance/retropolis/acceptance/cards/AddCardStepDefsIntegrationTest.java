@@ -6,8 +6,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.responses.CardResponseObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,11 +49,11 @@ public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
   @And("the client receives the card with the column_id:{long}, text:{string} and userId:{long}")
   public void theClientReceivesTheCardWithTheColumn_idAndText(Long columnId, String text, Long userId)
       throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
-    });
 
-    assertThat(card.getColumnId(), is(columnId));
-    assertThat(card.getText(), is(text));
-    assertThat(card.getUserId(), is(userId));
+    CardResponseObject cardResponseObject = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
+        });
+
+    assertThat(cardResponseObject.getText(), is(text));
   }
 }

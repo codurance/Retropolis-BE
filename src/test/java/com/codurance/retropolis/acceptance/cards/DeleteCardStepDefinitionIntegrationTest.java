@@ -7,8 +7,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -51,9 +51,10 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
 
   @When("the client deletes to cards with this id passing it as path variable to endpoint")
   public void theClientDeletesToCardsEndpointWithPathVariable() throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
-    });
-    executeDelete(url + "/cards/" + card.getId());
+    CardResponseObject cardResponseObject = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
+        });
+    executeDelete(url + "/cards/" + cardResponseObject.getCardId());
   }
 
   @Then("the client receives a status code of {int} after card was deleted")

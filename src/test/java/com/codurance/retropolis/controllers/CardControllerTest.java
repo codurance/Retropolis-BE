@@ -42,6 +42,7 @@ public class CardControllerTest {
   public static final Long USER_ID = 1L;
   private static final Boolean HAVE_VOTED = false;
   private static final Integer TOTAL_VOTERS = 0;
+  private static final String USERNAME = "John Doe";
   private final String TOKEN = "SOMETOKEN";
   private final String USER_EMAIL = "john.doe@codurance.com";
 
@@ -65,7 +66,8 @@ public class CardControllerTest {
   public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL);
     given(cardService.addCard(any(NewCardRequestObject.class)))
-        .willReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS));
+        .willReturn(
+            new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USERNAME));
     when(loginService.isAuthorized(USER_EMAIL, TOKEN)).thenReturn(true);
 
     String jsonResponse = mockMvcWrapper
@@ -78,6 +80,7 @@ public class CardControllerTest {
     assertEquals(COLUMN_ID, cardResponseObject.getCardId());
     assertEquals(HAVE_VOTED, cardResponseObject.getHaveVoted());
     assertEquals(TOTAL_VOTERS, cardResponseObject.getTotalVoters());
+    assertEquals(USERNAME, cardResponseObject.getAuthor());
   }
 
   @Test

@@ -39,14 +39,15 @@ public class CardService {
 
     try {
       Card card = cardRepository.addCard(newCard);
-      return createResponseFrom(card);
+      return createResponseFrom(card, user.getId());
     } catch (RuntimeException exception) {
       throw new ColumnNotFoundException();
     }
   }
 
-  private CardResponseObject createResponseFrom(Card card) {
-    return cardResponseObjectFactory.create(card);
+  private CardResponseObject createResponseFrom(Card card, Long userId) {
+    User cardAuthor = userService.findById(userId);
+    return cardResponseObjectFactory.create(card, userId, cardAuthor.username);
   }
 
   public void delete(Long cardId) {

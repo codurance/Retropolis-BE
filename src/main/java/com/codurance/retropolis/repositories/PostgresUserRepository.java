@@ -57,7 +57,7 @@ public class PostgresUserRepository implements UserRepository {
     }
   }
 
-  private User findById(Long id) {
+  public User findById(Long id) {
     try {
       return jdbcTemplate.queryForObject(SELECT_USER_BY_ID, new UserMapper(), id);
     } catch (RuntimeException exception) {

@@ -9,4 +9,6 @@ public interface UserRepository {
   User register(User user);
 
   void addToBoard(Long userId, Long boardId);
+
+  User findById(Long id);
 }
