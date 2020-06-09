@@ -2,6 +2,7 @@ package com.codurance.retropolis.services;
 
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -116,11 +117,18 @@ public class CardServiceTest {
         Collections.singletonList(USER.getId()));
     when(userService.findByEmail(USER_EMAIL)).thenReturn(USER);
     when(cardRepository.addVoter(CARD_ID, USER.getId())).thenReturn(editedCard);
+    when(userService.findById(USER_ID)).thenReturn(USER);
 
-    Card card = cardService.updateVotes(CARD_ID, requestObject);
+    CardResponseObject cardResponseObject = new CardResponseObject(editedCard.getText(), editedCard.getId(),
+        editedCard.getColumnId(), HAVE_VOTED, editedCard.getVoters().size(), USERNAME);
 
-    assertEquals(1, card.getVoters().size());
-    assertEquals(USER.getId(), card.getVoters().get(0));
+    when(cardResponseObjectFactory.create(editedCard, USER_ID, USERNAME))
+        .thenReturn(cardResponseObject);
+
+    cardService.updateVotes(CARD_ID, requestObject);
+
+    assertEquals(1, cardResponseObject.getTotalVoters());
+    assertFalse(cardResponseObject.getHaveVoted());
   }
 
   @Test

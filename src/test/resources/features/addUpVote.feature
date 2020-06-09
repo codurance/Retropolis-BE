@@ -4,4 +4,4 @@ Feature: upvote is added to card
     When the card exists with id
     And the client updates cards vote with this id in path and voter:"john.doe@codurance.com" in body
     Then the client receives a status code of 200 after update
-    And the client receives the card with the voter:"username"
+    And the client receives the card with their vote

@@ -45,11 +45,6 @@ public class CardService {
     }
   }
 
-  private CardResponseObject createResponseFrom(Card card, Long userId) {
-    User cardAuthor = userService.findById(userId);
-    return cardResponseObjectFactory.create(card, userId, cardAuthor.username);
-  }
-
   public void delete(Long cardId) {
     try {
       cardRepository.delete(cardId);
@@ -66,13 +61,20 @@ public class CardService {
     }
   }
 
-  public Card updateVotes(Long cardId, UpVoteRequestObject requestObject) {
+  public CardResponseObject updateVotes(Long cardId, UpVoteRequestObject requestObject) {
     try {
-      return cardRepository.addVoter(cardId, userService.findByEmail(requestObject.getEmail()).getId());
+      User user = userService.findByEmail(requestObject.getEmail());
+      Card updatedCard = cardRepository.addVoter(cardId, user.getId());
+      return createResponseFrom(updatedCard, user.getId());
     } catch (UserUpvotedException userUpvotedException) {
       throw userUpvotedException;
     } catch (RuntimeException invalidCardId) {
       throw new CardNotFoundException();
     }
+  }
+
+  private CardResponseObject createResponseFrom(Card card, Long userId) {
+    User cardAuthor = userService.findById(userId);
+    return cardResponseObjectFactory.create(card, userId, cardAuthor.username);
   }
 }

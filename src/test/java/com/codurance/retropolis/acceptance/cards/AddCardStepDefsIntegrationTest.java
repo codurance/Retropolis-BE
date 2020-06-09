@@ -56,4 +56,5 @@ public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
 
     assertThat(cardResponseObject.getText(), is(text));
   }
+
 }

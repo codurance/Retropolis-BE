@@ -3,7 +3,8 @@ package com.codurance.retropolis.controllers;
 import static com.codurance.retropolis.utils.Convert.asJsonString;
 import static com.codurance.retropolis.utils.MockMvcWrapper.getAuthHeader;
 import static java.util.Collections.emptyList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -21,7 +22,6 @@ import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
 import com.codurance.retropolis.utils.MockMvcWrapper;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -111,14 +111,14 @@ public class CardControllerTest {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(voterEmail);
 
     given(cardService.updateVotes(any(), any(UpVoteRequestObject.class)))
-        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID, Collections.singletonList(voter)));
+        .willReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, 1, USERNAME));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
-    Card cardResponse = mockMvcWrapper.buildObject(jsonResponse, Card.class);
+    CardResponseObject cardResponseObject = mockMvcWrapper.buildObject(jsonResponse, CardResponseObject.class);
 
-    assertEquals(1, cardResponse.getVoters().size());
-    assertEquals(voter, cardResponse.getVoters().get(0));
+    assertEquals(1, cardResponseObject.getTotalVoters());
+    assertFalse(cardResponseObject.getHaveVoted());
   }
 
   @Test
