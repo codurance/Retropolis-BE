@@ -17,6 +17,7 @@ import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.responses.CardResponseObjectFactory;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,11 +48,15 @@ public class CardServiceTest {
   @Mock
   private UserService userService;
 
+  @Mock
+  private CardResponseObjectFactory cardResponseObjectFactory;
+
   private CardService cardService;
 
   @BeforeEach
   void setUp() {
-    cardService = new CardService(cardFactory, cardRepository, userService);
+    cardService = new CardService(cardFactory, cardRepository, userService,
+        cardResponseObjectFactory);
   }
 
   @Test

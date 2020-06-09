@@ -7,6 +7,7 @@ import com.codurance.retropolis.exceptions.UnauthorizedException;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
 import java.util.Collections;
@@ -42,10 +43,12 @@ public class CardController extends BaseController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Card postCard(@RequestBody @Valid NewCardRequestObject request, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+  public CardResponseObject postCard(@RequestBody @Valid NewCardRequestObject request,
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
     if (!loginService.isAuthorized(request.getEmail(), token)) {
       throw new UnauthorizedException();
     }
+
     return cardService.addCard(request);
   }
 

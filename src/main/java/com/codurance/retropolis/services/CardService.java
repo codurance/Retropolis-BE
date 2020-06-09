@@ -10,6 +10,8 @@ import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.responses.CardResponseObject;
+import com.codurance.retropolis.responses.CardResponseObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,23 +21,32 @@ public class CardService {
   private final CardFactory cardFactory;
   private final CardRepository cardRepository;
   private final UserService userService;
+  private final CardResponseObjectFactory cardResponseObjectFactory;
 
   @Autowired
-  public CardService(CardFactory cardFactory, CardRepository cardRepository, UserService userService) {
+  public CardService(CardFactory cardFactory, CardRepository cardRepository,
+      UserService userService, CardResponseObjectFactory cardResponseObjectFactory) {
     this.cardFactory = cardFactory;
     this.cardRepository = cardRepository;
     this.userService = userService;
+    this.cardResponseObjectFactory = cardResponseObjectFactory;
   }
 
-  public Card addCard(NewCardRequestObject requestObject) {
+  public CardResponseObject addCard(NewCardRequestObject requestObject) {
     User user = userService.findByEmail(requestObject.getEmail());
     requestObject.setUserId(user.getId());
     Card newCard = cardFactory.create(requestObject);
+
     try {
-      return cardRepository.addCard(newCard);
+      Card card = cardRepository.addCard(newCard);
+      return createResponseFrom(card);
     } catch (RuntimeException exception) {
       throw new ColumnNotFoundException();
     }
+  }
+
+  private CardResponseObject createResponseFrom(Card card) {
+    return cardResponseObjectFactory.create(card);
   }
 
   public void delete(Long cardId) {

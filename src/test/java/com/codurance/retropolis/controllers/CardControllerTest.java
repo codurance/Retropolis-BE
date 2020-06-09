@@ -17,6 +17,7 @@ import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
 import com.codurance.retropolis.utils.MockMvcWrapper;
@@ -39,6 +40,8 @@ public class CardControllerTest {
   private static final String URL = "/cards";
   public static final String TEXT = "hello";
   public static final Long USER_ID = 1L;
+  private static final Boolean HAVE_VOTED = false;
+  private static final Integer TOTAL_VOTERS = 0;
   private final String TOKEN = "SOMETOKEN";
   private final String USER_EMAIL = "john.doe@codurance.com";
 
@@ -62,17 +65,19 @@ public class CardControllerTest {
   public void post_cards_should_return_back_card_instance_with_id_in_response() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL);
     given(cardService.addCard(any(NewCardRequestObject.class)))
-        .willReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID, emptyList()));
+        .willReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS));
     when(loginService.isAuthorized(USER_EMAIL, TOKEN)).thenReturn(true);
 
     String jsonResponse = mockMvcWrapper
         .postRequest(URL, asJsonString(requestObject), status().isCreated(), getAuthHeader(TOKEN));
-    Card cardResponse = mockMvcWrapper.buildObject(jsonResponse, Card.class);
+    CardResponseObject cardResponseObject = mockMvcWrapper
+        .buildObject(jsonResponse, CardResponseObject.class);
 
-    assertEquals(TEXT, cardResponse.getText());
-    assertEquals(CARD_ID, cardResponse.getId());
-    assertEquals(COLUMN_ID, cardResponse.getColumnId());
-    assertEquals(USER_ID, cardResponse.getUserId());
+    assertEquals(TEXT, cardResponseObject.getText());
+    assertEquals(CARD_ID, cardResponseObject.getCardId());
+    assertEquals(COLUMN_ID, cardResponseObject.getCardId());
+    assertEquals(HAVE_VOTED, cardResponseObject.getHaveVoted());
+    assertEquals(TOTAL_VOTERS, cardResponseObject.getTotalVoters());
   }
 
   @Test
