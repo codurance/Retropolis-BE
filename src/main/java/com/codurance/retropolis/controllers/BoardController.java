@@ -61,7 +61,6 @@ public class BoardController extends BaseController {
     if (!loginService.isAuthorized(request.getUserEmail(), token)) {
       throw new UnauthorizedException();
     }
-    boardService.createBoard(request);
 
     return boardService.createBoard(request);
   }
