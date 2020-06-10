@@ -16,9 +16,14 @@ For continuous integration it uses [CircleCI](https://circleci.com/) and for the
 
  2) Navigate to the project folder and install the dependencies with the following command.  <br/>
                  `$ mvn install`
+
+ 3) Set the enviroment variables for the db connection.
+       * `URL`, the datasource url of your db (e.g. `jdbc:postgresql://localhost:5432/postgres`
+       * `USER`, the user of your db
+       * `PASS`, the password of your db
                  
- 3) Run the application locally (the application can be accessed from [localhost:5000](http://localhost:3000/)) <br/>
-                  `$ mvn spring-boot:run`
+ 4) Run the application locally (the application can be accessed from [localhost:5000](http://localhost:3000/)) <br/>
+                  `$ mvn spring-boot:run -Dspring.profiles.active=dev`
 
 #### Run tests
 You can run the tests by using `$ mvn test`.
