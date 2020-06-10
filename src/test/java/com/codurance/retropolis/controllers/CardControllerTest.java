@@ -148,7 +148,8 @@ public class CardControllerTest {
 
   @Test
   public void return_bad_request_when_columnId_is_null() throws Exception {
-    String jsonResponse = mockMvcWrapper.postRequest(URL, "{\"text\":\"hello\",\"email\":\"john.doe@codurance.com\"}",
+    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, null, USER.email);
+    String jsonResponse = mockMvcWrapper.postRequest(URL, asJsonString(requestObject),
         status().isBadRequest(), EMPTY_HEADERS);
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Column id cannot be empty", errorResponse.get(0));
@@ -156,10 +157,18 @@ public class CardControllerTest {
 
   @Test
   public void return_bad_request_when_no_text_is_sent_on_post_card() throws Exception {
-    String jsonResponse = mockMvcWrapper.postRequest(URL, "{\"columnId\":\"1\",\"email\":\"john.doe@codurance.com\"}",
-        status().isBadRequest(), EMPTY_HEADERS);
+    NewCardRequestObject requestObject = new NewCardRequestObject(null, COLUMN_ID, USER.email);
+    String jsonResponse = mockMvcWrapper.postRequest(URL, asJsonString(requestObject), status().isBadRequest(), EMPTY_HEADERS);
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Text cannot be empty", errorResponse.get(0));
+  }
+
+  @Test
+  public void return_bad_request_when_no_email_is_sent_on_create() throws Exception {
+    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, null);
+    String jsonResponse = mockMvcWrapper.postRequest(URL, asJsonString(requestObject), status().isBadRequest(), EMPTY_HEADERS);
+    List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
+    assertEquals("Email is required", errorResponse.get(0));
   }
 
   @Test
@@ -173,29 +182,24 @@ public class CardControllerTest {
 
   @Test
   public void return_bad_request_when_no_text_is_sent_on_updateText() throws Exception {
-    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1", "{}", status().isBadRequest());
+    UpdateCardRequestObject requestObject = new UpdateCardRequestObject(null);
+    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1", asJsonString(requestObject), status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Text cannot be empty", errorResponse.get(0));
   }
 
   @Test
-  public void return_bad_request_when_no_email_is_sent_on_create() throws Exception {
-    String jsonResponse = mockMvcWrapper
-        .postRequest(URL, "{\"text\":\"hello\",\"columnId\":\"1\"}", status().isBadRequest(), EMPTY_HEADERS);
-    List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
-    assertEquals("Email is required", errorResponse.get(0));
-  }
-
-  @Test
   public void return_bad_request_when_email_is_empty_on_upvote() throws Exception {
-    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote", "{}", status().isBadRequest());
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(null);
+    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Email is required", errorResponse.get(0));
   }
 
   @Test
   public void return_bad_request_when_email_is_invalid_on_upvote() throws Exception {
-    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote", "{\"email\":\"hello\"}", status().isBadRequest());
+    UpVoteRequestObject requestObject = new UpVoteRequestObject("invalid mail");
+    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Email is invalid", errorResponse.get(0));
   }
