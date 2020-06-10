@@ -57,7 +57,7 @@ public class PostgresCardRepository implements CardRepository {
   }
 
   @Override
-  public Card upvote(Long cardId, Long userId) {
+  public Card addUpvote(Long cardId, Long userId) {
     Card card = getCard(cardId);
     if (card.getVoters().contains(userId)) {
       throw new UserAlreadyUpvotedException();

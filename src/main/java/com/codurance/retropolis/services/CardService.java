@@ -61,16 +61,20 @@ public class CardService {
     }
   }
 
-  public CardResponseObject upvote(Long cardId, UpVoteRequestObject requestObject) {
+  public CardResponseObject addUpvote(Long cardId, UpVoteRequestObject requestObject) {
     try {
       User user = userService.findByEmail(requestObject.getEmail());
-      Card updatedCard = cardRepository.upvote(cardId, user.getId());
+      Card updatedCard = cardRepository.addUpvote(cardId, user.getId());
       return createResponseFrom(updatedCard, user.getId());
     } catch (UserAlreadyUpvotedException userUpvotedException) {
       throw userUpvotedException;
     } catch (RuntimeException invalidCardId) {
       throw new CardNotFoundException();
     }
+  }
+
+  public CardResponseObject removeUpvote(Long cardId, UpVoteRequestObject requestObject) {
+    throw new UnsupportedOperationException();
   }
 
   private CardResponseObject createResponseFrom(Card card, Long userId) {

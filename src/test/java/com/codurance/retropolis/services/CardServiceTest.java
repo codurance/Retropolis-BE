@@ -109,12 +109,12 @@ public class CardServiceTest {
         editedCard.getColumnId(), HAVE_VOTED, editedCard.getVoters().size(), USER.username);
 
     when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
-    when(cardRepository.upvote(editedCard.getId(), editedCard.getUserId())).thenReturn(editedCard);
+    when(cardRepository.addUpvote(editedCard.getId(), editedCard.getUserId())).thenReturn(editedCard);
     when(userService.findById(editedCard.getUserId())).thenReturn(USER);
     when(cardResponseObjectFactory.create(editedCard, editedCard.getUserId(), USER.username))
         .thenReturn(cardResponseObject);
 
-    cardService.upvote(CARD_ID, requestObject);
+    cardService.addUpvote(CARD_ID, requestObject);
 
     assertEquals(editedCard.getVoters().size(), cardResponseObject.getTotalVoters());
     assertFalse(cardResponseObject.getHaveVoted());
@@ -123,20 +123,20 @@ public class CardServiceTest {
   @Test
   public void should_throw_UserAlreadyUpvotedException_when_user_has_already_upvoted() {
     when(userService.findByEmail(USER.email)).thenReturn(USER);
-    doThrow(new UserAlreadyUpvotedException()).when(cardRepository).upvote(CARD_ID, USER.getId());
+    doThrow(new UserAlreadyUpvotedException()).when(cardRepository).addUpvote(CARD_ID, USER.getId());
     assertThrows(UserAlreadyUpvotedException.class, () -> {
       UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
-      cardService.upvote(CARD_ID, requestObject);
+      cardService.addUpvote(CARD_ID, requestObject);
     });
   }
 
   @Test
   public void should_throw_CardNotFoundException_on_upvote() {
     when(userService.findByEmail(USER.email)).thenReturn(USER);
-    doThrow(new RuntimeException()).when(cardRepository).upvote(NON_EXISTENT_CARD_ID, USER.getId());
+    doThrow(new RuntimeException()).when(cardRepository).addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
     assertThrows(CardNotFoundException.class, () -> {
       UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
-      cardService.upvote(NON_EXISTENT_CARD_ID, requestObject);
+      cardService.addUpvote(NON_EXISTENT_CARD_ID, requestObject);
     });
   }
 
