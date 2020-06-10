@@ -19,6 +19,7 @@ public class PostgresCardRepository implements CardRepository {
   private final String DELETE_CARD = "delete from cards where id = ?";
   private final String UPDATE_CARD = "update cards set text = ? where id = ?";
   private final String ADD_VOTER = "update cards set voters = array_append(voters, ?::integer) where id = ?";
+  private final String REMOVE_VOTER = "update cards set voters = array_remove(voters, ?::integer) where id = ?";
   private final JdbcTemplate jdbcTemplate;
 
   public PostgresCardRepository(DataSource dataSource) {
@@ -64,6 +65,12 @@ public class PostgresCardRepository implements CardRepository {
     }
 
     jdbcTemplate.update(ADD_VOTER, userId, cardId);
+    return getCard(cardId);
+  }
+
+  @Override
+  public Card removeUpvote(Long cardId, Long userId) {
+    jdbcTemplate.update(REMOVE_VOTER, userId, cardId);
     return getCard(cardId);
   }
 }

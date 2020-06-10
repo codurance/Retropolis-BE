@@ -74,7 +74,13 @@ public class CardService {
   }
 
   public CardResponseObject removeUpvote(Long cardId, UpVoteRequestObject requestObject) {
-    throw new UnsupportedOperationException();
+    try {
+      User user = userService.findByEmail(requestObject.getEmail());
+      Card updatedCard = cardRepository.removeUpvote(cardId, user.getId());
+      return createResponseFrom(updatedCard, user.getId());
+    } catch (RuntimeException invalidCardId) {
+      throw new CardNotFoundException();
+    }
   }
 
   private CardResponseObject createResponseFrom(Card card, Long userId) {
