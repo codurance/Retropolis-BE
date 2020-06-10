@@ -8,6 +8,8 @@ public class UpVoteRequestObject {
   @NotNull(message = "Email is required")
   @Email(message = "Email is invalid")
   private String email;
+
+  @NotNull(message = "AddVote parameter is required")
   private Boolean addVote;
 
   public UpVoteRequestObject() {

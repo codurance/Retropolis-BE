@@ -44,6 +44,7 @@ public class CardControllerTest {
   private final Boolean HAVE_VOTED = false;
   private final Integer TOTAL_VOTERS = 1;
   private final User USER = new User(3L, "john.doe@codurance.com", "John Doe");
+  private final String VOTER_EMAIL = "jane.doe@codurance.com";
 
   @MockBean
   private CardService cardService;
@@ -97,21 +98,6 @@ public class CardControllerTest {
     Card cardResponse = mockMvcWrapper.buildObject(jsonResponse, Card.class);
 
     assertEquals(TEXT, cardResponse.getText());
-  }
-
-  @Test
-  void update_card_vote_with_username_should_return_card_with_voter() throws Exception {
-    String voterEmail = "jane.doe@codurance.com";
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(voterEmail, true);
-    when(cardService.upvote(any(), any(UpVoteRequestObject.class)))
-        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USER.username));
-
-    String jsonResponse = mockMvcWrapper
-        .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
-    CardResponseObject cardResponseObject = mockMvcWrapper.buildObject(jsonResponse, CardResponseObject.class);
-
-    assertEquals(TOTAL_VOTERS, cardResponseObject.getTotalVoters());
-    assertFalse(cardResponseObject.getHaveVoted());
   }
 
   @Test
@@ -189,6 +175,20 @@ public class CardControllerTest {
   }
 
   @Test
+  void update_card_vote_with_email_should_return_card_with_voter() throws Exception {
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, true);
+    when(cardService.upvote(any(), any(UpVoteRequestObject.class)))
+        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USER.username));
+
+    String jsonResponse = mockMvcWrapper
+        .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
+    CardResponseObject cardResponseObject = mockMvcWrapper.buildObject(jsonResponse, CardResponseObject.class);
+
+    assertEquals(TOTAL_VOTERS, cardResponseObject.getTotalVoters());
+    assertFalse(cardResponseObject.getHaveVoted());
+  }
+
+  @Test
   public void return_bad_request_when_email_is_empty_on_upvote() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(null, true);
     String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
@@ -204,4 +204,11 @@ public class CardControllerTest {
     assertEquals("Email is invalid", errorResponse.get(0));
   }
 
+  @Test
+  public void return_bad_request_when_addVote_parameter_missing() throws Exception {
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, null);
+    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
+    List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
+    assertEquals("AddVote parameter is required", errorResponse.get(0));
+  }
 }
