@@ -73,9 +73,11 @@ public class PostgresCardRepository implements CardRepository {
   public Card removeUpvote(Long cardId, Long userId) {
     List<Long> voters = getCard(cardId).getVoters();
     voters.remove(userId);
+
     jdbcTemplate.update(connection -> {
       PreparedStatement statement = connection.prepareStatement(UPDATE_VOTERS);
-      statement.setArray(1, connection.createArrayOf("int", voters.toArray(new Integer[0])));
+      statement.setArray(1, connection
+          .createArrayOf("int", voters.stream().map(Long::intValue).toArray(Integer[]::new)));
       statement.setLong(2, cardId);
       return statement;
     });
