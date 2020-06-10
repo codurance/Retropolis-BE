@@ -38,13 +38,12 @@ public class CardControllerTest {
   public final Long CARD_ID = 1L;
   public final Long COLUMN_ID = 2L;
   public final String TEXT = "hello";
-  public final Long USER_ID = 3L;
   public final HttpHeaders EMPTY_HEADERS = new HttpHeaders();
   private final String URL = "/cards";
   private final String TOKEN = "SOMETOKEN";
   private final Boolean HAVE_VOTED = false;
   private final Integer TOTAL_VOTERS = 1;
-  private final User USER = new User("john.doe@codurance.com", "John Doe");
+  private final User USER = new User(3L, "john.doe@codurance.com", "John Doe");
 
   @MockBean
   private CardService cardService;
@@ -91,7 +90,7 @@ public class CardControllerTest {
   public void update_card_with_new_text_should_return_card_with_updated_text() throws Exception {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(TEXT);
     when(cardService.updateText(any(), any(UpdateCardRequestObject.class)))
-        .thenReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USER_ID, emptyList()));
+        .thenReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList()));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID, asJsonString(requestObject), status().isOk());
