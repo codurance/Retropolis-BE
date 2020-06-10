@@ -51,9 +51,10 @@ public class AddBoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @Then("the client receives the new board with title {string}")
   public void theClientReceivesTheNewBoard(String boardTitle) throws JsonProcessingException {
-    assertThat(responseResult.getResponseCode(), is(HttpStatus.CREATED.value()));
     Board board = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
+
+    assertThat(responseResult.getResponseCode(), is(HttpStatus.CREATED.value()));
     assertThat(board.getTitle(), is(boardTitle));
   }
 }

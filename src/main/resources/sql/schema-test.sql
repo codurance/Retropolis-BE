@@ -1,6 +1,7 @@
-CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
-  email varchar UNIQUE
+CREATE TABLE IF NOT EXISTS users(
+                                    id       SERIAL PRIMARY KEY,
+                                    email    varchar UNIQUE,
+                                    username varchar
 );
 
 CREATE TABLE IF NOT EXISTS boards (
@@ -26,8 +27,9 @@ CREATE TABLE IF NOT EXISTS columns (
 CREATE TABLE IF NOT EXISTS cards (
   id SERIAL PRIMARY KEY,
   text varchar,
-  username varchar,
+  user_id int,
   column_id int,
   voters ARRAY,
-  FOREIGN KEY (column_id) REFERENCES columns (id)
+  FOREIGN KEY (column_id) REFERENCES columns (id),
+  FOREIGN KEY (user_id) REFERENCES users (id)
 );

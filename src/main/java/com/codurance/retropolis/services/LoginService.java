@@ -1,6 +1,6 @@
 package com.codurance.retropolis.services;
 
-import com.codurance.retropolis.config.web.GoogleTokenAuthenticator;
+import com.codurance.retropolis.config.web.TokenAuthenticator;
 import com.codurance.retropolis.exceptions.UnauthorizedException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginService {
 
-  private GoogleTokenAuthenticator tokenAuthenticator;
+  private TokenAuthenticator tokenAuthenticator;
 
-  public LoginService(GoogleTokenAuthenticator tokenAuthenticator) {
+  public LoginService(TokenAuthenticator tokenAuthenticator) {
     this.tokenAuthenticator = tokenAuthenticator;
   }
 

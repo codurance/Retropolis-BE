@@ -4,9 +4,10 @@ DROP TABLE IF EXISTS users_boards;
 DROP TABLE IF EXISTS boards;
 DROP TABLE IF EXISTS users;
 
-CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
-  email varchar UNIQUE
+CREATE TABLE IF NOT EXISTS users(
+                                    id       SERIAL PRIMARY KEY,
+                                    email    varchar UNIQUE,
+                                    username varchar
 );
 
 CREATE TABLE IF NOT EXISTS boards (
@@ -32,13 +33,15 @@ CREATE TABLE IF NOT EXISTS columns (
 CREATE TABLE IF NOT EXISTS cards (
   id SERIAL PRIMARY KEY,
   text varchar,
-  username varchar,
+  user_id int,
   column_id int,
   voters ARRAY,
-  FOREIGN KEY (column_id) REFERENCES columns (id)
+  FOREIGN KEY (column_id) REFERENCES columns (id),
+  FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 insert into boards(id, title) values(1, 'test board');
 insert into columns(title, board_id) values('Start', 1);
 insert into columns(title, board_id) values('Stop', 1);
 insert into columns(title, board_id) values('Continue', 1);
+insert into users(email, username) values('john.doe@codurance.com', 'john doe');

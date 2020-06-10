@@ -14,20 +14,28 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  public void registerUserIfNotExists(String email, Long boardId) {
-    User user = findOrCreateBy(email);
-    addToBoard(user.id, boardId);
+  public void registerUserIfNotExists(User requestUser, Long boardId) {
+    User user = findOrCreateBy(requestUser);
+    addToBoard(user.getId(), boardId);
   }
 
   public void addToBoard(Long userId, Long boardId) {
     userRepository.addToBoard(userId, boardId);
   }
 
-  public User findOrCreateBy(String email) {
+  public User findOrCreateBy(User user) {
     try {
-      return userRepository.findByEmail(email);
+      return findByEmail(user.email);
     } catch (UserNotFoundException userNotFoundException) {
-      return userRepository.register(email);
+      return userRepository.register(user);
     }
+  }
+
+  public User findByEmail(String email) {
+    return userRepository.findByEmail(email);
+  }
+
+  public User findById(Long Id) {
+    return userRepository.findById(Id);
   }
 }

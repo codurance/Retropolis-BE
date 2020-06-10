@@ -1,20 +1,19 @@
 package com.codurance.retropolis.services;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.entities.Board;
-import com.codurance.retropolis.entities.Column;
-import com.codurance.retropolis.entities.ColumnType;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
-import java.util.Collections;
+import com.codurance.retropolis.responses.BoardResponseObject;
+import com.codurance.retropolis.responses.BoardResponseObjectFactory;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,10 +24,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
 
-  private final Long COLUMN_ID = 1L;
-  private final Long USER_ID = 1L;
+  private final Long USER_ID = 2L;
   private final Long BOARD_ID = 1L;
-  private final String USER_EMAIL = "john.doe@codurance.com";
+  private final User USER = new User("john.doe@codurance.com", "John Doe");
   private final String BOARD_TITLE = "test board";
 
   @Mock
@@ -40,49 +38,55 @@ public class BoardServiceTest {
   @Mock
   private UserService userService;
 
+  @Mock
+  private BoardResponseObjectFactory boardResponseFactory;
+
   private BoardService boardService;
 
   @BeforeEach
   void setUp() {
-    boardService = new BoardService(boardRepository, boardFactory, userService);
+    boardService = new BoardService(boardRepository, boardFactory, userService,
+        boardResponseFactory);
   }
 
   @Test
   void returns_a_board() {
-    String columnTitle = "Start";
-    when(boardRepository.getBoard(BOARD_ID)).thenReturn(
-        new Board(BOARD_ID, BOARD_TITLE, List.of(new Column(COLUMN_ID, ColumnType.START))));
+    Board board = new Board(BOARD_ID, BOARD_TITLE, emptyList());
+    when(userService.findByEmail("john.doe@codurance.com")).thenReturn(USER);
+    when(boardRepository.getBoard(BOARD_ID)).thenReturn(board);
+    when(boardResponseFactory.create(board, USER.getId()))
+        .thenReturn(new BoardResponseObject(BOARD_ID, BOARD_TITLE, emptyList()));
 
-    Board board = boardService.getBoard(USER_EMAIL, BOARD_ID);
+    BoardResponseObject boardResponse = boardService.getBoard(USER, BOARD_ID);
 
-    verify(boardRepository).getBoard(BOARD_ID);
-    assertEquals(BOARD_ID, board.getColumns().get(0).getId());
-    assertEquals(columnTitle, board.getColumns().get(0).getTitle());
-    assertEquals(0, board.getColumns().get(0).getCards().size());
+    assertEquals(BOARD_ID, boardResponse.getId());
+    assertEquals(BOARD_TITLE, boardResponse.getTitle());
   }
 
   @Test
   void creates_a_board() {
-    NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE, USER_EMAIL);
-    Board board = new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList());
-
+    NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE,
+        "john.doe@codurance.com");
+    requestObject.setUser(USER);
+    Board board = new Board(BOARD_ID, BOARD_TITLE, emptyList());
     when(boardFactory.create(requestObject)).thenReturn(board);
     when(boardRepository.insert(board)).thenReturn(board);
 
-    boardService.createBoard(requestObject);
+    Board boardResponse = boardService.createBoard(requestObject);
 
-    verify(boardFactory).create(requestObject);
-    verify(boardRepository).insert(board);
-    verify(userService).registerUserIfNotExists(USER_EMAIL, board.getId());
+    assertEquals(BOARD_ID, boardResponse.getId());
+    assertEquals(BOARD_TITLE, boardResponse.getTitle());
+    assertEquals(0, boardResponse.getColumns().size());
   }
 
   @Test
   void should_return_boards_for_a_user() {
+    when(userService.findOrCreateBy(USER))
+        .thenReturn(new User(USER_ID, USER.email, USER.username));
     when(boardRepository.getUsersBoards(USER_ID)).thenReturn(List.of(
-        new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList())));
-    when(userService.findOrCreateBy(USER_EMAIL)).thenReturn(new User(USER_ID, USER_EMAIL));
+        new Board(BOARD_ID, BOARD_TITLE, emptyList())));
 
-    List<Board> boards = boardService.getUsersBoards(USER_EMAIL);
+    List<Board> boards = boardService.getUsersBoards(USER);
 
     assertEquals(1, boards.size());
     assertEquals(BOARD_ID, boards.get(0).getId());
@@ -91,8 +95,8 @@ public class BoardServiceTest {
 
   @Test
   public void should_throw_BoardNotFoundException_when_boardId_is_invalid_on_() {
-    doThrow(new RuntimeException()).when(userService).registerUserIfNotExists(USER_EMAIL, BOARD_ID);
-    assertThrows(BoardNotFoundException.class, () -> boardService.getBoard(USER_EMAIL, BOARD_ID));
+    doThrow(new RuntimeException()).when(userService).registerUserIfNotExists(USER, BOARD_ID);
+    assertThrows(BoardNotFoundException.class, () -> boardService.getBoard(USER, BOARD_ID));
   }
 
 }

@@ -1,7 +1,7 @@
 package com.codurance.retropolis.repositories;
 
 import com.codurance.retropolis.entities.Card;
-import com.codurance.retropolis.exceptions.UserUpvotedException;
+import com.codurance.retropolis.exceptions.UserAlreadyUpvotedException;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
 import java.sql.PreparedStatement;
 import java.util.Objects;
@@ -14,13 +14,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PostgresCardRepository implements CardRepository {
 
-  private final String INSERT_CARD = "insert into cards (text, username, column_id, voters) values (?,?,?,?)";
+  private final String INSERT_CARD = "insert into cards (text, user_id, column_id, voters) values (?,?,?,?)";
   private final String SELECT_CARD = "select * from cards where id = ?";
   private final String DELETE_CARD = "delete from cards where id = ?";
   private final String UPDATE_CARD = "update cards set text = ? where id = ?";
-  private final String ADD_VOTER = "update cards set voters = array_append(voters, ?::varchar) where id = ?";
+  private final String ADD_VOTER = "update cards set voters = array_append(voters, ?::integer) where id = ?";
   private final JdbcTemplate jdbcTemplate;
-
 
   public PostgresCardRepository(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -32,9 +31,9 @@ public class PostgresCardRepository implements CardRepository {
     jdbcTemplate.update(connection -> {
       PreparedStatement statement = connection.prepareStatement(INSERT_CARD, new String[]{"id"});
       statement.setString(1, newCard.getText());
-      statement.setString(2, newCard.getUsername());
+      statement.setLong(2, newCard.getUserId());
       statement.setLong(3, newCard.getColumnId());
-      statement.setArray(4, connection.createArrayOf("varchar", new String[]{}));
+      statement.setArray(4, connection.createArrayOf("int", new Integer[]{}));
       return statement;
     }, key);
 
@@ -58,13 +57,13 @@ public class PostgresCardRepository implements CardRepository {
   }
 
   @Override
-  public Card addVoter(Long cardId, String username) {
+  public Card upvote(Long cardId, Long userId) {
     Card card = getCard(cardId);
-    if (card.getVoters().contains(username)) {
-      throw new UserUpvotedException();
+    if (card.getVoters().contains(userId)) {
+      throw new UserAlreadyUpvotedException();
     }
 
-    jdbcTemplate.update(ADD_VOTER, username, cardId);
+    jdbcTemplate.update(ADD_VOTER, userId, cardId);
     return getCard(cardId);
   }
 }

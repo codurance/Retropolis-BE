@@ -12,14 +12,16 @@ public class CardFactoryTest {
   void returns_a_new_card() {
     String text = "hello";
     Long columnId = 1L;
-    String username = "John Doe";
-    NewCardRequestObject newCardRequestObject = new NewCardRequestObject(text, columnId, username);
+    Long userId = 1L;
+    String userEmail = "john.doe@codurance.com";
+    NewCardRequestObject newCardRequestObject = new NewCardRequestObject(text, columnId, userEmail);
+    newCardRequestObject.setUserId(userId);
 
     Card card = new CardFactory().create(newCardRequestObject);
 
     assertEquals(text, card.getText());
     assertEquals(columnId, card.getColumnId());
-    assertEquals(username, card.getUsername());
+    assertEquals(userId, card.getUserId());
   }
 
 }

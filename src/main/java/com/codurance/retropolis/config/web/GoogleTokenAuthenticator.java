@@ -17,12 +17,13 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 @Profile({Environment.PROD, Environment.DEV})
-public class GoogleTokenAuthenticator implements HandlerInterceptor {
+public class GoogleTokenAuthenticator implements HandlerInterceptor, TokenAuthenticator {
 
   private final String CLIENT_ID = "582070750046-gn9mvl54av9j8b3mo3ea807c18di9ees.apps.googleusercontent.com";
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+      Object handler) {
     String token = request.getHeader("Authorization");
     try {
       authenticateToken(token, request);
@@ -34,10 +35,18 @@ public class GoogleTokenAuthenticator implements HandlerInterceptor {
     return true;
   }
 
+  @Override
   public String getEmail(String token) throws GeneralSecurityException, IOException {
     GoogleIdTokenVerifier verifier = buildGoogleIdTokenVerifier();
     GoogleIdToken idToken = verifier.verify(token);
     return idToken.getPayload().get("email").toString();
+  }
+
+  @Override
+  public String getUsername(String token) throws GeneralSecurityException, IOException {
+    GoogleIdTokenVerifier verifier = buildGoogleIdTokenVerifier();
+    GoogleIdToken idToken = verifier.verify(token);
+    return idToken.getPayload().get("name").toString();
   }
 
   private void authenticateToken(String token, HttpServletRequest request)

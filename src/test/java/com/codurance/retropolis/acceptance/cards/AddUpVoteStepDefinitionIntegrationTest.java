@@ -6,8 +6,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
+import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,13 +31,14 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
     cleanUp();
   }
 
-  @And("the client updates cards vote with this id in path and voter:{string} and addVote:{string} in body")
-  public void theClientUpdatesToCardsWithThisIdInPathAndAddUpVoteInBody(String username, String addVote)
+  @And("the client updates cards vote with this id in path and voter:{string} in body")
+  public void theClientUpdatesToCardsWithThisIdInPathAndAddUpVoteInBody(String email)
       throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
-    });
-    executePatch(url + "/cards/" + card.getId() + "/vote",
-        new HttpEntity<>(new UpVoteRequestObject(username)));
+    CardResponseObject cardResponseObject = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
+        });
+    executePatch(url + "/cards/" + cardResponseObject.getId() + "/vote",
+        new HttpEntity<>(new UpVoteRequestObject(email)));
   }
 
   @Then("the client receives a status code of {int} after update")
@@ -45,11 +46,12 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(statusCode));
   }
 
-  @And("the client receives the card with the voter:{string}")
-  public void theClientReceivesTheCardWithTheVoter(String username) throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+  @And("the client receives the card with their vote")
+  public void theClientReceivesTheCardWithTheVoter() throws JsonProcessingException {
+    CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 
-    assertThat(card.getVoters().size(), is(1));
+    assertThat(cardResponseObject.getTotalVoters(), is(1));
+    assertThat(cardResponseObject.getHaveVoted(), is(true));
   }
 }

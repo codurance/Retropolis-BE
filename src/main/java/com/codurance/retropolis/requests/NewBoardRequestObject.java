@@ -1,5 +1,6 @@
 package com.codurance.retropolis.requests;
 
+import com.codurance.retropolis.entities.User;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,6 +14,8 @@ public class NewBoardRequestObject {
   @NotNull(message = "Email is required")
   @Email(message = "Email is invalid")
   private String userEmail;
+
+  private User user;
 
   public NewBoardRequestObject() {
   }
@@ -30,4 +33,11 @@ public class NewBoardRequestObject {
     return userEmail;
   }
 
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public User getUser() {
+    return user;
+  }
 }

@@ -1,6 +1,6 @@
 package com.codurance.retropolis.factories;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
