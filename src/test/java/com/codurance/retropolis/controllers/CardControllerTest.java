@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codurance.retropolis.entities.Card;
+import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.requests.NewCardRequestObject;
@@ -43,8 +44,7 @@ public class CardControllerTest {
   private final String TOKEN = "SOMETOKEN";
   private final Boolean HAVE_VOTED = false;
   private final Integer TOTAL_VOTERS = 1;
-  private final String USER_EMAIL = "john.doe@codurance.com";
-  private final String USERNAME = "John Doe";
+  private final User USER = new User("john.doe@codurance.com", "John Doe");
 
   @MockBean
   private CardService cardService;
@@ -64,10 +64,10 @@ public class CardControllerTest {
 
   @Test
   public void post_cards_should_return_back_cardResponseObject() throws Exception {
-    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL);
+    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
     when(cardService.create(any(NewCardRequestObject.class)))
-        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USERNAME));
-    when(loginService.isAuthorized(USER_EMAIL, TOKEN)).thenReturn(true);
+        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USER.username));
+    when(loginService.isAuthorized(USER.email, TOKEN)).thenReturn(true);
 
     String jsonResponse = mockMvcWrapper
         .postRequest(URL, asJsonString(requestObject), status().isCreated(), getAuthHeader(TOKEN));
@@ -78,7 +78,7 @@ public class CardControllerTest {
     assertEquals(COLUMN_ID, cardResponseObject.getColumnId());
     assertEquals(HAVE_VOTED, cardResponseObject.getHaveVoted());
     assertEquals(TOTAL_VOTERS, cardResponseObject.getTotalVoters());
-    assertEquals(USERNAME, cardResponseObject.getAuthor());
+    assertEquals(USER.username, cardResponseObject.getAuthor());
   }
 
   @Test
@@ -105,7 +105,7 @@ public class CardControllerTest {
     String voterEmail = "jane.doe@codurance.com";
     UpVoteRequestObject requestObject = new UpVoteRequestObject(voterEmail);
     when(cardService.upvote(any(), any(UpVoteRequestObject.class)))
-        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USERNAME));
+        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USER.username));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
@@ -125,9 +125,9 @@ public class CardControllerTest {
 
   @Test
   public void returns_bad_request_when_column_is_not_found() throws Exception {
-    when(loginService.isAuthorized(USER_EMAIL, TOKEN)).thenReturn(true);
+    when(loginService.isAuthorized(USER.email, TOKEN)).thenReturn(true);
     when(cardService.create(any(NewCardRequestObject.class))).thenThrow(new ColumnNotFoundException());
-    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER_EMAIL);
+    NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
 
     String jsonResponse = mockMvcWrapper
         .postRequest(URL, asJsonString(requestObject), status().isBadRequest(), getAuthHeader(TOKEN));
@@ -138,7 +138,7 @@ public class CardControllerTest {
 
   @Test
   public void return_bad_request_when_text_is_empty_on_post_card() throws Exception {
-    NewCardRequestObject requestObject = new NewCardRequestObject("", COLUMN_ID, USER_EMAIL);
+    NewCardRequestObject requestObject = new NewCardRequestObject("", COLUMN_ID, USER.email);
     String content = asJsonString(requestObject);
 
     String jsonResponse = mockMvcWrapper.postRequest(URL, content, status().isBadRequest(), EMPTY_HEADERS);

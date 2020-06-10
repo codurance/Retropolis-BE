@@ -24,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
 
-  private final Long USER_ID = 1L;
+  private final Long USER_ID = 2L;
   private final Long BOARD_ID = 1L;
   private final User USER = new User("john.doe@codurance.com", "John Doe");
   private final String BOARD_TITLE = "test board";

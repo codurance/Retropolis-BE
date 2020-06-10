@@ -39,7 +39,7 @@ public class BoardControllerTest {
 
   private final Long BOARD_ID = 1L;
   private final Long NON_EXISTENT_BOARD_ID = 999L;
-  private final Long COLUMN_ID = 1L;
+  private final Long COLUMN_ID = 2L;
   private final String BOARD_TITLE = "test board";
   private final String SPECIFIC_BOARD_URL = "/boards/" + BOARD_ID;
   private final String BOARDS_URL = "/boards";
