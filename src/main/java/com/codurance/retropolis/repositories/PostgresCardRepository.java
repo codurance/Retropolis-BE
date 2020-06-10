@@ -4,6 +4,7 @@ import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.exceptions.UserAlreadyUpvotedException;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +20,7 @@ public class PostgresCardRepository implements CardRepository {
   private final String DELETE_CARD = "delete from cards where id = ?";
   private final String UPDATE_CARD = "update cards set text = ? where id = ?";
   private final String ADD_VOTER = "update cards set voters = array_append(voters, ?::integer) where id = ?";
-  private final String REMOVE_VOTER = "update cards set voters = array_remove(voters, ?::integer) where id = ?";
+  private final String UPDATE_VOTERS = "update cards set voters = ? where id = ?";
   private final JdbcTemplate jdbcTemplate;
 
   public PostgresCardRepository(DataSource dataSource) {
@@ -70,7 +71,14 @@ public class PostgresCardRepository implements CardRepository {
 
   @Override
   public Card removeUpvote(Long cardId, Long userId) {
-    jdbcTemplate.update(REMOVE_VOTER, userId, cardId);
+    List<Long> voters = getCard(cardId).getVoters();
+    voters.remove(userId);
+    jdbcTemplate.update(connection -> {
+      PreparedStatement statement = connection.prepareStatement(UPDATE_VOTERS);
+      statement.setArray(1, connection.createArrayOf("int", voters.toArray(new Integer[0])));
+      statement.setLong(2, cardId);
+      return statement;
+    });
     return getCard(cardId);
   }
 }

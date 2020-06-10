@@ -49,11 +49,12 @@ public class RemoveUpvoteStepDefinitionIntegrationTest extends BaseStepDefinitio
 
   @Then("the client receives the card without their vote")
   public void theClientReceivesTheCardWithoutTheirVote() throws JsonProcessingException {
-    CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
-    });
+    CardResponseObject cardResponseObject = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
+        });
 
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
-    assertThat(cardResponseObject.getTotalVoters(), is(1));
-    assertThat(cardResponseObject.getHaveVoted(), is(true));
+    assertThat(cardResponseObject.getTotalVoters(), is(0));
+    assertThat(cardResponseObject.getHaveVoted(), is(false));
   }
 }
