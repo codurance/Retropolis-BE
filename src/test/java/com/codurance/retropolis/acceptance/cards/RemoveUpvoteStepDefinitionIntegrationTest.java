@@ -1,11 +1,12 @@
 package com.codurance.retropolis.acceptance.cards;
 
-import static com.codurance.retropolis.utils.HttpWrapper.executeDelete;
+import static com.codurance.retropolis.utils.HttpWrapper.executePatch;
 import static com.codurance.retropolis.utils.HttpWrapper.responseResult;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
+import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,19 +17,16 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.sql.SQLException;
 import javax.sql.DataSource;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
+public class RemoveUpvoteStepDefinitionIntegrationTest extends BaseStepDefinition {
 
-public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition {
-
-  private final String USER_EMAIL = "john.doe@codurance.com";
-  private final Long COLUMN_ID = 1L;
-  private final String CARD_TEXT = "Hello";
   private final String TOKEN = "token";
   private HttpHeaders headers;
 
-
-  public DeleteCardStepDefinitionIntegrationTest(DataSource dataSource) {
+  public RemoveUpvoteStepDefinitionIntegrationTest(DataSource dataSource) {
     super(dataSource);
   }
 
@@ -39,16 +37,23 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
     headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
   }
 
-  @When("the client deletes to cards with this id passing it as path variable to endpoint")
-  public void theClientDeletesToCardsEndpointWithPathVariable() throws JsonProcessingException {
+  @When("the client removes card vote with voter:{string}")
+  public void theClientRemovesCardVoteWithVoter(String email)
+      throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
         });
-    executeDelete(url + "/cards/" + cardResponseObject.getId());
+    executePatch(url + "/cards/" + cardResponseObject.getId() + "/vote",
+        new HttpEntity<>(new UpVoteRequestObject(email, false)));
   }
 
-  @Then("the client receives a status code of {int} after card was deleted")
-  public void theClientReceivesAStatusCodeOfAfterCardWasDeleted(int statusCode) {
-    assertThat(HttpWrapper.responseResult.getResponseCode(), is(statusCode));
+  @Then("the client receives the card without their vote")
+  public void theClientReceivesTheCardWithoutTheirVote() throws JsonProcessingException {
+    CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
+
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
+    assertThat(cardResponseObject.getTotalVoters(), is(1));
+    assertThat(cardResponseObject.getHaveVoted(), is(true));
   }
 }

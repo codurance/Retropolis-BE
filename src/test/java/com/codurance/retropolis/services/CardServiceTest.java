@@ -103,7 +103,7 @@ public class CardServiceTest {
 
   @Test
   void should_add_card_voter_and_return_card() {
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email);
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
     Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), singletonList(USER.getId()));
     CardResponseObject cardResponseObject = new CardResponseObject(editedCard.getText(), editedCard.getId(),
         editedCard.getColumnId(), HAVE_VOTED, editedCard.getVoters().size(), USER.username);
@@ -125,7 +125,7 @@ public class CardServiceTest {
     when(userService.findByEmail(USER.email)).thenReturn(USER);
     doThrow(new UserAlreadyUpvotedException()).when(cardRepository).upvote(CARD_ID, USER.getId());
     assertThrows(UserAlreadyUpvotedException.class, () -> {
-      UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email);
+      UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
       cardService.upvote(CARD_ID, requestObject);
     });
   }
@@ -135,7 +135,7 @@ public class CardServiceTest {
     when(userService.findByEmail(USER.email)).thenReturn(USER);
     doThrow(new RuntimeException()).when(cardRepository).upvote(NON_EXISTENT_CARD_ID, USER.getId());
     assertThrows(CardNotFoundException.class, () -> {
-      UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email);
+      UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
       cardService.upvote(NON_EXISTENT_CARD_ID, requestObject);
     });
   }

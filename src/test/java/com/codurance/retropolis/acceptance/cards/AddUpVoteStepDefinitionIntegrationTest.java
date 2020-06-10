@@ -14,10 +14,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Then;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 
 
 public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
@@ -31,19 +31,14 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
     cleanUp();
   }
 
-  @And("the client updates cards vote with this id in path and voter:{string} in body")
-  public void theClientUpdatesToCardsWithThisIdInPathAndAddUpVoteInBody(String email)
+  @And("the client adds card vote with voter:{string}")
+  public void theClientAddsCardVoteWithVoter(String email)
       throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
         });
     executePatch(url + "/cards/" + cardResponseObject.getId() + "/vote",
-        new HttpEntity<>(new UpVoteRequestObject(email)));
-  }
-
-  @Then("the client receives a status code of {int} after update")
-  public void theClientReceivesAStatusCodeOf(int statusCode) {
-    assertThat(HttpWrapper.responseResult.getResponseCode(), is(statusCode));
+        new HttpEntity<>(new UpVoteRequestObject(email, true)));
   }
 
   @And("the client receives the card with their vote")
@@ -51,6 +46,7 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
     CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
     assertThat(cardResponseObject.getTotalVoters(), is(1));
     assertThat(cardResponseObject.getHaveVoted(), is(true));
   }
