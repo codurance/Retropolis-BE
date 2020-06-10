@@ -76,8 +76,8 @@ public class CardControllerTest {
         .buildObject(jsonResponse, CardResponseObject.class);
 
     assertEquals(TEXT, cardResponseObject.getText());
-    assertEquals(CARD_ID, cardResponseObject.getCardId());
-    assertEquals(COLUMN_ID, cardResponseObject.getCardId());
+    assertEquals(CARD_ID, cardResponseObject.getId());
+    assertEquals(COLUMN_ID, cardResponseObject.getId());
     assertEquals(HAVE_VOTED, cardResponseObject.getHaveVoted());
     assertEquals(TOTAL_VOTERS, cardResponseObject.getTotalVoters());
     assertEquals(USERNAME, cardResponseObject.getAuthor());

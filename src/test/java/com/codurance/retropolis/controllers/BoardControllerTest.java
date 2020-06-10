@@ -124,7 +124,7 @@ public class BoardControllerTest {
     assertEquals(cards.size(), columnResponse.getCards().size());
     CardResponseObject cardResponse = columnResponse.getCards().get(0);
     assertEquals(text, cardResponse.getText());
-    assertEquals(cardId, cardResponse.getCardId());
+    assertEquals(cardId, cardResponse.getId());
     assertEquals(COLUMN_ID, cardResponse.getColumnId());
     assertEquals(USER_NAME, cardResponse.getAuthor());
   }

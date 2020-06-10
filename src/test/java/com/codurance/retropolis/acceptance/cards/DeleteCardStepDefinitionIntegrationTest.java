@@ -54,7 +54,7 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
         });
-    executeDelete(url + "/cards/" + cardResponseObject.getCardId());
+    executeDelete(url + "/cards/" + cardResponseObject.getId());
   }
 
   @Then("the client receives a status code of {int} after card was deleted")

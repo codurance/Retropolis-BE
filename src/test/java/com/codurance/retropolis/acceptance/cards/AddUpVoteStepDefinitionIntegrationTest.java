@@ -37,7 +37,7 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
         });
-    executePatch(url + "/cards/" + cardResponseObject.getCardId() + "/vote",
+    executePatch(url + "/cards/" + cardResponseObject.getId() + "/vote",
         new HttpEntity<>(new UpVoteRequestObject(email)));
   }
 

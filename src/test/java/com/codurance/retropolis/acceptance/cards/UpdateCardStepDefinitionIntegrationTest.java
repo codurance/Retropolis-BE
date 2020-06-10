@@ -56,7 +56,7 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
         .readValue(responseResult.getBody(), new TypeReference<>() {
         });
 
-    executePatch(url + "/cards/" + cardResponseObject.getCardId(),
+    executePatch(url + "/cards/" + cardResponseObject.getId(),
         new HttpEntity<>(new UpdateCardRequestObject(newText)));
   }
 
