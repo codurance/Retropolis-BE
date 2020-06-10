@@ -1,10 +1,12 @@
 package com.codurance.retropolis.services;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.config.web.GoogleTokenAuthenticator;
+import com.codurance.retropolis.exceptions.UnauthorizedException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +36,13 @@ class LoginServiceTest {
   public void returns_true_when_email_does_not_match_the_token() throws GeneralSecurityException, IOException {
     when(tokenAuthenticator.getEmail(TOKEN)).thenReturn(USER_EMAIL);
     assertTrue(loginService.isAuthorized(USER_EMAIL, TOKEN));
+  }
+
+  @Test
+  public void throws_UnauthorizedException_when_an_exception_is_thrown_on_token_validation()
+      throws GeneralSecurityException, IOException {
+    when(tokenAuthenticator.getEmail(TOKEN)).thenThrow(GeneralSecurityException.class);
+    assertThrows(UnauthorizedException.class, () -> loginService.isAuthorized(USER_EMAIL, TOKEN));
   }
 
   @Test

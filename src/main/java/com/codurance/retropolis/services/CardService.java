@@ -4,7 +4,7 @@ import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
-import com.codurance.retropolis.exceptions.UserUpvotedException;
+import com.codurance.retropolis.exceptions.UserAlreadyUpvotedException;
 import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
@@ -32,7 +32,7 @@ public class CardService {
     this.cardResponseObjectFactory = cardResponseObjectFactory;
   }
 
-  public CardResponseObject addCard(NewCardRequestObject requestObject) {
+  public CardResponseObject create(NewCardRequestObject requestObject) {
     User user = userService.findByEmail(requestObject.getEmail());
     requestObject.setUserId(user.getId());
     Card newCard = cardFactory.create(requestObject);
@@ -53,7 +53,7 @@ public class CardService {
     }
   }
 
-  public Card update(Long cardId, UpdateCardRequestObject requestObject) {
+  public Card updateText(Long cardId, UpdateCardRequestObject requestObject) {
     try {
       return cardRepository.updateText(cardId, requestObject.getNewText());
     } catch (RuntimeException invalidCardId) {
@@ -61,12 +61,12 @@ public class CardService {
     }
   }
 
-  public CardResponseObject updateVotes(Long cardId, UpVoteRequestObject requestObject) {
+  public CardResponseObject upvote(Long cardId, UpVoteRequestObject requestObject) {
     try {
       User user = userService.findByEmail(requestObject.getEmail());
-      Card updatedCard = cardRepository.addVoter(cardId, user.getId());
+      Card updatedCard = cardRepository.upvote(cardId, user.getId());
       return createResponseFrom(updatedCard, user.getId());
-    } catch (UserUpvotedException userUpvotedException) {
+    } catch (UserAlreadyUpvotedException userUpvotedException) {
       throw userUpvotedException;
     } catch (RuntimeException invalidCardId) {
       throw new CardNotFoundException();

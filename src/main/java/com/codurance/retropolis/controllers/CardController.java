@@ -49,7 +49,7 @@ public class CardController extends BaseController {
       throw new UnauthorizedException();
     }
 
-    return cardService.addCard(request);
+    return cardService.create(request);
   }
 
   @DeleteMapping(value = "/{cardId}")
@@ -60,12 +60,12 @@ public class CardController extends BaseController {
 
   @PatchMapping(value = "/{cardId}")
   public Card updateText(@PathVariable Long cardId, @RequestBody @Valid UpdateCardRequestObject request) {
-    return cardService.update(cardId, request);
+    return cardService.updateText(cardId, request);
   }
 
   @PatchMapping(value = "/{cardId}/vote")
   public CardResponseObject updateVote(@PathVariable Long cardId, @RequestBody @Valid UpVoteRequestObject request) {
-    return cardService.updateVotes(cardId, request);
+    return cardService.upvote(cardId, request);
   }
 
   @ExceptionHandler(ColumnNotFoundException.class)

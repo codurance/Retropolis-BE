@@ -1,8 +1,7 @@
 package com.codurance.retropolis.services;
 
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.UserNotFoundException;
@@ -18,9 +17,9 @@ public class UserServiceTest {
 
   private final Long BOARD_ID = 1L;
   private final Long USER_ID = 1L;
-  private final String NAME = "John Doe";
-  private final String EMAIL = "john.doe@codurance.com";
-  private final User USER = new User(EMAIL, NAME);
+  private final String USERNAME = "John Doe";
+  private final String USER_EMAIL = "john.doe@codurance.com";
+  private final User USER = new User(USER_EMAIL, USERNAME);
 
   @Mock
   private UserRepository userRepository;
@@ -34,7 +33,7 @@ public class UserServiceTest {
 
   @Test
   void calls_addToBoard_after_registration() {
-    when(userRepository.findByEmail(EMAIL)).thenReturn(new User(USER_ID, EMAIL, NAME));
+    when(userRepository.findByEmail(USER_EMAIL)).thenReturn(new User(USER_ID, USER_EMAIL, USERNAME));
 
     userService.registerUserIfNotExists(USER, BOARD_ID);
     verify(userRepository).addToBoard(USER_ID, BOARD_ID);
@@ -47,11 +46,33 @@ public class UserServiceTest {
   }
 
   @Test
-  void calls_userRepository_RegisterByEmail_when_UserNotFoundException() {
-    given(userRepository.findByEmail(EMAIL)).willThrow(new UserNotFoundException());
-    given(userRepository.register(USER)).willReturn(new User(USER_ID, EMAIL, NAME));
+  void findByEmail_returns_user_from_repo() {
+    userService.findByEmail(USER_EMAIL);
+    verify(userRepository).findByEmail(USER_EMAIL);
+  }
+
+  @Test
+  void findById_returns_user_from_repo() {
+    userService.findById(USER_ID);
+    verify(userRepository).findById(USER_ID);
+  }
+
+  @Test
+  void calls_userRepository_RegisterByEmail_and_registers_user_to_board_when_UserNotFoundException() {
+    when(userRepository.findByEmail(USER_EMAIL)).thenThrow(new UserNotFoundException());
+    when(userRepository.register(USER)).thenReturn(new User(USER_ID, USER_EMAIL, USERNAME));
+
     userService.registerUserIfNotExists(USER, BOARD_ID);
+
     verify(userRepository).register(USER);
     verify(userRepository).addToBoard(USER_ID, BOARD_ID);
   }
+
+  @Test
+  void registers_user_when_UserNotFoundException() {
+    when(userRepository.findByEmail(USER_EMAIL)).thenThrow(new UserNotFoundException());
+    userService.findOrCreateBy(USER);
+    verify(userRepository).register(USER);
+  }
+
 }
