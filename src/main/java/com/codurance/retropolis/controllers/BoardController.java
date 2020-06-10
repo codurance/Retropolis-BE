@@ -52,7 +52,6 @@ public class BoardController extends BaseController {
   public BoardResponseObject getBoard(@PathVariable Long id,
       @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
-
     return boardService.getBoard(userFactory.create(token), id);
   }
 

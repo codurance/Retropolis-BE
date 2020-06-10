@@ -42,18 +42,14 @@ public class BoardStepDefsIntegrationTest extends BaseStepDefinition {
     headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
   }
 
-  @When("^the client calls /boards/(\\d+)")
-  public void theClientCallsBoard(int boardId) {
-    HttpWrapper.executeGet(url + "/boards/" + boardId, headers);
-  }
-
-  @Then("^the client receives status code of (\\d+)$")
-  public void theClientReceivesStatusCodeOf(int statusCode) {
-    assertThat(HttpWrapper.responseResult.getResponseCode(), is(statusCode));
+  @When("the client requests the test board")
+  public void theClientCallsBoard() {
+    HttpWrapper.executeGet(url + "/boards/" + TEST_BOARD_ID, headers);
   }
 
   @And("^the client receives board with three columns, \"([^\"]*)\", \"([^\"]*)\", and \"([^\"]*)\"$")
   public void theClientReceivesBoardWithThreeColumnsAnd(String firstTitle, String secondTitle, String thirdTitle) {
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
     assertThat(HttpWrapper.responseResult.getBody(),
         is(asJsonString(new Board(1L, "test board", List.of(
             new Column(1L, ColumnType.of(firstTitle)),
