@@ -1,7 +1,7 @@
 package com.codurance.retropolis.repositories;
 
 import com.codurance.retropolis.entities.Card;
-import com.codurance.retropolis.exceptions.UserUpvotedException;
+import com.codurance.retropolis.exceptions.UserAlreadyUpvotedException;
 import com.codurance.retropolis.repositories.mappers.CardMapper;
 import java.sql.PreparedStatement;
 import java.util.Objects;
@@ -57,10 +57,10 @@ public class PostgresCardRepository implements CardRepository {
   }
 
   @Override
-  public Card addVoter(Long cardId, Long userId) {
+  public Card upvote(Long cardId, Long userId) {
     Card card = getCard(cardId);
     if (card.getVoters().contains(userId)) {
-      throw new UserUpvotedException();
+      throw new UserAlreadyUpvotedException();
     }
 
     jdbcTemplate.update(ADD_VOTER, userId, cardId);
