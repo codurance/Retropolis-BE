@@ -17,6 +17,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.sql.SQLException;
@@ -44,12 +45,12 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
     headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
   }
 
-  @When("the card exists with an id")
+  @Given("the card exists")
   public void theCardExistsWithId() {
     executePost(url + "/cards", new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USER_EMAIL), headers));
   }
 
-  @And("the client updates to cards with this id and changes the text to {string}")
+  @When("the client updates to cards with this id and changes the text to {string}")
   public void theClientUpdatesToCardsWithThisIdAndChangesTheTextFromTo(String newText)
       throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()

@@ -65,7 +65,9 @@ public class CardController extends BaseController {
 
   @PatchMapping(value = "/{cardId}/vote")
   public CardResponseObject updateVote(@PathVariable Long cardId, @RequestBody @Valid UpVoteRequestObject request) {
-    return cardService.upvote(cardId, request);
+    return request.getAddVote() ?
+        cardService.addUpvote(cardId, request) :
+        cardService.removeUpvote(cardId, request);
   }
 
   @ExceptionHandler(ColumnNotFoundException.class)

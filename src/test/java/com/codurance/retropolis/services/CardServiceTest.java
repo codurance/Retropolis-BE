@@ -5,6 +5,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -103,41 +104,59 @@ public class CardServiceTest {
 
   @Test
   void should_add_card_voter_and_return_card() {
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email);
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
     Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), singletonList(USER.getId()));
+    Boolean haveVoted = true;
     CardResponseObject cardResponseObject = new CardResponseObject(editedCard.getText(), editedCard.getId(),
-        editedCard.getColumnId(), HAVE_VOTED, editedCard.getVoters().size(), USER.username);
+        editedCard.getColumnId(), haveVoted, editedCard.getVoters().size(), USER.username);
 
     when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
-    when(cardRepository.upvote(editedCard.getId(), editedCard.getUserId())).thenReturn(editedCard);
+    when(cardRepository.addUpvote(editedCard.getId(), editedCard.getUserId())).thenReturn(editedCard);
     when(userService.findById(editedCard.getUserId())).thenReturn(USER);
-    when(cardResponseObjectFactory.create(editedCard, editedCard.getUserId(), USER.username))
-        .thenReturn(cardResponseObject);
+    when(cardResponseObjectFactory.create(editedCard, editedCard.getUserId(), USER.username)).thenReturn(cardResponseObject);
 
-    cardService.upvote(CARD_ID, requestObject);
+    CardResponseObject response = cardService.addUpvote(CARD_ID, requestObject);
 
-    assertEquals(editedCard.getVoters().size(), cardResponseObject.getTotalVoters());
-    assertFalse(cardResponseObject.getHaveVoted());
+    assertEquals(editedCard.getVoters().size(), response.getTotalVoters());
+    assertTrue(response.getHaveVoted());
   }
 
   @Test
   public void should_throw_UserAlreadyUpvotedException_when_user_has_already_upvoted() {
     when(userService.findByEmail(USER.email)).thenReturn(USER);
-    doThrow(new UserAlreadyUpvotedException()).when(cardRepository).upvote(CARD_ID, USER.getId());
+    doThrow(new UserAlreadyUpvotedException()).when(cardRepository).addUpvote(CARD_ID, USER.getId());
     assertThrows(UserAlreadyUpvotedException.class, () -> {
-      UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email);
-      cardService.upvote(CARD_ID, requestObject);
+      UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
+      cardService.addUpvote(CARD_ID, requestObject);
     });
   }
 
   @Test
   public void should_throw_CardNotFoundException_on_upvote() {
     when(userService.findByEmail(USER.email)).thenReturn(USER);
-    doThrow(new RuntimeException()).when(cardRepository).upvote(NON_EXISTENT_CARD_ID, USER.getId());
+    doThrow(new RuntimeException()).when(cardRepository).addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
     assertThrows(CardNotFoundException.class, () -> {
-      UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email);
-      cardService.upvote(NON_EXISTENT_CARD_ID, requestObject);
+      UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
+      cardService.addUpvote(NON_EXISTENT_CARD_ID, requestObject);
     });
+  }
+
+  @Test
+  void should_remove_card_voter_and_return_card() {
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, false);
+    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList());
+    CardResponseObject cardResponseObject = new CardResponseObject(editedCard.getText(), editedCard.getId(),
+        editedCard.getColumnId(), HAVE_VOTED, editedCard.getVoters().size(), USER.username);
+
+    when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
+    when(cardRepository.removeUpvote(editedCard.getId(), editedCard.getUserId())).thenReturn(editedCard);
+    when(userService.findById(editedCard.getUserId())).thenReturn(USER);
+    when(cardResponseObjectFactory.create(editedCard, editedCard.getUserId(), USER.username)).thenReturn(cardResponseObject);
+
+    CardResponseObject response = cardService.removeUpvote(CARD_ID, requestObject);
+
+    assertEquals(editedCard.getVoters().size(), response.getTotalVoters());
+    assertFalse(response.getHaveVoted());
   }
 
   @Test

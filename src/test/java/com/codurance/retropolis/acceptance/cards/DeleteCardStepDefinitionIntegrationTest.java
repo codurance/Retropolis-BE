@@ -1,13 +1,11 @@
 package com.codurance.retropolis.acceptance.cards;
 
 import static com.codurance.retropolis.utils.HttpWrapper.executeDelete;
-import static com.codurance.retropolis.utils.HttpWrapper.executePost;
 import static com.codurance.retropolis.utils.HttpWrapper.responseResult;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,7 +16,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
 
@@ -40,13 +37,6 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
     cleanUp();
     headers = new HttpHeaders();
     headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
-  }
-
-  @When("the card exists with id")
-  public void theCardExistsWithId() {
-    HttpEntity<NewCardRequestObject> request = new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USER_EMAIL),
-        headers);
-    executePost(url + "/cards", request);
   }
 
   @When("the client deletes to cards with this id passing it as path variable to endpoint")

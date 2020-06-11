@@ -13,41 +13,45 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.Before;
-import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+public class RemoveUpvoteStepDefinitionIntegrationTest extends BaseStepDefinition {
 
-public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
+  private final String TOKEN = "token";
+  private HttpHeaders headers;
 
-  public AddUpVoteStepDefinitionIntegrationTest(DataSource dataSource) {
+  public RemoveUpvoteStepDefinitionIntegrationTest(DataSource dataSource) {
     super(dataSource);
   }
 
   @Before
   public void cleanUpDatabase() throws SQLException {
     cleanUp();
+    headers = new HttpHeaders();
+    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
   }
 
-  @And("the client adds card vote with voter:{string}")
-  public void theClientAddsCardVoteWithVoter(String email)
+  @When("the client removes card vote with voter:{string}")
+  public void theClientRemovesCardVoteWithVoter(String email)
       throws JsonProcessingException {
-    CardResponseObject cardResponseObject = new ObjectMapper()
-        .readValue(responseResult.getBody(), new TypeReference<>() {
-        });
-    executePatch(url + "/cards/" + cardResponseObject.getId() + "/vote",
-        new HttpEntity<>(new UpVoteRequestObject(email, true)));
+    CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
+    executePatch(url + "/cards/" + cardResponseObject.getId() + "/vote", new HttpEntity<>(new UpVoteRequestObject(email, false)));
   }
 
-  @And("the client receives the card with their vote")
-  public void theClientReceivesTheCardWithTheVoter() throws JsonProcessingException {
+  @Then("the client receives the card without their vote")
+  public void theClientReceivesTheCardWithoutTheirVote() throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
-    assertThat(cardResponseObject.getTotalVoters(), is(1));
-    assertThat(cardResponseObject.getHaveVoted(), is(true));
+    assertThat(cardResponseObject.getTotalVoters(), is(0));
+    assertThat(cardResponseObject.getHaveVoted(), is(false));
   }
 }

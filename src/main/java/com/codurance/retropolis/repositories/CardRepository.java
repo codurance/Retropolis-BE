@@ -10,5 +10,7 @@ public interface CardRepository {
 
   Card updateText(Long cardId, String newText);
 
-  Card upvote(Long cardId, Long userId);
+  Card addUpvote(Long cardId, Long userId);
+
+  Card removeUpvote(Long cardId, Long userId);
 }
