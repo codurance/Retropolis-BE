@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS cards(
                                     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-insert into boards(id, title) values(1, 'test board');
+insert into boards(title) values('test board');
 insert into columns(title, board_id) values('Start', 1);
 insert into columns(title, board_id) values('Stop', 1);
 insert into columns(title, board_id) values('Continue', 1);
