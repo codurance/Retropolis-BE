@@ -24,12 +24,12 @@ CREATE TABLE IF NOT EXISTS columns (
   FOREIGN KEY (board_id) REFERENCES boards (id)
 );
 
-CREATE TABLE IF NOT EXISTS cards (
-  id SERIAL PRIMARY KEY,
-  text varchar,
-  user_id int,
-  column_id int,
-  voters ARRAY,
-  FOREIGN KEY (column_id) REFERENCES columns (id),
-  FOREIGN KEY (user_id) REFERENCES users (id)
+CREATE TABLE IF NOT EXISTS cards(
+                                    id        SERIAL PRIMARY KEY,
+                                    text      varchar,
+                                    user_id   int,
+                                    column_id int,
+                                    voters    int[],
+                                    FOREIGN KEY (column_id) REFERENCES columns (id),
+                                    FOREIGN KEY (user_id) REFERENCES users (id)
 );
