@@ -107,16 +107,13 @@ public class CardServiceTest {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
     Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), singletonList(USER.getId()));
     Boolean haveVoted = true;
-    CardResponseObject cardResponseObject = new CardResponseObject(editedCard.getText(),
-        editedCard.getId(),
+    CardResponseObject cardResponseObject = new CardResponseObject(editedCard.getText(), editedCard.getId(),
         editedCard.getColumnId(), haveVoted, editedCard.getVoters().size(), USER.username);
 
     when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
-    when(cardRepository.addUpvote(editedCard.getId(), editedCard.getUserId()))
-        .thenReturn(editedCard);
+    when(cardRepository.addUpvote(editedCard.getId(), editedCard.getUserId())).thenReturn(editedCard);
     when(userService.findById(editedCard.getUserId())).thenReturn(USER);
-    when(cardResponseObjectFactory.create(editedCard, editedCard.getUserId(), USER.username))
-        .thenReturn(cardResponseObject);
+    when(cardResponseObjectFactory.create(editedCard, editedCard.getUserId(), USER.username)).thenReturn(cardResponseObject);
 
     CardResponseObject response = cardService.addUpvote(CARD_ID, requestObject);
 
@@ -137,8 +134,7 @@ public class CardServiceTest {
   @Test
   public void should_throw_CardNotFoundException_on_upvote() {
     when(userService.findByEmail(USER.email)).thenReturn(USER);
-    doThrow(new RuntimeException()).when(cardRepository)
-        .addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
+    doThrow(new RuntimeException()).when(cardRepository).addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
     assertThrows(CardNotFoundException.class, () -> {
       UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
       cardService.addUpvote(NON_EXISTENT_CARD_ID, requestObject);
@@ -149,16 +145,13 @@ public class CardServiceTest {
   void should_remove_card_voter_and_return_card() {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, false);
     Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList());
-    CardResponseObject cardResponseObject = new CardResponseObject(editedCard.getText(),
-        editedCard.getId(),
+    CardResponseObject cardResponseObject = new CardResponseObject(editedCard.getText(), editedCard.getId(),
         editedCard.getColumnId(), HAVE_VOTED, editedCard.getVoters().size(), USER.username);
 
     when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
-    when(cardRepository.removeUpvote(editedCard.getId(), editedCard.getUserId()))
-        .thenReturn(editedCard);
+    when(cardRepository.removeUpvote(editedCard.getId(), editedCard.getUserId())).thenReturn(editedCard);
     when(userService.findById(editedCard.getUserId())).thenReturn(USER);
-    when(cardResponseObjectFactory.create(editedCard, editedCard.getUserId(), USER.username))
-        .thenReturn(cardResponseObject);
+    when(cardResponseObjectFactory.create(editedCard, editedCard.getUserId(), USER.username)).thenReturn(cardResponseObject);
 
     CardResponseObject response = cardService.removeUpvote(CARD_ID, requestObject);
 
