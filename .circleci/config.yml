@@ -24,10 +24,6 @@ jobs:
 
       - vm-install-tools/install-java11
 
-      - run: mvn clean
-
-      - run: mvn test
-
       - run: mvn jacoco:report
 
       - codecov/upload:
@@ -40,9 +36,10 @@ jobs:
           working_directory: /
           command: |
             sudo apt-get -y -qq update
-            sudo apt-get install python-pip python-dev build-essential
-            sudo pip install --upgrade setuptools==34.0.1
-            sudo pip install awsebcli --upgrade
+            sudo apt-get install python3.7
+            sudo apt-get install python3-pip python3-dev build-essential
+            sudo pip3 install --upgrade setuptools
+            sudo pip3 install awsebcli --upgrade
 
       - run:
           name: Deploying
