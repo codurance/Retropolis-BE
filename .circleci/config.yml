@@ -14,21 +14,19 @@ jobs:
 
       - run: mvn test
 
-      - run: mvn package
-
-  deploy:
-    machine:
-      image: circleci/classic:latest
-    working_directory: ~/app
-    steps:
-      - checkout
-
-      - vm-install-tools/install-java11
-
       - run: mvn jacoco:report
 
       - codecov/upload:
           file: ./target/site/jacoco/jacoco.xml
+
+      - run: mvn package
+
+  deploy:
+    working_directory: ~/app
+    docker:
+      - image: circleci/openjdk:11-stretch-node
+    steps:
+      - checkout
 
       - run: mvn package
 
