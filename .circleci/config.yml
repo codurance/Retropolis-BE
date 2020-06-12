@@ -24,7 +24,7 @@ jobs:
       - checkout
 
       - vm-install-tools/install-java11
-      -
+
       - run: mvn jacoco:report
 
       - codecov/upload:
