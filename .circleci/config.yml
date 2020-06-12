@@ -17,7 +17,8 @@ jobs:
       - run: mvn package
 
   deploy:
-    machine: true
+    machine:
+      image: circleci/classic:201808-01
     working_directory: ~/app
     steps:
       - checkout
