@@ -40,18 +40,15 @@ public class RemoveUpvoteStepDefinitionIntegrationTest extends BaseStepDefinitio
   @When("the client removes card vote with voter:{string}")
   public void theClientRemovesCardVoteWithVoter(String email)
       throws JsonProcessingException {
-    CardResponseObject cardResponseObject = new ObjectMapper()
-        .readValue(responseResult.getBody(), new TypeReference<>() {
-        });
-    executePatch(url + "/cards/" + cardResponseObject.getId() + "/vote",
-        new HttpEntity<>(new UpVoteRequestObject(email, false)));
+    CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
+    executePatch(url + "/cards/" + cardResponseObject.getId() + "/vote", new HttpEntity<>(new UpVoteRequestObject(email, false)));
   }
 
   @Then("the client receives the card without their vote")
   public void theClientReceivesTheCardWithoutTheirVote() throws JsonProcessingException {
-    CardResponseObject cardResponseObject = new ObjectMapper()
-        .readValue(responseResult.getBody(), new TypeReference<>() {
-        });
+    CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
 
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
     assertThat(cardResponseObject.getTotalVoters(), is(0));

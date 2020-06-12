@@ -1,23 +1,28 @@
 version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.2
+  vm-install-tools: entur/vm-install-tools@0.0.6
+
 jobs:
   test:
-    working_directory: ~/app
     machine: true
+    working_directory: ~/app
     steps:
       - checkout
+
+      - vm-install-tools/install-java11
 
       - run: mvn test
 
       - run: mvn package
 
   deploy:
+    machine: true
     working_directory: ~/app
-    docker:
-      - image: circleci/openjdk:11-stretch-node
     steps:
       - checkout
+
+      - vm-install-tools/install-java11
 
       - run: mvn clean
 
