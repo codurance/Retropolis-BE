@@ -17,16 +17,13 @@ jobs:
       - run: mvn package
 
   deploy:
-    machine: true
     working_directory: ~/app
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
 
       - vm-install-tools/install-java11
-
-      - run: mvn clean
-
-      - run: mvn test
 
       - run: mvn jacoco:report
 
@@ -40,9 +37,9 @@ jobs:
           working_directory: /
           command: |
             sudo apt-get -y -qq update
-            sudo apt-get install python-pip python-dev build-essential
-            sudo pip install --upgrade setuptools
-            sudo pip install awsebcli --upgrade
+            sudo apt-get install python3-pip python-dev build-essential
+            sudo pip3 install --upgrade setuptools
+            sudo pip3 install awsebcli --upgrade
 
       - run:
           name: Deploying
