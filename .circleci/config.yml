@@ -14,17 +14,6 @@ jobs:
 
       - run: mvn test
 
-      - run: mvn package
-
-  deploy:
-    working_directory: ~/app
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-
-      - vm-install-tools/install-java11
-
       - run: mvn jacoco:report
 
       - codecov/upload:
@@ -32,15 +21,30 @@ jobs:
 
       - run: mvn package
 
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  deploy:
+    working_directory: ~/app
+    docker:
+      - image: circleci/openjdk:11-stretch-node
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: .
+
       - run:
           name: Installing deployment dependencies
           working_directory: /
           command: |
             sudo apt-get -y -qq update
-            sudo apt-get install python3.6
-            sudo apt-get install python3-pip python-dev build-essential
-            sudo pip3 install --upgrade setuptools
-            sudo pip3 install awsebcli --upgrade
+            sudo apt-get install python
+            sudo apt-get install python-pip python-dev build-essential
+            sudo pip install --upgrade setuptools
+            sudo pip install awsebcli --upgrade
 
       - run:
           name: Deploying
