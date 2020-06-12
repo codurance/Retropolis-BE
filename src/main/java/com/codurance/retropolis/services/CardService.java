@@ -35,6 +35,7 @@ public class CardService {
   public CardResponseObject create(NewCardRequestObject requestObject) {
     User user = userService.findByEmail(requestObject.getEmail());
     requestObject.setUserId(user.getId());
+
     Card newCard = cardFactory.create(requestObject);
 
     try {
