@@ -28,8 +28,6 @@ jobs:
     steps:
       - checkout
 
-      - run: mvn package
-
       - run:
           name: Installing deployment dependencies
           working_directory: /
