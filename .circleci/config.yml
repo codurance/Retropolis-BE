@@ -36,7 +36,6 @@ jobs:
           working_directory: /
           command: |
             sudo apt-get -y -qq update
-            sudo apt-get install python3.7
             pyenv global 3.7.0
             sudo apt-get install python-pip python-dev build-essential
             sudo pip install --upgrade setuptools
