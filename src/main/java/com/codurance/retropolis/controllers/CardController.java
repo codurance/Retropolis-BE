@@ -32,12 +32,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cards")
 public class CardController extends BaseController {
 
-  private final CardService cardService;
   private final LoginService loginService;
+  private CardService cardService;
+  private ApplicationCardService applicationCardService;
 
   @Autowired
-  public CardController(CardService cardService, LoginService loginService) {
+  public CardController(CardService cardService, ApplicationCardService applicationCardService,
+      LoginService loginService) {
     this.cardService = cardService;
+    this.applicationCardService = applicationCardService;
     this.loginService = loginService;
   }
 
@@ -49,7 +52,7 @@ public class CardController extends BaseController {
       throw new UnauthorizedException();
     }
 
-    return cardService.create(request);
+    return applicationCardService.create(request);
   }
 
   @DeleteMapping(value = "/{cardId}")

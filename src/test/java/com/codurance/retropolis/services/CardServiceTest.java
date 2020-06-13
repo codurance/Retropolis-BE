@@ -64,14 +64,14 @@ public class CardServiceTest {
     Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList());
     User author = new User(USER.getId(), USER.email, USER.username);
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
-    CardResponseObject cardResponseObject = new CardResponseObject(card.getText(), card.getId(),
-        card.getColumnId(), HAVE_VOTED, card.getVoters().size(), author.username);
+//    CardResponseObject cardResponseObject = new CardResponseObject(card.getText(), card.getId(),
+//        card.getColumnId(), HAVE_VOTED, card.getVoters().size(), author.username);
 
-    when(userService.findByEmail(requestObject.getEmail())).thenReturn(author);
+//    when(userService.findByEmail(requestObject.getEmail())).thenReturn(author);
     when(cardFactory.create(requestObject)).thenReturn(card);
     when(cardRepository.addCard(card)).thenReturn(card);
-    when(userService.findById(author.getId())).thenReturn(author);
-    when(cardResponseObjectFactory.create(card, author.getId(), author.username)).thenReturn(cardResponseObject);
+//    when(userService.findById(author.getId())).thenReturn(author);
+//    when(cardResponseObjectFactory.create(card, author.getId(), author.username)).thenReturn(cardResponseObject);
 
     cardService.create(requestObject);
 

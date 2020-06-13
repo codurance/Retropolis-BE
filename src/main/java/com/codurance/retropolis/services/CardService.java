@@ -32,18 +32,16 @@ public class CardService {
     this.cardResponseObjectFactory = cardResponseObjectFactory;
   }
 
-  public CardResponseObject create(NewCardRequestObject requestObject) {
-    User user = userService.findByEmail(requestObject.getEmail());
-    requestObject.setUserId(user.getId());
-
+  public Card create(NewCardRequestObject requestObject) {
+    Card card = null;
     Card newCard = cardFactory.create(requestObject);
 
     try {
-      Card card = cardRepository.addCard(newCard);
-      return createResponseFrom(card, user.getId());
+      card = cardRepository.addCard(newCard);
     } catch (RuntimeException exception) {
       throw new ColumnNotFoundException();
     }
+    return card;
   }
 
   public void delete(Long cardId) {
