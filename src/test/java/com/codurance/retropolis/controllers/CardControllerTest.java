@@ -191,7 +191,7 @@ public class CardControllerTest {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, true);
     Boolean haveVoted = true;
     Integer expectedVoteCount = 1;
-    when(cardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class)))
+    when(applicationCardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class)))
         .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, haveVoted, expectedVoteCount, USER.username));
 
     String jsonResponse = mockMvcWrapper

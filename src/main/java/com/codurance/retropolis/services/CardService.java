@@ -33,7 +33,7 @@ public class CardService {
   }
 
   public Card create(NewCardRequestObject requestObject) {
-    Card card = null;
+    Card card;
     Card newCard = cardFactory.create(requestObject);
 
     try {
@@ -60,11 +60,10 @@ public class CardService {
     }
   }
 
-  public CardResponseObject addUpvote(Long cardId, UpVoteRequestObject requestObject) {
+  public Card addUpvote(Long cardId, Long userId) {
     try {
-      User user = userService.findByEmail(requestObject.getEmail());
-      Card updatedCard = cardRepository.addUpvote(cardId, user.getId());
-      return createResponseFrom(updatedCard, user.getId());
+      Card updatedCard = cardRepository.addUpvote(cardId, userId);
+      return updatedCard;
     } catch (UserAlreadyUpvotedException userUpvotedException) {
       throw userUpvotedException;
     } catch (RuntimeException invalidCardId) {

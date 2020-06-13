@@ -4,6 +4,7 @@ import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.responses.CardResponseObjectFactory;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,13 @@ public class ApplicationCardService {
     } catch (RuntimeException exception) {
       throw new ColumnNotFoundException();
     }
+  }
+
+  public CardResponseObject addUpvote(Long cardId, UpVoteRequestObject requestObject) {
+    User user = userService.findByEmail(requestObject.getEmail());
+
+    Card updatedCard = cardService.addUpvote(cardId, user.getId());
+    return createResponseFrom(updatedCard, user.getId());
   }
 
   private CardResponseObject createResponseFrom(Card card, Long userId) {
