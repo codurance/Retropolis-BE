@@ -229,7 +229,7 @@ public class CardControllerTest {
   @Test
   void remove_card_vote_with_voter_email_should_return_card_without_voter() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, false);
-    when(cardService.removeUpvote(any(Long.class), any(UpVoteRequestObject.class)))
+    when(applicationCardService.removeUpvote(any(Long.class), any(UpVoteRequestObject.class)))
         .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USER.username));
 
     String jsonResponse = mockMvcWrapper

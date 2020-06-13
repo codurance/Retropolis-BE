@@ -42,6 +42,12 @@ public class ApplicationCardService {
     return createResponseFrom(updatedCard, user.getId());
   }
 
+  public CardResponseObject removeUpvote(Long cardId, UpVoteRequestObject requestObject) {
+    User user = userService.findByEmail(requestObject.getEmail());
+    Card updatedCard = cardService.removeUpvote(cardId, user.getId());
+    return createResponseFrom(updatedCard, user.getId());
+  }
+
   private CardResponseObject createResponseFrom(Card card, Long userId) {
     User cardAuthor = userService.findById(userId);
     return cardResponseObjectFactory.create(card, userId, cardAuthor.username);

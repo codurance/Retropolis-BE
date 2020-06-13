@@ -1,16 +1,13 @@
 package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.entities.Card;
-import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.exceptions.UserAlreadyUpvotedException;
 import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
-import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
-import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.responses.CardResponseObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,18 +68,12 @@ public class CardService {
     }
   }
 
-  public CardResponseObject removeUpvote(Long cardId, UpVoteRequestObject requestObject) {
+  public Card removeUpvote(Long cardId, Long userId) {
     try {
-      User user = userService.findByEmail(requestObject.getEmail());
-      Card updatedCard = cardRepository.removeUpvote(cardId, user.getId());
-      return createResponseFrom(updatedCard, user.getId());
+      Card updatedCard = cardRepository.removeUpvote(cardId, userId);
+      return updatedCard;
     } catch (RuntimeException invalidCardId) {
       throw new CardNotFoundException();
     }
-  }
-
-  private CardResponseObject createResponseFrom(Card card, Long userId) {
-    User cardAuthor = userService.findById(userId);
-    return cardResponseObjectFactory.create(card, userId, cardAuthor.username);
   }
 }

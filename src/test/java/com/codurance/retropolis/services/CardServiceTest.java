@@ -3,7 +3,6 @@ package com.codurance.retropolis.services;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -19,7 +18,6 @@ import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
-import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.responses.CardResponseObjectFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -124,20 +122,13 @@ public class CardServiceTest {
 
   @Test
   void should_remove_card_voter_and_return_card() {
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, false);
     Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList());
-    CardResponseObject cardResponseObject = new CardResponseObject(editedCard.getText(), editedCard.getId(),
-        editedCard.getColumnId(), HAVE_VOTED, editedCard.getVoters().size(), USER.username);
 
-    when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
     when(cardRepository.removeUpvote(editedCard.getId(), editedCard.getUserId())).thenReturn(editedCard);
-    when(userService.findById(editedCard.getUserId())).thenReturn(USER);
-    when(cardResponseObjectFactory.create(editedCard, editedCard.getUserId(), USER.username)).thenReturn(cardResponseObject);
 
-    CardResponseObject response = cardService.removeUpvote(CARD_ID, requestObject);
+    Card card = cardService.removeUpvote(CARD_ID, USER.getId());
 
-    assertEquals(editedCard.getVoters().size(), response.getTotalVoters());
-    assertFalse(response.getHaveVoted());
+    assertEquals(editedCard.getVoters().size(), card.getVoters().size());
   }
 
   @Test

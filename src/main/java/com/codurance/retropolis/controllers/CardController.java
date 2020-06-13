@@ -71,7 +71,7 @@ public class CardController extends BaseController {
   public CardResponseObject updateVote(@PathVariable Long cardId, @RequestBody @Valid UpVoteRequestObject request) {
     return request.getAddVote() ?
         applicationCardService.addUpvote(cardId, request) :
-        cardService.removeUpvote(cardId, request);
+        applicationCardService.removeUpvote(cardId, request);
   }
 
   @ExceptionHandler(ColumnNotFoundException.class)
