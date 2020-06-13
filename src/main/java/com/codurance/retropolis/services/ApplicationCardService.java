@@ -1,4 +1,4 @@
-package com.codurance.retropolis.controllers;
+package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.User;
@@ -6,8 +6,6 @@ import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.responses.CardResponseObjectFactory;
-import com.codurance.retropolis.services.CardService;
-import com.codurance.retropolis.services.UserService;
 import org.springframework.stereotype.Service;
 
 @Service

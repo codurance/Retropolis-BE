@@ -8,6 +8,7 @@ import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
+import com.codurance.retropolis.services.ApplicationCardService;
 import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
 import java.util.Collections;
