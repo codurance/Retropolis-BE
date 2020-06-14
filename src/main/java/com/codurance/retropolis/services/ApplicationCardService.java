@@ -2,7 +2,6 @@ package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.User;
-import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
@@ -27,12 +26,8 @@ public class ApplicationCardService {
     User user = userService.findByEmail(requestObject.getEmail());
     requestObject.setUserId(user.getId());
 
-    try {
-      Card card = cardService.create(requestObject);
-      return createResponseFrom(card, user.getId());
-    } catch (RuntimeException exception) {
-      throw new ColumnNotFoundException();
-    }
+    Card card = cardService.create(requestObject);
+    return createResponseFrom(card, user.getId());
   }
 
   public CardResponseObject addUpvote(Long cardId, UpVoteRequestObject requestObject) {
