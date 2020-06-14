@@ -8,7 +8,6 @@ import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
-import com.codurance.retropolis.responses.CardResponseObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +16,11 @@ public class CardService {
 
   private final CardFactory cardFactory;
   private final CardRepository cardRepository;
-  private final UserService userService;
-  private final CardResponseObjectFactory cardResponseObjectFactory;
 
   @Autowired
-  public CardService(CardFactory cardFactory, CardRepository cardRepository,
-      UserService userService, CardResponseObjectFactory cardResponseObjectFactory) {
+  public CardService(CardFactory cardFactory, CardRepository cardRepository) {
     this.cardFactory = cardFactory;
     this.cardRepository = cardRepository;
-    this.userService = userService;
-    this.cardResponseObjectFactory = cardResponseObjectFactory;
   }
 
   public Card create(NewCardRequestObject requestObject) {

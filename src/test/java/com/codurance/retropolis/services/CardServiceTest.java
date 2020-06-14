@@ -16,9 +16,7 @@ import com.codurance.retropolis.exceptions.UserAlreadyUpvotedException;
 import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.repositories.CardRepository;
 import com.codurance.retropolis.requests.NewCardRequestObject;
-import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
-import com.codurance.retropolis.responses.CardResponseObjectFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,15 +43,11 @@ public class CardServiceTest {
   @Mock
   private UserService userService;
 
-  @Mock
-  private CardResponseObjectFactory cardResponseObjectFactory;
-
   private CardService cardService;
 
   @BeforeEach
   void setUp() {
-    cardService = new CardService(cardFactory, cardRepository, userService,
-        cardResponseObjectFactory);
+    cardService = new CardService(cardFactory, cardRepository);
   }
 
   @Test
@@ -106,7 +100,6 @@ public class CardServiceTest {
   public void should_throw_UserAlreadyUpvotedException_when_user_has_already_upvoted() {
     doThrow(new UserAlreadyUpvotedException()).when(cardRepository).addUpvote(CARD_ID, USER.getId());
     assertThrows(UserAlreadyUpvotedException.class, () -> {
-      UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
       cardService.addUpvote(CARD_ID, USER.getId());
     });
   }
@@ -115,7 +108,6 @@ public class CardServiceTest {
   public void should_throw_CardNotFoundException_on_upvote() {
     doThrow(new RuntimeException()).when(cardRepository).addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
     assertThrows(CardNotFoundException.class, () -> {
-      UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
       cardService.addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
     });
   }
