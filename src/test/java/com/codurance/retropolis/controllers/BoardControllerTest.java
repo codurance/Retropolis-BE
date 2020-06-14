@@ -19,6 +19,7 @@ import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.responses.BoardResponseObject;
 import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.responses.ColumnResponseObject;
+import com.codurance.retropolis.services.ApplicationBoardService;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.LoginService;
 import com.codurance.retropolis.utils.MockMvcWrapper;
@@ -63,6 +64,9 @@ public class BoardControllerTest {
 
   private MockMvcWrapper mockMvcWrapper;
 
+  @MockBean
+  private ApplicationBoardService applicationBoardService;
+
   @BeforeEach
   void setUp() {
     mockMvcWrapper = new MockMvcWrapper(context);
@@ -82,7 +86,7 @@ public class BoardControllerTest {
     List<ColumnResponseObject> columns = List.of(columnResponse);
 
     when(userFactory.create(TOKEN)).thenReturn(USER);
-    when(boardService.getBoard(USER, BOARD_ID))
+    when(applicationBoardService.getBoard(USER, BOARD_ID))
         .thenReturn(new BoardResponseObject(BOARD_ID, BOARD_TITLE, columns));
 
     String jsonResponse = mockMvcWrapper
@@ -118,7 +122,8 @@ public class BoardControllerTest {
   @Test
   public void returns_bad_request_when_board_does_not_exist() throws Exception {
     when(userFactory.create(TOKEN)).thenReturn(USER);
-    doThrow(new BoardNotFoundException()).when(boardService).getBoard(USER, NON_EXISTENT_BOARD_ID);
+    doThrow(new BoardNotFoundException()).when(applicationBoardService)
+        .getBoard(USER, NON_EXISTENT_BOARD_ID);
     String jsonResponse = mockMvcWrapper
         .getRequest(BOARDS_URL + "/" + NON_EXISTENT_BOARD_ID, status().isBadRequest(),
             getAuthHeader(TOKEN));
