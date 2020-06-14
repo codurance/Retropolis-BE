@@ -27,12 +27,12 @@ public class ApplicationCardService {
     requestObject.setUserId(user.getId());
 
     Card card = cardService.create(requestObject);
+
     return createResponseFrom(card, user.getId());
   }
 
   public CardResponseObject addUpvote(Long cardId, UpVoteRequestObject requestObject) {
     User user = userService.findByEmail(requestObject.getEmail());
-
     Card updatedCard = cardService.addUpvote(cardId, user.getId());
     return createResponseFrom(updatedCard, user.getId());
   }
