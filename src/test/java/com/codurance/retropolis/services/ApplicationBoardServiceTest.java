@@ -36,8 +36,7 @@ public class ApplicationBoardServiceTest {
 
   @BeforeEach
   void setUp() {
-    applicationBoardService = new ApplicationBoardService(userService, boardResponseFactory,
-        boardService);
+    applicationBoardService = new ApplicationBoardService(userService, boardResponseFactory, boardService);
   }
 
   @Test
@@ -47,7 +46,7 @@ public class ApplicationBoardServiceTest {
     requestObject.setUser(USER);
     Board board = new Board(BOARD_ID, BOARD_TITLE, emptyList());
     when(userService.findByEmail(USER.email)).thenReturn(USER);
-    when(boardService.getBoard(BOARD_ID)).thenReturn(board);
+    when(boardService.getBoard(USER, BOARD_ID)).thenReturn(board);
 
     BoardResponseObject boardResponseObject = new BoardResponseObject(BOARD_ID, BOARD_TITLE,
         emptyList());
@@ -62,7 +61,7 @@ public class ApplicationBoardServiceTest {
 
   @Test
   public void should_throw_BoardNotFoundException_when_boardId_is_invalid_on_() {
-    doThrow(new RuntimeException()).when(userService).registerUserIfNotExists(USER, BOARD_ID);
+    doThrow(new RuntimeException()).when(boardService).getBoard(USER, BOARD_ID);
     assertThrows(BoardNotFoundException.class,
         () -> applicationBoardService.getBoard(USER, BOARD_ID));
   }

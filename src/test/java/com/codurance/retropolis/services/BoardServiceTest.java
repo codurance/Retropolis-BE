@@ -49,8 +49,8 @@ public class BoardServiceTest {
     Board board = new Board(BOARD_ID, BOARD_TITLE, emptyList());
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(board);
 
-    assertEquals(BOARD_ID, boardService.getBoard(BOARD_ID).getId());
-    assertEquals(BOARD_TITLE, boardService.getBoard(BOARD_ID).getTitle());
+    assertEquals(BOARD_ID, boardService.getBoard(USER, BOARD_ID).getId());
+    assertEquals(BOARD_TITLE, boardService.getBoard(USER, BOARD_ID).getTitle());
   }
 
   @Test

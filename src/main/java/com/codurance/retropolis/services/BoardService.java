@@ -25,8 +25,9 @@ public class BoardService {
     this.userService = userService;
   }
 
-  public Board getBoard(Long boardId) {
+  public Board getBoard(User user, Long boardId) {
     try {
+      userService.registerUserIfNotExists(user, boardId);
       return boardRepository.getBoard(boardId);
     } catch (RuntimeException exc) {
       throw new BoardNotFoundException();

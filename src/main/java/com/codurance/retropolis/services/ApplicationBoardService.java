@@ -24,12 +24,10 @@ public class ApplicationBoardService {
     this.boardService = boardService;
   }
 
-  public BoardResponseObject getBoard(User user, Long boardId) {
+  public BoardResponseObject getBoard(User requestUser, Long boardId) {
     try {
-      userService.registerUserIfNotExists(user, boardId);
-      user = userService.findByEmail(user.email);
-      Board board = boardService.getBoard(boardId);
-      return getResponseFrom(board, user.getId());
+      Board board = boardService.getBoard(requestUser, boardId);
+      return getResponseFrom(board, requestUser);
     } catch (RuntimeException exc) {
       throw new BoardNotFoundException();
     }
@@ -40,17 +38,18 @@ public class ApplicationBoardService {
     return getResponseFrom(boards);
   }
 
-  private BoardResponseObject getResponseFrom(Board board, Long userId) {
-    return boardResponseObjectFactory.create(board, userId);
+  public BoardResponseObject createBoard(NewBoardRequestObject requestObject) {
+    Board board = boardService.createBoard(requestObject);
+    return boardResponseObjectFactory.create(board, requestObject.getUser().getId());
+  }
+
+  private BoardResponseObject getResponseFrom(Board board, User requestUser) {
+    User user = userService.findByEmail(requestUser.email);
+    return boardResponseObjectFactory.create(board, user.getId());
   }
 
   private List<UserBoardResponseObject> getResponseFrom(List<Board> boards) {
     return boardResponseObjectFactory.create(boards);
-  }
-
-  public BoardResponseObject createBoard(NewBoardRequestObject requestObject) {
-    Board board = boardService.createBoard(requestObject);
-    return boardResponseObjectFactory.create(board, requestObject.getUser().getId());
   }
 
 }
