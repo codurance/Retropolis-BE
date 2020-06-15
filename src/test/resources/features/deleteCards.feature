@@ -1,6 +1,6 @@
-Feature: card is deleted
+Feature: deleting a card
 
-  Scenario: client makes call to DELETE /cards/1
+  Scenario: user deletes a card
     Given the card exists
-    And the client deletes to cards with this id passing it as path variable to endpoint
-    Then the client receives a status code of 200 after card was deleted
+    When the user deletes existing card
+    Then the user receives an ok response
