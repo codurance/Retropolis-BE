@@ -21,23 +21,18 @@ public class CardService {
   private final UserService userService;
 
   @Autowired
-  public CardService(UserService userService, CardFactory cardFactory,
-      CardRepository cardRepository) {
+  public CardService(UserService userService, CardFactory cardFactory, CardRepository cardRepository) {
     this.userService = userService;
     this.cardFactory = cardFactory;
     this.cardRepository = cardRepository;
   }
 
   public Card create(NewCardRequestObject requestObject) {
-    Card card;
-    Card newCard = cardFactory.create(requestObject);
-
     try {
-      card = cardRepository.addCard(newCard);
+      return cardRepository.addCard(cardFactory.create(requestObject));
     } catch (RuntimeException exception) {
       throw new ColumnNotFoundException();
     }
-    return card;
   }
 
   public void delete(Long cardId) {
@@ -75,4 +70,5 @@ public class CardService {
       throw new CardNotFoundException();
     }
   }
+
 }
