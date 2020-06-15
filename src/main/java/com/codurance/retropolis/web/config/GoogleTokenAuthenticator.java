@@ -11,6 +11,7 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,7 +20,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Profile({Environment.PROD, Environment.DEV})
 public class GoogleTokenAuthenticator implements HandlerInterceptor, TokenAuthenticator {
 
-  private final String CLIENT_ID = "582070750046-gn9mvl54av9j8b3mo3ea807c18di9ees.apps.googleusercontent.com";
+  @Value("${googleTokenId}")
+  private String googleClientId;
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -60,7 +62,7 @@ public class GoogleTokenAuthenticator implements HandlerInterceptor, TokenAuthen
     JacksonFactory jsonFactory = new JacksonFactory();
     HttpTransport transport = new NetHttpTransport();
     return new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-        .setAudience(Collections.singletonList(CLIENT_ID))
+        .setAudience(Collections.singletonList(googleClientId))
         .build();
   }
 }
