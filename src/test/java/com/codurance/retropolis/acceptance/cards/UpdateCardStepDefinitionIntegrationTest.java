@@ -15,15 +15,12 @@ import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 
 
 public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition {
@@ -31,23 +28,15 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
   private final String CARD_TEXT = "Hello";
   private final Long COLUMN_ID = 1L;
   private final String USER_EMAIL = "john.doe@codurance.com";
-  private final String TOKEN = "token";
-  private HttpHeaders headers;
 
   public UpdateCardStepDefinitionIntegrationTest(DataSource dataSource) {
     super(dataSource);
   }
 
-  @Before
-  public void cleanUpDatabase() throws SQLException {
-    cleanUp();
-    headers = new HttpHeaders();
-    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
-  }
-
   @Given("the card exists")
   public void theCardExistsWithId() {
-    executePost(url + "/cards", new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USER_EMAIL), headers));
+    executePost(url + "/cards",
+        new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USER_EMAIL), headers));
   }
 
   @When("the client updates to cards with this id and changes the text to {string}")

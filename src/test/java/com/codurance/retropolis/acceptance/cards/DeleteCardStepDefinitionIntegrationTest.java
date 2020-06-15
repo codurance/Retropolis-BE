@@ -11,32 +11,15 @@ import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import java.sql.SQLException;
 import javax.sql.DataSource;
-import org.springframework.http.HttpHeaders;
 
 
 public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition {
 
-  private final String USER_EMAIL = "john.doe@codurance.com";
-  private final Long COLUMN_ID = 1L;
-  private final String CARD_TEXT = "Hello";
-  private final String TOKEN = "token";
-  private HttpHeaders headers;
-
-
   public DeleteCardStepDefinitionIntegrationTest(DataSource dataSource) {
     super(dataSource);
-  }
-
-  @Before
-  public void cleanUpDatabase() throws SQLException {
-    cleanUp();
-    headers = new HttpHeaders();
-    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
   }
 
   @When("the client deletes to cards with this id passing it as path variable to endpoint")

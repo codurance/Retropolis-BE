@@ -12,9 +12,7 @@ import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
-import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -24,11 +22,6 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
 
   public AddUpVoteStepDefinitionIntegrationTest(DataSource dataSource) {
     super(dataSource);
-  }
-
-  @Before
-  public void cleanUpDatabase() throws SQLException {
-    cleanUp();
   }
 
   @And("the client adds card vote with voter:{string}")
@@ -43,8 +36,9 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
 
   @And("the client receives the card with their vote")
   public void theClientReceivesTheCardWithTheVoter() throws JsonProcessingException {
-    CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
-    });
+    CardResponseObject cardResponseObject = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
+        });
 
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
     assertThat(cardResponseObject.getTotalVoters(), is(1));
