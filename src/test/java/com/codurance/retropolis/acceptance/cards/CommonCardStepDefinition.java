@@ -19,7 +19,7 @@ public class CommonCardStepDefinition extends BaseStepDefinition {
   }
 
   @Given("the card exists")
-  public void theCardExistsWithId() {
+  public void theCardExists() {
     executePost(url + "/cards",
         new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USER_EMAIL), headers));
   }

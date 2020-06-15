@@ -1,6 +1,6 @@
 Feature: card is deleted
 
-  Scenario: client makes call to DELETE /cards/1
+  Scenario: client deletes a card
     Given the card exists
-    And the client deletes to cards with this id passing it as path variable to endpoint
+    When the client deletes existing card
     Then the client receives an ok response

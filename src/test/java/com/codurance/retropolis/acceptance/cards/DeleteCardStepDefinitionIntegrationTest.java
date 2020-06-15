@@ -23,8 +23,8 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
     super(dataSource);
   }
 
-  @When("the client deletes to cards with this id passing it as path variable to endpoint")
-  public void theClientDeletesToCardsEndpointWithPathVariable() throws JsonProcessingException {
+  @When("the client deletes existing card")
+  public void theClientDeletesExistingCard() throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
         });
