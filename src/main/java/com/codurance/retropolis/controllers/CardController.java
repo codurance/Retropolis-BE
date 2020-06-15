@@ -65,7 +65,8 @@ public class CardController extends BaseController {
   }
 
   @PatchMapping(value = "/{cardId}/vote")
-  public CardResponseObject updateVote(@PathVariable Long cardId, @RequestBody @Valid UpVoteRequestObject request) {
+  public ResponseEntity<HttpStatus> updateVote(@PathVariable Long cardId,
+      @RequestBody @Valid UpVoteRequestObject request) {
     return request.getAddVote() ?
         applicationCardService.addUpvote(cardId, request) :
         applicationCardService.removeUpvote(cardId, request);

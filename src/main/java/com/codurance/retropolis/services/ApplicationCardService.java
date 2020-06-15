@@ -29,22 +29,18 @@ public class ApplicationCardService {
   public CardResponseObject create(NewCardRequestObject requestObject) {
     User user = userService.findByEmail(requestObject.getEmail());
     requestObject.setUserId(user.getId());
-
     Card card = cardService.create(requestObject);
-
     return createResponseFrom(card, user.getId());
   }
 
-  public CardResponseObject addUpvote(Long cardId, UpVoteRequestObject requestObject) {
-    User user = userService.findByEmail(requestObject.getEmail());
-    Card updatedCard = cardService.addUpvote(cardId, user.getId());
-    return createResponseFrom(updatedCard, user.getId());
+  public ResponseEntity<HttpStatus> addUpvote(Long cardId, UpVoteRequestObject requestObject) {
+    cardService.addUpvote(cardId, requestObject);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  public CardResponseObject removeUpvote(Long cardId, UpVoteRequestObject requestObject) {
-    User user = userService.findByEmail(requestObject.getEmail());
-    Card updatedCard = cardService.removeUpvote(cardId, user.getId());
-    return createResponseFrom(updatedCard, user.getId());
+  public ResponseEntity<HttpStatus> removeUpvote(Long cardId, UpVoteRequestObject requestObject) {
+    cardService.removeUpvote(cardId, requestObject);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   public ResponseEntity<HttpStatus> delete(Long cardId) {

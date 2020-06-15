@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @ExtendWith(MockitoExtension.class)
 public class ApplicationCardServiceTest {
@@ -78,7 +80,6 @@ public class ApplicationCardServiceTest {
     User author = new User(USER.getId(), USER.email, USER.username);
 
     when(userService.findByEmail(newCardRequestObject.getEmail())).thenReturn(author);
-    when(cardService.addUpvote(card.getId(), USER.getId())).thenReturn(card);
     CardResponseObject cardResponseObject = new CardResponseObject(card.getText(), card.getId(),
         card.getColumnId(), HAVE_VOTED, card.getVoters().size() + 1, author.username);
 
@@ -86,12 +87,9 @@ public class ApplicationCardServiceTest {
     when(cardResponseObjectFactory.create(card, author.getId(), author.username))
         .thenReturn(cardResponseObject);
 
-    CardResponseObject response = applicationCardService.addUpvote(CARD_ID, upvoteRequestObject);
-    assertEquals(CARD_ID, response.getId());
-    assertEquals(HAVE_VOTED, response.getHaveVoted());
-    assertEquals(card.getVoters().size() + 1, response.getTotalVoters());
-    assertEquals(TEXT, response.getText());
-    assertEquals(card.getColumnId(), response.getColumnId());
+    ResponseEntity<HttpStatus> response = applicationCardService
+        .addUpvote(CARD_ID, upvoteRequestObject);
+    assertEquals(200, response.getStatusCode().value());
   }
 
   @Test
@@ -102,7 +100,6 @@ public class ApplicationCardServiceTest {
     User author = new User(USER.getId(), USER.email, USER.username);
 
     when(userService.findByEmail(newCardRequestObject.getEmail())).thenReturn(author);
-    when(cardService.removeUpvote(card.getId(), USER.getId())).thenReturn(card);
     CardResponseObject cardResponseObject = new CardResponseObject(card.getText(), card.getId(),
         card.getColumnId(), HAVE_VOTED, card.getVoters().size() - 1, author.username);
 
@@ -110,11 +107,8 @@ public class ApplicationCardServiceTest {
     when(cardResponseObjectFactory.create(card, author.getId(), author.username))
         .thenReturn(cardResponseObject);
 
-    CardResponseObject response = applicationCardService.removeUpvote(CARD_ID, upvoteRequestObject);
-    assertEquals(CARD_ID, response.getId());
-    assertEquals(HAVE_VOTED, response.getHaveVoted());
-    assertEquals(card.getVoters().size() - 1, response.getTotalVoters());
-    assertEquals(TEXT, response.getText());
-    assertEquals(card.getColumnId(), response.getColumnId());
+    ResponseEntity<HttpStatus> response = applicationCardService
+        .removeUpvote(CARD_ID, upvoteRequestObject);
+    assertEquals(200, response.getStatusCode().value());
   }
 }

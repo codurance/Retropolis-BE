@@ -32,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(CardController.class)
@@ -193,7 +195,7 @@ public class CardControllerTest {
     Boolean haveVoted = true;
     Integer expectedVoteCount = 1;
     when(applicationCardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class)))
-        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, haveVoted, expectedVoteCount, USER.username));
+        .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
@@ -231,7 +233,7 @@ public class CardControllerTest {
   void remove_card_vote_with_voter_email_should_return_card_without_voter() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, false);
     when(applicationCardService.removeUpvote(any(Long.class), any(UpVoteRequestObject.class)))
-        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USER.username));
+        .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
