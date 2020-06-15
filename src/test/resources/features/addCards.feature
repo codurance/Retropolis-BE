@@ -1,6 +1,5 @@
-Feature: card is created
+Feature: creating a card
 
-  Scenario: client makes call to POST /cards
-    When the client posts to cards endpoint with column_id:1, text:"hello" and email:"john.doe@codurance.com"
-    Then the client receives a status code of 201
-    And the client receives the card with the column_id:1, text:"hello" and userId:1
+  Scenario: user creates a card
+    When the user posts to cards endpoint with text:"hello" and email:"john.doe@codurance.com"
+    Then the user receives the card with the text:"hello" and author:"john doe"
