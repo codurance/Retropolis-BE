@@ -10,11 +10,9 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codurance.retropolis.applicationservices.ApplicationCardService;
-import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
-import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
 import com.codurance.retropolis.utils.MockMvcWrapper;
 import com.codurance.retropolis.web.requests.NewCardRequestObject;
@@ -22,7 +20,6 @@ import com.codurance.retropolis.web.requests.UpVoteRequestObject;
 import com.codurance.retropolis.web.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.web.responses.CardResponseObject;
 import com.codurance.retropolis.web.responses.CardUpdatedTextResponseObject;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,9 +46,6 @@ public class CardControllerTest {
   private final User USER = new User(3L, "john.doe@codurance.com", "John Doe");
   private final String VOTER_EMAIL = "jane.doe@codurance.com";
 
-  @MockBean
-  private CardService cardService;
-
   @Autowired
   private WebApplicationContext context;
 
@@ -71,8 +65,6 @@ public class CardControllerTest {
   @Test
   public void post_cards_should_return_back_cardResponseObject() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
-    when(cardService.create(any(NewCardRequestObject.class)))
-        .thenReturn(new Card(TEXT, COLUMN_ID, USER.getId(), Collections.EMPTY_LIST));
 
     when(applicationCardService.create(any(NewCardRequestObject.class)))
         .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS,
