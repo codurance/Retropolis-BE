@@ -11,7 +11,7 @@ import com.codurance.retropolis.responses.CardResponseObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
@@ -19,28 +19,29 @@ import org.springframework.http.HttpStatus;
 
 public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
 
+  private Long columnId = 1L;
+
   public AddCardStepDefsIntegrationTest(DataSource dataSource) {
     super(dataSource);
   }
 
-  @When("the client posts to cards endpoint with column_id:{long}, text:{string} and email:{string}")
-  public void theClientPostsToCardsEndpointWithColumn_idAndText(Long columnId, String text,
+  @When("the client posts to cards endpoint with text:{string} and email:{string}")
+  public void theClientPostsToCardsEndpointWithText(String text,
       String email) {
     executePost(url + "/cards",
         new HttpEntity<>(new NewCardRequestObject(text, columnId, email), headers));
   }
 
-  @And("the client receives the card with the column_id:{long}, text:{string} and userId:{long}")
-  public void theClientReceivesTheCardWithTheColumn_idAndText(Long columnId, String text,
-      Long userId)
-      throws JsonProcessingException {
-    assertThat(responseResult.getResponseCode(), is(HttpStatus.CREATED.value()));
-
+  @Then("the client receives the card with the text:{string} and author:{string}")
+  public void theClientReceivesTheCardWithTheColumn_idTextAndAuthor(String text,
+      String author) throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
         });
 
+    assertThat(responseResult.getResponseCode(), is(HttpStatus.CREATED.value()));
     assertThat(cardResponseObject.getText(), is(text));
+    assertThat(cardResponseObject.getColumnId(), is(columnId));
+    assertThat(cardResponseObject.getAuthor(), is(author));
   }
-
 }

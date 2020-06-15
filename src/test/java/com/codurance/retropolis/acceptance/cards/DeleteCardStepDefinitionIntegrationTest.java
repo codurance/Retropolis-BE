@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import javax.sql.DataSource;
+import org.springframework.http.HttpStatus;
 
 
 public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition {
@@ -30,8 +31,8 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
     executeDelete(url + "/cards/" + cardResponseObject.getId());
   }
 
-  @Then("the client receives a status code of {int} after card was deleted")
-  public void theClientReceivesAStatusCodeOfAfterCardWasDeleted(int statusCode) {
-    assertThat(HttpWrapper.responseResult.getResponseCode(), is(statusCode));
+  @Then("the client receives an ok response")
+  public void theClientReceivesAnOkResponse() {
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
   }
 }
