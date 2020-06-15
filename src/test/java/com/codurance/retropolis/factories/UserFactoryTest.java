@@ -15,12 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class UserFactoryTest {
 
-  public static final String EMAIL = "john.doe@codurance.com";
-  public static final String USER_NAME = "John Doe";
-  private static final String TOKEN = "google_id123";
+  private final String EMAIL = "john.doe@codurance.com";
+  private final String USER_NAME = "John Doe";
+  private final String TOKEN = "google_id123";
+
   @Mock
   private GoogleTokenAuthenticator tokenAuthenticator;
-
 
   @Test
   void creates_a_new_user_from_token() throws GeneralSecurityException, IOException {

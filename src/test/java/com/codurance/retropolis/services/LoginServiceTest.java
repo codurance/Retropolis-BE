@@ -18,9 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class LoginServiceTest {
 
-  private static final String TOKEN = "TOKEN";
-  private static final String USER_EMAIL = "john.doe@codurance.com";
-  private static final String OTHER_USER_EMAIL = "jenny.doe@codurance.com";
+  private final String TOKEN = "TOKEN";
+  private final String USER_EMAIL = "john.doe@codurance.com";
+  private final String OTHER_USER_EMAIL = "jenny.doe@codurance.com";
 
   @Mock
   private GoogleTokenAuthenticator tokenAuthenticator;

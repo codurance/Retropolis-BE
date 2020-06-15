@@ -24,36 +24,35 @@ import org.springframework.http.ResponseEntity;
 public class ApplicationCardServiceTest {
 
   private final Boolean HAVE_VOTED = false;
-  private final String EMAIL = "john.doe@codurance.com";
-  private final String USERNAME = "John Doe";
   private final User USER = new User(3L, "john.doe@codurance.com", "John Doe");
   private final Long CARD_ID = 1L;
   private final Long COLUMN_ID = 2L;
   private final String TEXT = "Hello";
+
   @Mock
-  UserService userService;
+  private UserService userService;
+
   @Mock
-  CardService cardService;
+  private CardService cardService;
+
   @Mock
-  CardResponseObjectFactory cardResponseObjectFactory;
+  private CardResponseObjectFactory cardResponseObjectFactory;
+
   private ApplicationCardService applicationCardService;
-  private NewCardRequestObject newCardRequestObject;
-  private UpVoteRequestObject upvoteRequestObject;
 
 
   @BeforeEach
   void setUp() {
     applicationCardService = new ApplicationCardService(userService, cardService,
         cardResponseObjectFactory);
-
-    newCardRequestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
   }
 
   @Test
   void creates_card_response_object() {
     Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList());
-
     User author = new User(USER.getId(), USER.email, USER.username);
+    NewCardRequestObject newCardRequestObject = new NewCardRequestObject(TEXT, COLUMN_ID,
+        USER.email);
     CardResponseObject cardResponseObject = new CardResponseObject(card.getText(), card.getId(),
         card.getColumnId(), HAVE_VOTED, card.getVoters().size(), author.username);
 
@@ -75,15 +74,17 @@ public class ApplicationCardServiceTest {
 
   @Test
   void adds_upvote_to_card_response() {
-    upvoteRequestObject = new UpVoteRequestObject(EMAIL, true);
-    ResponseEntity<HttpStatus> response = applicationCardService.addUpvote(CARD_ID, upvoteRequestObject);
+    UpVoteRequestObject upvoteRequestObject = new UpVoteRequestObject(USER.email, true);
+    ResponseEntity<HttpStatus> response = applicationCardService
+        .addUpvote(CARD_ID, upvoteRequestObject);
     assertEquals(200, response.getStatusCode().value());
   }
 
   @Test
   void removes_upvote_from_card_response() {
-    upvoteRequestObject = new UpVoteRequestObject(EMAIL, false);
-    ResponseEntity<HttpStatus> response = applicationCardService.removeUpvote(CARD_ID, upvoteRequestObject);
+    UpVoteRequestObject upvoteRequestObject = new UpVoteRequestObject(USER.email, false);
+    ResponseEntity<HttpStatus> response = applicationCardService
+        .removeUpvote(CARD_ID, upvoteRequestObject);
     assertEquals(200, response.getStatusCode().value());
   }
 }
