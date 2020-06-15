@@ -69,7 +69,7 @@ public class ApplicationCardServiceTest {
 
     CardResponseObject response = applicationCardService.create(newCardRequestObject);
 
-    assertEquals(cardResponseObject, response);
+    assertEquals(cardResponseObject.getId(), response.getId());
   }
 
   @Test
