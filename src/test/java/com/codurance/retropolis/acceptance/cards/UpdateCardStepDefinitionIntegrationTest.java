@@ -13,11 +13,11 @@ import com.codurance.retropolis.utils.HttpWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 
 
 public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition {
@@ -37,15 +37,23 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
         new HttpEntity<>(new UpdateCardRequestObject(newText)));
   }
 
-  @And("the client receives the card with the text:{string}")
+  @When("the client updates the existing card with text {string}")
+  public void theClientUpdatesTheExistingCardWithText(String newText)
+      throws JsonProcessingException {
+    CardResponseObject cardResponseObject = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
+        });
+
+    executePatch(url + "/cards/" + cardResponseObject.getId(),
+        new HttpEntity<>(new UpdateCardRequestObject(newText)));
+  }
+
+  @Then("the client receives the card with the text:{string}")
   public void theClientReceivesTheCardWithTheText(String newText) throws JsonProcessingException {
     Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
-    assertThat(card.getText(), is(newText));
-  }
 
-  @Then("the client receives {int} status code")
-  public void theClientReceivesStatusCode(int statusCode) {
-    assertThat(HttpWrapper.responseResult.getResponseCode(), is(statusCode));
+    assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
+    assertThat(card.getText(), is(newText));
   }
 }
