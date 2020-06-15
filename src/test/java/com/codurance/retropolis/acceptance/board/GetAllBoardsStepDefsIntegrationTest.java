@@ -39,8 +39,7 @@ public class GetAllBoardsStepDefsIntegrationTest extends BaseStepDefinition {
   @Then("the user receives a list of the boards with one called {string}")
   public void theUserReceivesAListOfTheBoardsWithOneCalled(String title)
       throws JsonProcessingException {
-    List<Board> boards = new ObjectMapper()
-        .readValue(responseResult.getBody(), new TypeReference<>() {
+    List<Board> boards = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
         });
 
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
@@ -50,8 +49,7 @@ public class GetAllBoardsStepDefsIntegrationTest extends BaseStepDefinition {
 
   @Then("the user receives a empty list of boards")
   public void theUserReceivesAEmptyList() throws JsonProcessingException {
-    List<Board> boards = new ObjectMapper()
-        .readValue(responseResult.getBody(), new TypeReference<>() {
+    List<Board> boards = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
         });
 
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
