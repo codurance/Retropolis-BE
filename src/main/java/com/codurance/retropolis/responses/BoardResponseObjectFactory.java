@@ -6,6 +6,7 @@ import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.Column;
 import com.codurance.retropolis.services.UserService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +39,13 @@ public class BoardResponseObjectFactory {
     return card -> new CardResponseObject(card.getText(), card.getId(), card.getColumnId(),
         card.getVoters().contains(userId),
         card.getVoters().size(), userService.findById(card.getUserId()).username);
+  }
+
+  public List<UserBoardResponseObject> create(List<Board> boards) {
+    List<UserBoardResponseObject> responseObject = new ArrayList<>();
+    for (Board board : boards) {
+      responseObject.add(new UserBoardResponseObject(board.getId(), board.getTitle()));
+    }
+    return responseObject;
   }
 }

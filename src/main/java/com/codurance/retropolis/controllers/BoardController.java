@@ -7,6 +7,7 @@ import com.codurance.retropolis.exceptions.UnauthorizedException;
 import com.codurance.retropolis.factories.UserFactory;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.responses.BoardResponseObject;
+import com.codurance.retropolis.responses.UserBoardResponseObject;
 import com.codurance.retropolis.services.ApplicationBoardService;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.LoginService;
@@ -47,21 +48,21 @@ public class BoardController extends BaseController {
   }
 
   @GetMapping
-  public List<Board> getUsersBoards(@RequestHeader(HttpHeaders.AUTHORIZATION) String token)
+  public List<UserBoardResponseObject> getUsersBoards(@RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
-    return boardService.getUsersBoards(userFactory.create(token));
+    return applicationBoardService.getUserBoards(userFactory.create(token));
   }
 
   @GetMapping(value = "/{id}")
-  public BoardResponseObject getBoard(@PathVariable Long id,
-      @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
+  public BoardResponseObject getBoard(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
     return applicationBoardService.getBoard(userFactory.create(token), id);
   }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Board postBoard(@RequestBody @Valid NewBoardRequestObject request, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
+  public Board postBoard(@RequestBody @Valid NewBoardRequestObject request,
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
     if (!loginService.isAuthorized(request.getUserEmail(), token)) {
       throw new UnauthorizedException();

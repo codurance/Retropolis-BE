@@ -2,7 +2,6 @@ package com.codurance.retropolis.controllers;
 
 import static com.codurance.retropolis.utils.Convert.asJsonString;
 import static com.codurance.retropolis.utils.MockMvcWrapper.getAuthHeader;
-import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -19,6 +18,7 @@ import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.responses.BoardResponseObject;
 import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.responses.ColumnResponseObject;
+import com.codurance.retropolis.responses.UserBoardResponseObject;
 import com.codurance.retropolis.services.ApplicationBoardService;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.LoginService;
@@ -106,8 +106,7 @@ public class BoardControllerTest {
   @Test
   void returns_id_and_title_of_users_boards() throws Exception {
     when(userFactory.create(TOKEN)).thenReturn(USER);
-    when(boardService.getUsersBoards(USER))
-        .thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
+    when(applicationBoardService.getUserBoards(USER)).thenReturn(List.of(new UserBoardResponseObject(BOARD_ID, BOARD_TITLE)));
 
     String jsonResponse = mockMvcWrapper
         .getRequest(BOARDS_URL, status().isOk(), getAuthHeader(TOKEN));

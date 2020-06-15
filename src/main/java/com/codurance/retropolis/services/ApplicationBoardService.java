@@ -5,6 +5,8 @@ import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.responses.BoardResponseObject;
 import com.codurance.retropolis.responses.BoardResponseObjectFactory;
+import com.codurance.retropolis.responses.UserBoardResponseObject;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,7 +34,16 @@ public class ApplicationBoardService {
     }
   }
 
+  public List<UserBoardResponseObject> getUserBoards(User requestUser) {
+    List<Board> boards = boardService.getUsersBoards(requestUser);
+    return getResponseFrom(boards);
+  }
+
   private BoardResponseObject getResponseFrom(Board board, Long userId) {
     return boardResponseObjectFactory.create(board, userId);
+  }
+
+  private List<UserBoardResponseObject> getResponseFrom(List<Board> boards) {
+    return boardResponseObjectFactory.create(boards);
   }
 }
