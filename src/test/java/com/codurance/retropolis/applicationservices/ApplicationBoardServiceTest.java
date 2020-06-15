@@ -80,4 +80,17 @@ public class ApplicationBoardServiceTest {
 
     verify(boardResponseFactory).create(boards);
   }
+
+  @Test
+  void creates_a_board() {
+    NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE,
+        "john.doe@codurance.com");
+    requestObject.setUser(USER);
+    Board board = new Board(BOARD_ID, BOARD_TITLE);
+    when(boardService.createBoard(requestObject)).thenReturn(board);
+
+    applicationBoardService.createBoard(requestObject);
+
+    verify(boardResponseFactory).create(board, requestObject.getUser().getId());
+  }
 }
