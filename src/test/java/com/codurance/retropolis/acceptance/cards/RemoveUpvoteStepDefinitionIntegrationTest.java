@@ -24,8 +24,8 @@ public class RemoveUpvoteStepDefinitionIntegrationTest extends BaseStepDefinitio
     super(dataSource);
   }
 
-  @When("the client removes card vote with voter:{string}")
-  public void theClientRemovesCardVoteWithVoter(String email)
+  @When("the user removes card vote with voter:{string}")
+  public void theUserRemovesCardVoteWithVoter(String email)
       throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
@@ -34,8 +34,8 @@ public class RemoveUpvoteStepDefinitionIntegrationTest extends BaseStepDefinitio
         new HttpEntity<>(new UpVoteRequestObject(email, false)));
   }
 
-  @Then("the client receives the card without their vote")
-  public void theClientReceivesTheCardWithoutTheirVote() throws JsonProcessingException {
+  @Then("the user receives the card without their vote")
+  public void theUserReceivesTheCardWithoutTheirVote() throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
         });

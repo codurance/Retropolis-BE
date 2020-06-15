@@ -26,8 +26,8 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
     super(dataSource);
   }
 
-  @When("the client updates to cards with this id and changes the text to {string}")
-  public void theClientUpdatesToCardsWithThisIdAndChangesTheTextFromTo(String newText)
+  @When("the user updates the existing card with text {string}")
+  public void theUserUpdatesTheExistingCardWithText(String newText)
       throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
@@ -37,19 +37,8 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
         new HttpEntity<>(new UpdateCardRequestObject(newText)));
   }
 
-  @When("the client updates the existing card with text {string}")
-  public void theClientUpdatesTheExistingCardWithText(String newText)
-      throws JsonProcessingException {
-    CardResponseObject cardResponseObject = new ObjectMapper()
-        .readValue(responseResult.getBody(), new TypeReference<>() {
-        });
-
-    executePatch(url + "/cards/" + cardResponseObject.getId(),
-        new HttpEntity<>(new UpdateCardRequestObject(newText)));
-  }
-
-  @Then("the client receives the card with the text:{string}")
-  public void theClientReceivesTheCardWithTheText(String newText) throws JsonProcessingException {
+  @Then("the user receives the card with the text:{string}")
+  public void theUserReceivesTheCardWithTheText(String newText) throws JsonProcessingException {
     Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 

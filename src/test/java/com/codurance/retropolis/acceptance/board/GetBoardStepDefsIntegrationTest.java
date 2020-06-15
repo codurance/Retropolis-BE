@@ -23,13 +23,13 @@ public class GetBoardStepDefsIntegrationTest extends BaseStepDefinition {
     super(dataSource);
   }
 
-  @When("the client requests the test board")
-  public void theClientCallsBoard() {
+  @When("the user requests the test board")
+  public void theUserCallsBoard() {
     HttpWrapper.executeGet(url + "/boards/" + TEST_BOARD_ID, headers);
   }
 
-  @And("^the client receives board with three columns, \"([^\"]*)\", \"([^\"]*)\", and \"([^\"]*)\"$")
-  public void theClientReceivesBoardWithThreeColumnsAnd(String firstTitle, String secondTitle,
+  @And("^the user receives board with three columns, \"([^\"]*)\", \"([^\"]*)\", and \"([^\"]*)\"$")
+  public void theUserReceivesBoardWithThreeColumnsAnd(String firstTitle, String secondTitle,
       String thirdTitle) {
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
     assertThat(HttpWrapper.responseResult.getBody(),

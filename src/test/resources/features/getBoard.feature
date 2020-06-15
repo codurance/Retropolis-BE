@@ -1,5 +1,5 @@
 Feature: retrieving a board
 
-  Scenario: client requests a specific board
-    When the client requests the test board
-    Then the client receives board with three columns, "Start", "Stop", and "Continue"
+  Scenario: user requests a specific board
+    When the user requests the test board
+    Then the user receives board with three columns, "Start", "Stop", and "Continue"

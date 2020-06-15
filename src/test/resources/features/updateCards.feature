@@ -1,6 +1,6 @@
-Feature: updating card
+Feature: updating a card
 
-  Scenario: client updates a card
+  Scenario: user updates a card
     Given the card exists
-    When the client updates the existing card with text "bye"
-    Then the client receives the card with the text:"bye"
+    When the user updates the existing card with text "bye"
+    Then the user receives the card with the text:"bye"
