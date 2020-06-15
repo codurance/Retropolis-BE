@@ -6,6 +6,8 @@ import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.responses.CardResponseObjectFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,5 +48,10 @@ public class ApplicationCardService {
   private CardResponseObject createResponseFrom(Card card, Long userId) {
     User cardAuthor = userService.findById(userId);
     return cardResponseObjectFactory.create(card, userId, cardAuthor.username);
+  }
+
+  public ResponseEntity<HttpStatus> delete(Long cardId) {
+    cardService.delete(cardId);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

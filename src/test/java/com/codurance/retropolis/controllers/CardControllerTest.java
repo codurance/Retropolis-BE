@@ -95,7 +95,7 @@ public class CardControllerTest {
   @Test
   public void delete_card_should_return_200_status_code() throws Exception {
     mockMvcWrapper.deleteRequest(URL + "/" + CARD_ID, status().isOk());
-    verify(cardService).delete(CARD_ID);
+    verify(applicationCardService).delete(CARD_ID);
   }
 
   @Test
@@ -113,7 +113,7 @@ public class CardControllerTest {
 
   @Test
   public void returns_bad_request_on_delete_when_card_does_not_exist() throws Exception {
-    doThrow(new CardNotFoundException()).when(cardService).delete(NON_EXISTENT_CARD_ID);
+    doThrow(new CardNotFoundException()).when(applicationCardService).delete(NON_EXISTENT_CARD_ID);
     String jsonResponse = mockMvcWrapper.deleteRequest(URL + "/" + NON_EXISTENT_CARD_ID, status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Card Id is not valid", errorResponse.get(0));
