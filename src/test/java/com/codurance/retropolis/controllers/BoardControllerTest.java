@@ -134,14 +134,13 @@ public class BoardControllerTest {
   void returns_a_new_board() throws Exception {
     when(loginService.isAuthorized(USER.email, TOKEN)).thenReturn(true);
     when(userFactory.create(TOKEN)).thenReturn(USER);
-    when(boardService.createBoard(any(NewBoardRequestObject.class)))
-        .thenReturn(new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList()));
+    when(applicationBoardService.createBoard(any(NewBoardRequestObject.class)))
+        .thenReturn(new BoardResponseObject(BOARD_ID, BOARD_TITLE, Collections.emptyList()));
 
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE, USER.email);
     String jsonResponse = mockMvcWrapper
-        .postRequest(BOARDS_URL, asJsonString(requestObject), status().isCreated(),
-            getAuthHeader(TOKEN));
-    Board boardResponse = mockMvcWrapper.buildObject(jsonResponse, Board.class);
+        .postRequest(BOARDS_URL, asJsonString(requestObject), status().isCreated(), getAuthHeader(TOKEN));
+    BoardResponseObject boardResponse = mockMvcWrapper.buildObject(jsonResponse, BoardResponseObject.class);
 
     assertEquals(BOARD_TITLE, boardResponse.getTitle());
     assertEquals(BOARD_ID, boardResponse.getId());

@@ -3,6 +3,7 @@ package com.codurance.retropolis.services;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
+import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.responses.BoardResponseObject;
 import com.codurance.retropolis.responses.BoardResponseObjectFactory;
 import com.codurance.retropolis.responses.UserBoardResponseObject;
@@ -46,4 +47,10 @@ public class ApplicationBoardService {
   private List<UserBoardResponseObject> getResponseFrom(List<Board> boards) {
     return boardResponseObjectFactory.create(boards);
   }
+
+  public BoardResponseObject createBoard(NewBoardRequestObject requestObject) {
+    Board board = boardService.createBoard(requestObject);
+    return boardResponseObjectFactory.create(board, requestObject.getUser().getId());
+  }
+
 }

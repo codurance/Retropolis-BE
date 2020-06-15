@@ -1,7 +1,6 @@
 package com.codurance.retropolis.controllers;
 
 
-import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.exceptions.UnauthorizedException;
 import com.codurance.retropolis.factories.UserFactory;
@@ -61,14 +60,14 @@ public class BoardController extends BaseController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Board postBoard(@RequestBody @Valid NewBoardRequestObject request,
+  public BoardResponseObject postBoard(@RequestBody @Valid NewBoardRequestObject request,
       @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
     if (!loginService.isAuthorized(request.getUserEmail(), token)) {
       throw new UnauthorizedException();
     }
     request.setUser(userFactory.create(token));
-    return boardService.createBoard(request);
+    return applicationBoardService.createBoard(request);
   }
 
   @ExceptionHandler(BoardNotFoundException.class)
