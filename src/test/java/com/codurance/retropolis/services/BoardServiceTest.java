@@ -8,8 +8,8 @@ import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
-import com.codurance.retropolis.requests.NewBoardRequestObject;
-import com.codurance.retropolis.responses.BoardResponseObjectFactory;
+import com.codurance.retropolis.web.requests.NewBoardRequestObject;
+import com.codurance.retropolis.web.responses.BoardResponseObjectFactory;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,8 +49,8 @@ public class BoardServiceTest {
     Board board = new Board(BOARD_ID, BOARD_TITLE, emptyList());
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(board);
 
-    assertEquals(BOARD_ID, boardService.getBoard(BOARD_ID).getId());
-    assertEquals(BOARD_TITLE, boardService.getBoard(BOARD_ID).getTitle());
+    assertEquals(BOARD_ID, boardService.getBoard(USER, BOARD_ID).getId());
+    assertEquals(BOARD_TITLE, boardService.getBoard(USER, BOARD_ID).getTitle());
   }
 
   @Test

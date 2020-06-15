@@ -2,19 +2,14 @@ package com.codurance.retropolis.acceptance.cards;
 
 import static com.codurance.retropolis.utils.HttpWrapper.executeDelete;
 import static com.codurance.retropolis.utils.HttpWrapper.responseResult;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.responses.CardResponseObject;
-import com.codurance.retropolis.utils.HttpWrapper;
+import com.codurance.retropolis.web.responses.CardResponseObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import javax.sql.DataSource;
-import org.springframework.http.HttpStatus;
 
 
 public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition {
@@ -25,14 +20,8 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
 
   @When("the user deletes existing card")
   public void theUserDeletesExistingCard() throws JsonProcessingException {
-    CardResponseObject cardResponseObject = new ObjectMapper()
-        .readValue(responseResult.getBody(), new TypeReference<>() {
-        });
+    CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
     executeDelete(url + "/cards/" + cardResponseObject.getId());
-  }
-
-  @Then("the user receives an ok response")
-  public void theUserReceivesAnOkResponse() {
-    assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
   }
 }

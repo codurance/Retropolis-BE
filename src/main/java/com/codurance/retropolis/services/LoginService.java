@@ -1,7 +1,7 @@
 package com.codurance.retropolis.services;
 
-import com.codurance.retropolis.config.web.TokenAuthenticator;
 import com.codurance.retropolis.exceptions.UnauthorizedException;
+import com.codurance.retropolis.web.config.TokenAuthenticator;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import org.springframework.stereotype.Service;

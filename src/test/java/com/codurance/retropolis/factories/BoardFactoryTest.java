@@ -3,7 +3,7 @@ package com.codurance.retropolis.factories;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.codurance.retropolis.entities.Board;
-import com.codurance.retropolis.requests.NewBoardRequestObject;
+import com.codurance.retropolis.web.requests.NewBoardRequestObject;
 import org.junit.jupiter.api.Test;
 
 public class BoardFactoryTest {

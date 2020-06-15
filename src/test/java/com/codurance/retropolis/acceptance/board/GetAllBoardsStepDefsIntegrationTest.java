@@ -6,8 +6,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.utils.HttpWrapper;
+import com.codurance.retropolis.web.responses.UserBoardResponseObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +39,8 @@ public class GetAllBoardsStepDefsIntegrationTest extends BaseStepDefinition {
   @Then("the user receives a list of the boards with one called {string}")
   public void theUserReceivesAListOfTheBoardsWithOneCalled(String title)
       throws JsonProcessingException {
-    List<Board> boards = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    List<UserBoardResponseObject> boards = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
         });
 
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
@@ -49,7 +50,8 @@ public class GetAllBoardsStepDefsIntegrationTest extends BaseStepDefinition {
 
   @Then("the user receives a empty list of boards")
   public void theUserReceivesAEmptyList() throws JsonProcessingException {
-    List<Board> boards = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    List<UserBoardResponseObject> boards = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
         });
 
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));

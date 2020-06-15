@@ -3,8 +3,8 @@ package com.codurance.retropolis.factories;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-import com.codurance.retropolis.config.web.GoogleTokenAuthenticator;
 import com.codurance.retropolis.entities.User;
+import com.codurance.retropolis.web.config.GoogleTokenAuthenticator;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import org.junit.jupiter.api.Test;

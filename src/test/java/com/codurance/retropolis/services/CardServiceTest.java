@@ -1,7 +1,6 @@
 package com.codurance.retropolis.services;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
@@ -15,8 +14,9 @@ import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.exceptions.UserAlreadyUpvotedException;
 import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.repositories.CardRepository;
-import com.codurance.retropolis.requests.NewCardRequestObject;
-import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.web.requests.NewCardRequestObject;
+import com.codurance.retropolis.web.requests.UpVoteRequestObject;
+import com.codurance.retropolis.web.requests.UpdateCardRequestObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +47,7 @@ public class CardServiceTest {
 
   @BeforeEach
   void setUp() {
-    cardService = new CardService(cardFactory, cardRepository);
+    cardService = new CardService(userService, cardFactory, cardRepository);
   }
 
   @Test
@@ -88,39 +88,47 @@ public class CardServiceTest {
 
   @Test
   void should_add_card_voter_and_return_card() {
-    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), singletonList(USER.getId()));
-    when(cardRepository.addUpvote(editedCard.getId(), editedCard.getUserId())).thenReturn(editedCard);
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
+    when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
+    cardService.addUpvote(CARD_ID, requestObject);
 
-    Card card = cardService.addUpvote(CARD_ID, USER.getId());
-
-    assertEquals(editedCard.getVoters().size(), card.getVoters().size());
+    verify(cardRepository).addUpvote(CARD_ID, USER.getId());
   }
 
   @Test
   public void should_throw_UserAlreadyUpvotedException_when_user_has_already_upvoted() {
-    doThrow(new UserAlreadyUpvotedException()).when(cardRepository).addUpvote(CARD_ID, USER.getId());
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
+    when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
+
+    doThrow(new UserAlreadyUpvotedException()).when(cardRepository)
+        .addUpvote(CARD_ID, USER.getId());
+
     assertThrows(UserAlreadyUpvotedException.class, () -> {
-      cardService.addUpvote(CARD_ID, USER.getId());
+      cardService.addUpvote(CARD_ID, requestObject);
     });
   }
 
   @Test
   public void should_throw_CardNotFoundException_on_upvote() {
-    doThrow(new RuntimeException()).when(cardRepository).addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
+    when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
+
+
+    doThrow(new RuntimeException()).when(cardRepository)
+        .addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
     assertThrows(CardNotFoundException.class, () -> {
-      cardService.addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
+      cardService.addUpvote(NON_EXISTENT_CARD_ID, requestObject);
     });
   }
 
   @Test
   void should_remove_card_voter_and_return_card() {
-    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList());
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, false);
+    when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
 
-    when(cardRepository.removeUpvote(editedCard.getId(), editedCard.getUserId())).thenReturn(editedCard);
+    cardService.removeUpvote(CARD_ID, requestObject);
 
-    Card card = cardService.removeUpvote(CARD_ID, USER.getId());
-
-    assertEquals(editedCard.getVoters().size(), card.getVoters().size());
+    verify(cardRepository).removeUpvote(CARD_ID, USER.getId());
   }
 
   @Test

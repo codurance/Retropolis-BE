@@ -1,13 +1,15 @@
 package com.codurance.retropolis.services;
 
 import com.codurance.retropolis.entities.Card;
+import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.exceptions.UserAlreadyUpvotedException;
 import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.repositories.CardRepository;
-import com.codurance.retropolis.requests.NewCardRequestObject;
-import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.web.requests.NewCardRequestObject;
+import com.codurance.retropolis.web.requests.UpVoteRequestObject;
+import com.codurance.retropolis.web.requests.UpdateCardRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,23 +18,21 @@ public class CardService {
 
   private final CardFactory cardFactory;
   private final CardRepository cardRepository;
+  private final UserService userService;
 
   @Autowired
-  public CardService(CardFactory cardFactory, CardRepository cardRepository) {
+  public CardService(UserService userService, CardFactory cardFactory, CardRepository cardRepository) {
+    this.userService = userService;
     this.cardFactory = cardFactory;
     this.cardRepository = cardRepository;
   }
 
   public Card create(NewCardRequestObject requestObject) {
-    Card card;
-    Card newCard = cardFactory.create(requestObject);
-
     try {
-      card = cardRepository.addCard(newCard);
+      return cardRepository.addCard(cardFactory.create(requestObject));
     } catch (RuntimeException exception) {
       throw new ColumnNotFoundException();
     }
-    return card;
   }
 
   public void delete(Long cardId) {
@@ -51,10 +51,10 @@ public class CardService {
     }
   }
 
-  public Card addUpvote(Long cardId, Long userId) {
+  public void addUpvote(Long cardId, UpVoteRequestObject requestObject) {
     try {
-      Card updatedCard = cardRepository.addUpvote(cardId, userId);
-      return updatedCard;
+      User user = userService.findByEmail(requestObject.getEmail());
+      cardRepository.addUpvote(cardId, user.getId());
     } catch (UserAlreadyUpvotedException userUpvotedException) {
       throw userUpvotedException;
     } catch (RuntimeException invalidCardId) {
@@ -62,12 +62,13 @@ public class CardService {
     }
   }
 
-  public Card removeUpvote(Long cardId, Long userId) {
+  public void removeUpvote(Long cardId, UpVoteRequestObject requestObject) {
     try {
-      Card updatedCard = cardRepository.removeUpvote(cardId, userId);
-      return updatedCard;
+      User user = userService.findByEmail(requestObject.getEmail());
+      cardRepository.removeUpvote(cardId, user.getId());
     } catch (RuntimeException invalidCardId) {
       throw new CardNotFoundException();
     }
   }
+
 }
