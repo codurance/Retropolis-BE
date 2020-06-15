@@ -85,7 +85,7 @@ public class ApplicationBoardServiceTest {
   @Test
   void creates_a_board() {
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE,
-        "john.doe@codurance.com");
+        USER.email);
     requestObject.setUser(USER);
     Board board = new Board(BOARD_ID, BOARD_TITLE);
     when(boardService.createBoard(requestObject)).thenReturn(board);
