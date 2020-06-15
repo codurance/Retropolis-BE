@@ -70,6 +70,8 @@ public class ApplicationCardServiceTest {
     CardResponseObject response = applicationCardService.create(newCardRequestObject);
 
     assertEquals(cardResponseObject.getId(), response.getId());
+    assertEquals(cardResponseObject.getAuthor(), response.getAuthor());
+    assertEquals(cardResponseObject.getText(), response.getText());
   }
 
   @Test
