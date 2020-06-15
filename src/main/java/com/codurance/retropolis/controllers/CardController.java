@@ -9,7 +9,6 @@ import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.responses.CardUpdatedTextResponseObject;
 import com.codurance.retropolis.services.ApplicationCardService;
-import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
 import java.util.Collections;
 import java.util.List;
@@ -34,13 +33,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController extends BaseController {
 
   private final LoginService loginService;
-  private CardService cardService;
   private ApplicationCardService applicationCardService;
 
   @Autowired
-  public CardController(CardService cardService, ApplicationCardService applicationCardService,
+  public CardController(ApplicationCardService applicationCardService,
       LoginService loginService) {
-    this.cardService = cardService;
     this.applicationCardService = applicationCardService;
     this.loginService = loginService;
   }
