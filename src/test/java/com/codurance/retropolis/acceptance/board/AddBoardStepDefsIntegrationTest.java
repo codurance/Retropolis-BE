@@ -33,7 +33,6 @@ public class AddBoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   @When("the client sends the title of the board {string} and their email")
   public void theClientSendsTheNameOfTheBoardAndTheirEmail(String boardTitle) {
-    System.out.println(headers);
     executePost(url + "/boards",
         new HttpEntity<>(new NewBoardRequestObject(boardTitle, userEmail), headers));
   }

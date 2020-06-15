@@ -12,10 +12,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 
 public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
 
@@ -30,15 +30,11 @@ public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
         new HttpEntity<>(new NewCardRequestObject(text, columnId, email), headers));
   }
 
-  @Then("^the client receives a status code of (\\d+)$")
-  public void theClientReceivesStatusCodeOf(int statusCode) {
-    assertThat(responseResult.getResponseCode(), is(statusCode));
-  }
-
   @And("the client receives the card with the column_id:{long}, text:{string} and userId:{long}")
   public void theClientReceivesTheCardWithTheColumn_idAndText(Long columnId, String text,
       Long userId)
       throws JsonProcessingException {
+    assertThat(responseResult.getResponseCode(), is(HttpStatus.CREATED.value()));
 
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
