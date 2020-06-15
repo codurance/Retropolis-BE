@@ -11,32 +11,19 @@ import com.codurance.retropolis.responses.BoardResponseObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 public class AddBoardStepDefsIntegrationTest extends BaseStepDefinition {
 
   private String userEmail;
-  private final String TOKEN = "token";
-  private HttpHeaders headers;
-
 
   public AddBoardStepDefsIntegrationTest(DataSource dataSource) {
     super(dataSource);
-  }
-
-  @Before
-  public void cleanUpDatabase() throws SQLException {
-    cleanUp();
-    headers = new HttpHeaders();
-    headers.set(HttpHeaders.AUTHORIZATION, TOKEN);
   }
 
   @Given("a user is logged in")
@@ -44,15 +31,17 @@ public class AddBoardStepDefsIntegrationTest extends BaseStepDefinition {
     userEmail = "john.doe@codurance.com";
   }
 
-  @When("the client sends the title of the board {string} and their email")
-  public void theClientSendsTheNameOfTheBoardAndTheirEmail(String boardTitle) {
-    executePost(url + "/boards", new HttpEntity<>(new NewBoardRequestObject(boardTitle, userEmail), headers));
+  @When("the user creates a board with title:{string} and their email")
+  public void theUserCreatesABoardWithTitleAndTheirEmail(String boardTitle) {
+    executePost(url + "/boards",
+        new HttpEntity<>(new NewBoardRequestObject(boardTitle, userEmail), headers));
   }
 
-  @Then("the client receives the new board with title {string}")
-  public void theClientReceivesTheNewBoard(String boardTitle) throws JsonProcessingException {
-    BoardResponseObject board = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
-    });
+  @Then("the user receives the new board with title {string}")
+  public void theUserReceivesTheNewBoard(String boardTitle) throws JsonProcessingException {
+    BoardResponseObject board = new ObjectMapper()
+        .readValue(responseResult.getBody(), new TypeReference<>() {
+        });
 
     assertThat(responseResult.getResponseCode(), is(HttpStatus.CREATED.value()));
     assertThat(board.getTitle(), is(boardTitle));

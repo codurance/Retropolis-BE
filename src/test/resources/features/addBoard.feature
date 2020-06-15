@@ -1,6 +1,6 @@
-Feature: create a board
+Feature: creating a board
 
-  Scenario: client creates a board
+  Scenario: user creates a board
     Given a user is logged in
-    When the client sends the title of the board "test board" and their email
-    Then the client receives the new board with title "test board"
+    When the user creates a board with title:"test board" and their email
+    Then the user receives the new board with title "test board"
