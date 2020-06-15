@@ -1,4 +1,4 @@
-Feature: board is retrieved
+Feature: retrieving a board
 
   Scenario: client requests a specific board
     When the client requests the test board

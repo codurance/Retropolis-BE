@@ -1,4 +1,4 @@
-Feature: create a board
+Feature: creating a board
 
   Scenario: client creates a board
     Given a user is logged in
