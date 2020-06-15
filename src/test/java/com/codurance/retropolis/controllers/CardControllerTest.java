@@ -20,9 +20,11 @@ import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
+import com.codurance.retropolis.services.ApplicationCardService;
 import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
 import com.codurance.retropolis.utils.MockMvcWrapper;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,6 +58,9 @@ public class CardControllerTest {
   @MockBean
   private LoginService loginService;
 
+  @MockBean
+  private ApplicationCardService applicationCardService;
+
   private MockMvcWrapper mockMvcWrapper;
 
   @BeforeEach
@@ -67,12 +72,17 @@ public class CardControllerTest {
   public void post_cards_should_return_back_cardResponseObject() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
     when(cardService.create(any(NewCardRequestObject.class)))
-        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USER.username));
+        .thenReturn(new Card(TEXT, COLUMN_ID, USER.getId(), Collections.EMPTY_LIST));
+
+    when(applicationCardService.create(any(NewCardRequestObject.class)))
+        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS,
+            USER.username));
     when(loginService.isAuthorized(USER.email, TOKEN)).thenReturn(true);
 
     String jsonResponse = mockMvcWrapper
         .postRequest(URL, asJsonString(requestObject), status().isCreated(), getAuthHeader(TOKEN));
-    CardResponseObject cardResponseObject = mockMvcWrapper.buildObject(jsonResponse, CardResponseObject.class);
+    CardResponseObject cardResponseObject = mockMvcWrapper
+        .buildObject(jsonResponse, CardResponseObject.class);
 
     assertEquals(TEXT, cardResponseObject.getText());
     assertEquals(CARD_ID, cardResponseObject.getId());
@@ -112,7 +122,8 @@ public class CardControllerTest {
   @Test
   public void returns_bad_request_when_column_is_not_found() throws Exception {
     when(loginService.isAuthorized(USER.email, TOKEN)).thenReturn(true);
-    when(cardService.create(any(NewCardRequestObject.class))).thenThrow(new ColumnNotFoundException());
+    when(applicationCardService.create(any(NewCardRequestObject.class)))
+        .thenThrow(new ColumnNotFoundException());
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
 
     String jsonResponse = mockMvcWrapper
@@ -180,7 +191,7 @@ public class CardControllerTest {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, true);
     Boolean haveVoted = true;
     Integer expectedVoteCount = 1;
-    when(cardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class)))
+    when(applicationCardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class)))
         .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, haveVoted, expectedVoteCount, USER.username));
 
     String jsonResponse = mockMvcWrapper
@@ -218,7 +229,7 @@ public class CardControllerTest {
   @Test
   void remove_card_vote_with_voter_email_should_return_card_without_voter() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, false);
-    when(cardService.removeUpvote(any(Long.class), any(UpVoteRequestObject.class)))
+    when(applicationCardService.removeUpvote(any(Long.class), any(UpVoteRequestObject.class)))
         .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USER.username));
 
     String jsonResponse = mockMvcWrapper

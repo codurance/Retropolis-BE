@@ -7,6 +7,7 @@ import com.codurance.retropolis.exceptions.UnauthorizedException;
 import com.codurance.retropolis.factories.UserFactory;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.responses.BoardResponseObject;
+import com.codurance.retropolis.services.ApplicationBoardService;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.LoginService;
 import java.io.IOException;
@@ -34,12 +35,15 @@ public class BoardController extends BaseController {
   private final BoardService boardService;
   private final UserFactory userFactory;
   private final LoginService loginService;
+  private ApplicationBoardService applicationBoardService;
 
   @Autowired
-  public BoardController(BoardService boardService, UserFactory userFactory, LoginService loginService) {
+  public BoardController(BoardService boardService, UserFactory userFactory,
+      LoginService loginService, ApplicationBoardService applicationBoardService) {
     this.boardService = boardService;
     this.userFactory = userFactory;
     this.loginService = loginService;
+    this.applicationBoardService = applicationBoardService;
   }
 
   @GetMapping
@@ -52,7 +56,7 @@ public class BoardController extends BaseController {
   public BoardResponseObject getBoard(@PathVariable Long id,
       @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
-    return boardService.getBoard(userFactory.create(token), id);
+    return applicationBoardService.getBoard(userFactory.create(token), id);
   }
 
   @PostMapping

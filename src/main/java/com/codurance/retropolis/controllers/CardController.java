@@ -8,6 +8,7 @@ import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
+import com.codurance.retropolis.services.ApplicationCardService;
 import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
 import java.util.Collections;
@@ -32,12 +33,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cards")
 public class CardController extends BaseController {
 
-  private final CardService cardService;
   private final LoginService loginService;
+  private CardService cardService;
+  private ApplicationCardService applicationCardService;
 
   @Autowired
-  public CardController(CardService cardService, LoginService loginService) {
+  public CardController(CardService cardService, ApplicationCardService applicationCardService,
+      LoginService loginService) {
     this.cardService = cardService;
+    this.applicationCardService = applicationCardService;
     this.loginService = loginService;
   }
 
@@ -49,7 +53,7 @@ public class CardController extends BaseController {
       throw new UnauthorizedException();
     }
 
-    return cardService.create(request);
+    return applicationCardService.create(request);
   }
 
   @DeleteMapping(value = "/{cardId}")
@@ -66,8 +70,8 @@ public class CardController extends BaseController {
   @PatchMapping(value = "/{cardId}/vote")
   public CardResponseObject updateVote(@PathVariable Long cardId, @RequestBody @Valid UpVoteRequestObject request) {
     return request.getAddVote() ?
-        cardService.addUpvote(cardId, request) :
-        cardService.removeUpvote(cardId, request);
+        applicationCardService.addUpvote(cardId, request) :
+        applicationCardService.removeUpvote(cardId, request);
   }
 
   @ExceptionHandler(ColumnNotFoundException.class)

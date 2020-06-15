@@ -2,17 +2,13 @@ package com.codurance.retropolis.services;
 
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.User;
-import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
 import com.codurance.retropolis.requests.NewBoardRequestObject;
-import com.codurance.retropolis.responses.BoardResponseObject;
 import com.codurance.retropolis.responses.BoardResponseObjectFactory;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,22 +41,16 @@ public class BoardServiceTest {
 
   @BeforeEach
   void setUp() {
-    boardService = new BoardService(boardRepository, boardFactory, userService,
-        boardResponseFactory);
+    boardService = new BoardService(boardRepository, boardFactory, userService);
   }
 
   @Test
   void returns_a_board() {
     Board board = new Board(BOARD_ID, BOARD_TITLE, emptyList());
-    when(userService.findByEmail("john.doe@codurance.com")).thenReturn(USER);
     when(boardRepository.getBoard(BOARD_ID)).thenReturn(board);
-    when(boardResponseFactory.create(board, USER.getId()))
-        .thenReturn(new BoardResponseObject(BOARD_ID, BOARD_TITLE, emptyList()));
 
-    BoardResponseObject boardResponse = boardService.getBoard(USER, BOARD_ID);
-
-    assertEquals(BOARD_ID, boardResponse.getId());
-    assertEquals(BOARD_TITLE, boardResponse.getTitle());
+    assertEquals(BOARD_ID, boardService.getBoard(BOARD_ID).getId());
+    assertEquals(BOARD_TITLE, boardService.getBoard(BOARD_ID).getTitle());
   }
 
   @Test
@@ -92,11 +82,4 @@ public class BoardServiceTest {
     assertEquals(BOARD_ID, boards.get(0).getId());
     assertEquals(BOARD_TITLE, boards.get(0).getTitle());
   }
-
-  @Test
-  public void should_throw_BoardNotFoundException_when_boardId_is_invalid_on_() {
-    doThrow(new RuntimeException()).when(userService).registerUserIfNotExists(USER, BOARD_ID);
-    assertThrows(BoardNotFoundException.class, () -> boardService.getBoard(USER, BOARD_ID));
-  }
-
 }
