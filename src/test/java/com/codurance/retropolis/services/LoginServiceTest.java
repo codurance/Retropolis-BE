@@ -39,7 +39,7 @@ class LoginServiceTest {
   }
 
   @Test
-  public void throws_UnauthorizedException_when_an_exception_is_thrown_on_token_validation()
+  public void throws_unauthorized_exception_when_email_cannot_be_found_from_token()
       throws GeneralSecurityException, IOException {
     when(tokenAuthenticator.getEmail(TOKEN)).thenThrow(GeneralSecurityException.class);
     assertThrows(UnauthorizedException.class, () -> loginService.isAuthorized(USER_EMAIL, TOKEN));
