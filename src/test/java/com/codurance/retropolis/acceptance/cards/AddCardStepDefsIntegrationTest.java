@@ -25,15 +25,15 @@ public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
     super(dataSource);
   }
 
-  @When("the client posts to cards endpoint with text:{string} and email:{string}")
-  public void theClientPostsToCardsEndpointWithText(String text,
+  @When("the user posts to cards endpoint with text:{string} and email:{string}")
+  public void theUserPostsToCardsEndpointWithText(String text,
       String email) {
     executePost(url + "/cards",
         new HttpEntity<>(new NewCardRequestObject(text, columnId, email), headers));
   }
 
-  @Then("the client receives the card with the text:{string} and author:{string}")
-  public void theClientReceivesTheCardWithTheColumn_idTextAndAuthor(String text,
+  @Then("the user receives the card with the text:{string} and author:{string}")
+  public void theUserReceivesTheCardWithTheColumn_idTextAndAuthor(String text,
       String author) throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {

@@ -32,8 +32,8 @@ public class CommonCardStepDefinition extends BaseStepDefinition {
         new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USER_EMAIL), headers));
   }
 
-  @When("the client adds card vote with voter:{string}")
-  public void theClientAddsCardVoteWithVoter(String email)
+  @When("the user adds card vote with voter:{string}")
+  public void theUserAddsCardVoteWithVoter(String email)
       throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {

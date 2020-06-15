@@ -1,6 +1,6 @@
-Feature: card is deleted
+Feature: deleting a card
 
-  Scenario: client deletes a card
+  Scenario: user deletes a card
     Given the card exists
-    When the client deletes existing card
-    Then the client receives an ok response
+    When the user deletes existing card
+    Then the user receives an ok response

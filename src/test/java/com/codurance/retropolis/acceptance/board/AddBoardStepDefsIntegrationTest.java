@@ -31,14 +31,14 @@ public class AddBoardStepDefsIntegrationTest extends BaseStepDefinition {
     userEmail = "john.doe@codurance.com";
   }
 
-  @When("the client sends the title of the board {string} and their email")
-  public void theClientSendsTheNameOfTheBoardAndTheirEmail(String boardTitle) {
+  @When("the user creates a board with title:{string} and their email")
+  public void theUserCreatesABoardWithTitleAndTheirEmail(String boardTitle) {
     executePost(url + "/boards",
         new HttpEntity<>(new NewBoardRequestObject(boardTitle, userEmail), headers));
   }
 
-  @Then("the client receives the new board with title {string}")
-  public void theClientReceivesTheNewBoard(String boardTitle) throws JsonProcessingException {
+  @Then("the user receives the new board with title {string}")
+  public void theUserReceivesTheNewBoard(String boardTitle) throws JsonProcessingException {
     Board board = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 

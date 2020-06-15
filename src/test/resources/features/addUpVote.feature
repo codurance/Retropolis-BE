@@ -1,6 +1,6 @@
-Feature: upvote is added to card
+Feature: adding an upvote
 
-  Scenario: client adds vote to a card
+  Scenario: user adds an upvote to a card
     Given the card exists
-    When the client adds card vote with voter:"john.doe@codurance.com"
-    Then the client receives the card with their vote
+    When the user adds card vote with voter:"john.doe@codurance.com"
+    Then the user receives the card with their vote

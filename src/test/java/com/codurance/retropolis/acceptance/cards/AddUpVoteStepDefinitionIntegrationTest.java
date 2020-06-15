@@ -21,8 +21,8 @@ public class AddUpVoteStepDefinitionIntegrationTest extends BaseStepDefinition {
     super(dataSource);
   }
 
-  @And("the client receives the card with their vote")
-  public void theClientReceivesTheCardWithTheVoter() throws JsonProcessingException {
+  @And("the user receives the card with their vote")
+  public void theUserReceivesTheCardWithTheVoter() throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
         });

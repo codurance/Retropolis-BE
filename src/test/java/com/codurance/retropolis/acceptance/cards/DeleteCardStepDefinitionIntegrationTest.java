@@ -23,16 +23,16 @@ public class DeleteCardStepDefinitionIntegrationTest extends BaseStepDefinition 
     super(dataSource);
   }
 
-  @When("the client deletes existing card")
-  public void theClientDeletesExistingCard() throws JsonProcessingException {
+  @When("the user deletes existing card")
+  public void theUserDeletesExistingCard() throws JsonProcessingException {
     CardResponseObject cardResponseObject = new ObjectMapper()
         .readValue(responseResult.getBody(), new TypeReference<>() {
         });
     executeDelete(url + "/cards/" + cardResponseObject.getId());
   }
 
-  @Then("the client receives an ok response")
-  public void theClientReceivesAnOkResponse() {
+  @Then("the user receives an ok response")
+  public void theUserReceivesAnOkResponse() {
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
   }
 }
