@@ -4,6 +4,7 @@ import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.entities.Board;
@@ -14,6 +15,8 @@ import com.codurance.retropolis.services.UserService;
 import com.codurance.retropolis.web.requests.NewBoardRequestObject;
 import com.codurance.retropolis.web.responses.BoardResponseObject;
 import com.codurance.retropolis.web.responses.BoardResponseObjectFactory;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,9 +65,19 @@ public class ApplicationBoardServiceTest {
   }
 
   @Test
-  public void should_throw_BoardNotFoundException_when_boardId_is_invalid_on_() {
+  public void should_throw_BoardNotFoundException_when_boardId_is_invalid() {
     doThrow(new RuntimeException()).when(boardService).getBoard(USER, BOARD_ID);
     assertThrows(BoardNotFoundException.class,
         () -> applicationBoardService.getBoard(USER, BOARD_ID));
+  }
+
+  @Test
+  void returns_list_of_board_response_objects() {
+    Board board = new Board(BOARD_ID, BOARD_TITLE);
+    List<Board> boards = Collections.singletonList(board);
+    when(boardService.getUsersBoards(USER)).thenReturn(boards);
+    applicationBoardService.getUserBoards(USER);
+
+    verify(boardResponseFactory).create(boards);
   }
 }
