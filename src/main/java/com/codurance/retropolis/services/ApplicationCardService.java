@@ -4,8 +4,10 @@ import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
+import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.responses.CardResponseObjectFactory;
+import com.codurance.retropolis.responses.CardUpdatedTextResponseObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -45,13 +47,22 @@ public class ApplicationCardService {
     return createResponseFrom(updatedCard, user.getId());
   }
 
+  public ResponseEntity<HttpStatus> delete(Long cardId) {
+    cardService.delete(cardId);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  public CardUpdatedTextResponseObject updateText(Long cardId, UpdateCardRequestObject request) {
+    Card card = cardService.updateText(cardId, request);
+    return createResponseFrom(card);
+  }
+
   private CardResponseObject createResponseFrom(Card card, Long userId) {
     User cardAuthor = userService.findById(userId);
     return cardResponseObjectFactory.create(card, userId, cardAuthor.username);
   }
 
-  public ResponseEntity<HttpStatus> delete(Long cardId) {
-    cardService.delete(cardId);
-    return new ResponseEntity<>(HttpStatus.OK);
+  private CardUpdatedTextResponseObject createResponseFrom(Card card) {
+    return cardResponseObjectFactory.create(card);
   }
 }

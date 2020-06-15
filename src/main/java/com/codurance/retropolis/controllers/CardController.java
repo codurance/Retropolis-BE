@@ -1,6 +1,5 @@
 package com.codurance.retropolis.controllers;
 
-import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.exceptions.UnauthorizedException;
@@ -8,6 +7,7 @@ import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
+import com.codurance.retropolis.responses.CardUpdatedTextResponseObject;
 import com.codurance.retropolis.services.ApplicationCardService;
 import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
@@ -62,8 +62,9 @@ public class CardController extends BaseController {
   }
 
   @PatchMapping(value = "/{cardId}")
-  public Card updateText(@PathVariable Long cardId, @RequestBody @Valid UpdateCardRequestObject request) {
-    return cardService.updateText(cardId, request);
+  public CardUpdatedTextResponseObject updateText(@PathVariable Long cardId,
+      @RequestBody @Valid UpdateCardRequestObject request) {
+    return applicationCardService.updateText(cardId, request);
   }
 
   @PatchMapping(value = "/{cardId}/vote")

@@ -2,7 +2,6 @@ package com.codurance.retropolis.controllers;
 
 import static com.codurance.retropolis.utils.Convert.asJsonString;
 import static com.codurance.retropolis.utils.MockMvcWrapper.getAuthHeader;
-import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,6 +19,7 @@ import com.codurance.retropolis.requests.NewCardRequestObject;
 import com.codurance.retropolis.requests.UpVoteRequestObject;
 import com.codurance.retropolis.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.responses.CardResponseObject;
+import com.codurance.retropolis.responses.CardUpdatedTextResponseObject;
 import com.codurance.retropolis.services.ApplicationCardService;
 import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
@@ -101,12 +101,13 @@ public class CardControllerTest {
   @Test
   public void update_card_with_new_text_should_return_card_with_updated_text() throws Exception {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(TEXT);
-    when(cardService.updateText(any(), any(UpdateCardRequestObject.class)))
-        .thenReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList()));
+    when(applicationCardService.updateText(any(), any(UpdateCardRequestObject.class)))
+        .thenReturn(new CardUpdatedTextResponseObject(CARD_ID, TEXT, COLUMN_ID));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID, asJsonString(requestObject), status().isOk());
-    Card cardResponse = mockMvcWrapper.buildObject(jsonResponse, Card.class);
+    CardUpdatedTextResponseObject cardResponse = mockMvcWrapper
+        .buildObject(jsonResponse, CardUpdatedTextResponseObject.class);
 
     assertEquals(TEXT, cardResponse.getText());
   }

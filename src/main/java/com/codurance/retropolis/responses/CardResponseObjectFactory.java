@@ -12,4 +12,8 @@ public class CardResponseObjectFactory {
     return new CardResponseObject(newCard.getText(), newCard.getId(), newCard.getColumnId(),
         hasVoted, numberOfVoters, author);
   }
+
+  public CardUpdatedTextResponseObject create(Card card) {
+    return new CardUpdatedTextResponseObject(card.getId(), card.getText(), card.getColumnId());
+  }
 }
