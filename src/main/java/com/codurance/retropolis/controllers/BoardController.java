@@ -8,7 +8,6 @@ import com.codurance.retropolis.requests.NewBoardRequestObject;
 import com.codurance.retropolis.responses.BoardResponseObject;
 import com.codurance.retropolis.responses.UserBoardResponseObject;
 import com.codurance.retropolis.services.ApplicationBoardService;
-import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.LoginService;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -32,28 +31,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/boards")
 public class BoardController extends BaseController {
 
-  private final BoardService boardService;
   private final UserFactory userFactory;
   private final LoginService loginService;
   private ApplicationBoardService applicationBoardService;
 
   @Autowired
-  public BoardController(BoardService boardService, UserFactory userFactory,
+  public BoardController(UserFactory userFactory,
       LoginService loginService, ApplicationBoardService applicationBoardService) {
-    this.boardService = boardService;
     this.userFactory = userFactory;
     this.loginService = loginService;
     this.applicationBoardService = applicationBoardService;
   }
 
   @GetMapping
-  public List<UserBoardResponseObject> getUsersBoards(@RequestHeader(HttpHeaders.AUTHORIZATION) String token)
+  public List<UserBoardResponseObject> getUsersBoards(
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
     return applicationBoardService.getUserBoards(userFactory.create(token));
   }
 
   @GetMapping(value = "/{id}")
-  public BoardResponseObject getBoard(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
+  public BoardResponseObject getBoard(@PathVariable Long id,
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
     return applicationBoardService.getBoard(userFactory.create(token), id);
   }
