@@ -7,9 +7,9 @@ import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.exceptions.UserAlreadyUpvotedException;
 import com.codurance.retropolis.factories.CardFactory;
 import com.codurance.retropolis.repositories.CardRepository;
-import com.codurance.retropolis.requests.NewCardRequestObject;
-import com.codurance.retropolis.requests.UpVoteRequestObject;
-import com.codurance.retropolis.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.web.requests.NewCardRequestObject;
+import com.codurance.retropolis.web.requests.UpVoteRequestObject;
+import com.codurance.retropolis.web.requests.UpdateCardRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

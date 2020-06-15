@@ -5,7 +5,7 @@ import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
-import com.codurance.retropolis.requests.NewBoardRequestObject;
+import com.codurance.retropolis.web.requests.NewBoardRequestObject;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

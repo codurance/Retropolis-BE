@@ -7,10 +7,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.requests.NewCardRequestObject;
-import com.codurance.retropolis.requests.UpVoteRequestObject;
-import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.utils.HttpWrapper;
+import com.codurance.retropolis.web.requests.NewCardRequestObject;
+import com.codurance.retropolis.web.requests.UpVoteRequestObject;
+import com.codurance.retropolis.web.responses.CardResponseObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,11 +34,9 @@ public class CommonCardStepDefinition extends BaseStepDefinition {
 
   @Given("the card exists")
   public void theCardExists() throws JsonProcessingException {
-    executePost(url + "/cards",
-        new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USER_EMAIL), headers));
-    CardResponseObject cardResponseObject = new ObjectMapper()
-        .readValue(responseResult.getBody(), new TypeReference<>() {
-        });
+    executePost(url + "/cards", new HttpEntity<>(new NewCardRequestObject(CARD_TEXT, COLUMN_ID, USER_EMAIL), headers));
+    CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
     CARD_RESPONSE_ID = cardResponseObject.getId();
   }
 

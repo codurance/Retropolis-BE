@@ -4,7 +4,7 @@ import static com.codurance.retropolis.acceptance.cards.CommonCardStepDefinition
 import static com.codurance.retropolis.utils.HttpWrapper.executePatch;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.requests.UpVoteRequestObject;
+import com.codurance.retropolis.web.requests.UpVoteRequestObject;
 import io.cucumber.java.en.When;
 import javax.sql.DataSource;
 import org.springframework.http.HttpEntity;
@@ -17,7 +17,6 @@ public class RemoveUpvoteStepDefinitionIntegrationTest extends BaseStepDefinitio
 
   @When("the user removes card vote with voter:{string}")
   public void theUserRemovesCardVoteWithVoter(String email) {
-    executePatch(url + "/cards/" + CARD_RESPONSE_ID + "/vote",
-        new HttpEntity<>(new UpVoteRequestObject(email, false)));
+    executePatch(url + "/cards/" + CARD_RESPONSE_ID + "/vote", new HttpEntity<>(new UpVoteRequestObject(email, false)));
   }
 }

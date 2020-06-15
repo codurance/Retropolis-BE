@@ -6,8 +6,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.responses.UserBoardResponseObject;
 import com.codurance.retropolis.utils.HttpWrapper;
+import com.codurance.retropolis.web.responses.UserBoardResponseObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
