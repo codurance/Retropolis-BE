@@ -190,19 +190,10 @@ public class CardControllerTest {
   }
 
   @Test
-  void update_card_vote_with_email_and_add_vote_should_return_card_with_voter() throws Exception {
+  void update_card_vote_with_email_and_add_vote_should_return_status_ok() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, true);
-    Boolean haveVoted = true;
-    Integer expectedVoteCount = 1;
-    when(applicationCardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class)))
-        .thenReturn(new ResponseEntity<>(HttpStatus.OK));
-
-    String jsonResponse = mockMvcWrapper
-        .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
-    CardResponseObject cardResponseObject = mockMvcWrapper.buildObject(jsonResponse, CardResponseObject.class);
-
-    assertEquals(expectedVoteCount, cardResponseObject.getTotalVoters());
-    assertTrue(cardResponseObject.getHaveVoted());
+    when(applicationCardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class))).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+    mockMvcWrapper.patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
   }
 
   @Test
@@ -230,16 +221,13 @@ public class CardControllerTest {
   }
 
   @Test
-  void remove_card_vote_with_voter_email_should_return_card_without_voter() throws Exception {
+  void remove_card_vote_with_voter_email_should_return_status_ok() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, false);
+
+    ResponseEntity<HttpStatus> responseEntity = new ResponseEntity<>(HttpStatus.OK);
     when(applicationCardService.removeUpvote(any(Long.class), any(UpVoteRequestObject.class)))
-        .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        .thenReturn(responseEntity);
 
-    String jsonResponse = mockMvcWrapper
-        .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
-    CardResponseObject cardResponseObject = mockMvcWrapper.buildObject(jsonResponse, CardResponseObject.class);
-
-    assertEquals(TOTAL_VOTERS, cardResponseObject.getTotalVoters());
-    assertFalse(cardResponseObject.getHaveVoted());
+    mockMvcWrapper.patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
   }
 }

@@ -74,41 +74,15 @@ public class ApplicationCardServiceTest {
 
   @Test
   void adds_upvote_to_card_response() {
-    Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList());
-
     upvoteRequestObject = new UpVoteRequestObject(EMAIL, true);
-    User author = new User(USER.getId(), USER.email, USER.username);
-
-    when(userService.findByEmail(newCardRequestObject.getEmail())).thenReturn(author);
-    CardResponseObject cardResponseObject = new CardResponseObject(card.getText(), card.getId(),
-        card.getColumnId(), HAVE_VOTED, card.getVoters().size() + 1, author.username);
-
-    when(userService.findById(author.getId())).thenReturn(author);
-    when(cardResponseObjectFactory.create(card, author.getId(), author.username))
-        .thenReturn(cardResponseObject);
-
-    ResponseEntity<HttpStatus> response = applicationCardService
-        .addUpvote(CARD_ID, upvoteRequestObject);
+    ResponseEntity<HttpStatus> response = applicationCardService.addUpvote(CARD_ID, upvoteRequestObject);
     assertEquals(200, response.getStatusCode().value());
   }
 
   @Test
   void removes_upvote_from_card_response() {
-    Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(),
-        Collections.singletonList(USER.getId()));
     upvoteRequestObject = new UpVoteRequestObject(EMAIL, false);
-    User author = new User(USER.getId(), USER.email, USER.username);
-
-    when(userService.findByEmail(newCardRequestObject.getEmail())).thenReturn(author);
-    CardResponseObject cardResponseObject = new CardResponseObject(card.getText(), card.getId(),
-        card.getColumnId(), HAVE_VOTED, card.getVoters().size() - 1, author.username);
-
-    when(userService.findById(author.getId())).thenReturn(author);
-    when(cardResponseObjectFactory.create(card, author.getId(), author.username))
-        .thenReturn(cardResponseObject);
-
-    ResponseEntity<HttpStatus> response = applicationCardService
-        .removeUpvote(CARD_ID, upvoteRequestObject);
+    ResponseEntity<HttpStatus> response = applicationCardService.removeUpvote(CARD_ID, upvoteRequestObject);
     assertEquals(200, response.getStatusCode().value());
   }
 }

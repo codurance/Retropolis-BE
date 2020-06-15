@@ -98,9 +98,11 @@ public class CardServiceTest {
   @Test
   public void should_throw_UserAlreadyUpvotedException_when_user_has_already_upvoted() {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
+    when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
 
     doThrow(new UserAlreadyUpvotedException()).when(cardRepository)
         .addUpvote(CARD_ID, USER.getId());
+
     assertThrows(UserAlreadyUpvotedException.class, () -> {
       cardService.addUpvote(CARD_ID, requestObject);
     });
@@ -109,6 +111,8 @@ public class CardServiceTest {
   @Test
   public void should_throw_CardNotFoundException_on_upvote() {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
+    when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
+
 
     doThrow(new RuntimeException()).when(cardRepository)
         .addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
@@ -119,16 +123,12 @@ public class CardServiceTest {
 
   @Test
   void should_remove_card_voter_and_return_card() {
-    Card editedCard = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList());
-
-    when(cardRepository.removeUpvote(editedCard.getId(), editedCard.getUserId()))
-        .thenReturn(editedCard);
-
-    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
-    cardService.removeUpvote(CARD_ID, requestObject);
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, false);
     when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
 
-    verify(cardRepository.addUpvote(editedCard.getId(), USER.getId()));
+    cardService.removeUpvote(CARD_ID, requestObject);
+
+    verify(cardRepository).removeUpvote(CARD_ID, USER.getId());
   }
 
   @Test
