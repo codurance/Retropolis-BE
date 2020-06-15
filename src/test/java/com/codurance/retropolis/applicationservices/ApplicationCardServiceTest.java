@@ -69,11 +69,7 @@ public class ApplicationCardServiceTest {
 
     CardResponseObject response = applicationCardService.create(newCardRequestObject);
 
-    assertEquals(CARD_ID, response.getId());
-    assertEquals(HAVE_VOTED, response.getHaveVoted());
-    assertEquals(card.getVoters().size(), response.getTotalVoters());
-    assertEquals(TEXT, response.getText());
-    assertEquals(card.getColumnId(), response.getColumnId());
+    assertEquals(cardResponseObject, response);
   }
 
   @Test
