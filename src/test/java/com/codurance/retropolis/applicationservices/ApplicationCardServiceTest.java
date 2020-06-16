@@ -2,7 +2,6 @@ package com.codurance.retropolis.applicationservices;
 
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.entities.Card;
@@ -94,7 +93,6 @@ public class ApplicationCardServiceTest {
   @Test
   void deletes_card_with_id() {
     ResponseEntity<HttpStatus> response = applicationCardService.delete(CARD_ID);
-    verify(cardService).delete(CARD_ID);
     assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
