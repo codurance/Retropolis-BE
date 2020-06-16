@@ -29,7 +29,6 @@ public class ApplicationBoardServiceTest {
   private static final String BOARD_TITLE = "test board";
   private final User USER = new User("john.doe@codurance.com", "John Doe");
   private final Long BOARD_ID = 1L;
-  ApplicationBoardService applicationBoardService;
   @Mock
   private UserService userService;
   @Mock
@@ -38,6 +37,7 @@ public class ApplicationBoardServiceTest {
   @Mock
   private BoardResponseObjectFactory boardResponseFactory;
 
+  private ApplicationBoardService applicationBoardService;
 
   @BeforeEach
   void setUp() {
