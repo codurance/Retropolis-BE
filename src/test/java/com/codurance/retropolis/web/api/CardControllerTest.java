@@ -91,7 +91,7 @@ public class CardControllerTest {
   }
 
   @Test
-  public void returns_updated_card_response_when_card_is_updated_with_test() throws Exception {
+  public void returns_updated_card_response_when_card_is_updated_with_text() throws Exception {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(TEXT);
     when(applicationCardService.updateText(any(), any(UpdateCardRequestObject.class)))
         .thenReturn(new CardUpdatedTextResponseObject(CARD_ID, TEXT, COLUMN_ID));
