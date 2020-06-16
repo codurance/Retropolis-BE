@@ -9,9 +9,6 @@ public class Column {
   private ColumnType title;
   private List<Card> cards;
 
-  public Column() {
-  }
-
   public Column(ColumnType title) {
     this.title = title;
   }
