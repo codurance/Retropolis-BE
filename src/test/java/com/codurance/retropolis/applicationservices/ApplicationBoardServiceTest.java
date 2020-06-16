@@ -4,7 +4,6 @@ import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codurance.retropolis.entities.Board;
@@ -15,6 +14,7 @@ import com.codurance.retropolis.services.UserService;
 import com.codurance.retropolis.web.requests.NewBoardRequestObject;
 import com.codurance.retropolis.web.responses.BoardResponseObject;
 import com.codurance.retropolis.web.responses.BoardResponseObjectFactory;
+import com.codurance.retropolis.web.responses.UserBoardResponseObject;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -76,9 +76,16 @@ public class ApplicationBoardServiceTest {
     Board board = new Board(BOARD_ID, BOARD_TITLE);
     List<Board> boards = Collections.singletonList(board);
     when(boardService.getUsersBoards(USER)).thenReturn(boards);
-    applicationBoardService.getUserBoards(USER);
 
-    verify(boardResponseFactory).create(boards);
+    UserBoardResponseObject userBoardResponseObject = new UserBoardResponseObject(BOARD_ID,
+        BOARD_TITLE);
+
+    List<UserBoardResponseObject> userBoards = Collections.singletonList(userBoardResponseObject);
+    when(boardResponseFactory.create(boards)).thenReturn(userBoards);
+    List<UserBoardResponseObject> result = applicationBoardService.getUserBoards(USER);
+
+    assertEquals(BOARD_ID, result.get(0).getId());
+    assertEquals(BOARD_TITLE, result.get(0).getTitle());
   }
 
   @Test
@@ -89,8 +96,15 @@ public class ApplicationBoardServiceTest {
     Board board = new Board(BOARD_ID, BOARD_TITLE);
     when(boardService.createBoard(requestObject)).thenReturn(board);
 
-    applicationBoardService.createBoard(requestObject);
+    BoardResponseObject boardResponseObject = new BoardResponseObject(BOARD_ID, BOARD_TITLE,
+        emptyList());
 
-    verify(boardResponseFactory).create(board, requestObject.getUser().getId());
+    when(boardResponseFactory.create(board, requestObject.getUser().getId()))
+        .thenReturn(boardResponseObject);
+
+    BoardResponseObject result = applicationBoardService.createBoard(requestObject);
+
+    assertEquals(BOARD_ID, result.getId());
+    assertEquals(BOARD_TITLE, result.getTitle());
   }
 }
