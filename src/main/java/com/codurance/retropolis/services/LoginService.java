@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginService {
 
-  private TokenAuthenticator tokenAuthenticator;
+  private final TokenAuthenticator tokenAuthenticator;
 
   public LoginService(TokenAuthenticator tokenAuthenticator) {
     this.tokenAuthenticator = tokenAuthenticator;

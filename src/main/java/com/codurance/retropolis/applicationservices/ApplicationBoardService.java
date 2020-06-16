@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApplicationBoardService {
 
-  private UserService userService;
-  private BoardResponseObjectFactory boardResponseObjectFactory;
-  private BoardService boardService;
+  private final UserService userService;
+  private final BoardResponseObjectFactory boardResponseObjectFactory;
+  private final BoardService boardService;
 
   public ApplicationBoardService(UserService userService,
       BoardResponseObjectFactory boardResponseObjectFactory, BoardService boardService) {

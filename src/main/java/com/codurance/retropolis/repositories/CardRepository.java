@@ -10,7 +10,7 @@ public interface CardRepository {
 
   Card updateText(Long cardId, String newText);
 
-  Card addUpvote(Long cardId, Long userId);
+  void addUpvote(Long cardId, Long userId);
 
-  Card removeUpvote(Long cardId, Long userId);
+  void removeUpvote(Long cardId, Long userId);
 }

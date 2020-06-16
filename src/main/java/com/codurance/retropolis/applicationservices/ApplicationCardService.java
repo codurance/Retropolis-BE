@@ -19,7 +19,7 @@ public class ApplicationCardService {
 
   private final UserService userService;
   private final CardService cardService;
-  private CardResponseObjectFactory cardResponseObjectFactory;
+  private final CardResponseObjectFactory cardResponseObjectFactory;
 
   public ApplicationCardService(UserService userService, CardService cardService,
       CardResponseObjectFactory cardResponseObjectFactory) {
@@ -35,12 +35,14 @@ public class ApplicationCardService {
     return createResponseFrom(card, user.getId());
   }
 
-  public ResponseEntity<HttpStatus> addUpvote(Long cardId, UpVoteRequestObject requestObject) {
+  public ResponseEntity<HttpStatus> addUpvote(Long cardId,
+      UpVoteRequestObject requestObject) {
     cardService.addUpvote(cardId, requestObject);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  public ResponseEntity<HttpStatus> removeUpvote(Long cardId, UpVoteRequestObject requestObject) {
+  public ResponseEntity<HttpStatus> removeUpvote(Long cardId,
+      UpVoteRequestObject requestObject) {
     cardService.removeUpvote(cardId, requestObject);
     return new ResponseEntity<>(HttpStatus.OK);
   }
