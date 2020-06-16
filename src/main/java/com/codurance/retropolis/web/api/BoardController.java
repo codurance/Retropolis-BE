@@ -1,14 +1,14 @@
-package com.codurance.retropolis.controllers;
+package com.codurance.retropolis.web.api;
 
 
-import com.codurance.retropolis.entities.Board;
+import com.codurance.retropolis.applicationservices.ApplicationBoardService;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.exceptions.UnauthorizedException;
 import com.codurance.retropolis.factories.UserFactory;
-import com.codurance.retropolis.requests.NewBoardRequestObject;
-import com.codurance.retropolis.responses.BoardResponseObject;
-import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.LoginService;
+import com.codurance.retropolis.web.requests.NewBoardRequestObject;
+import com.codurance.retropolis.web.responses.BoardResponseObject;
+import com.codurance.retropolis.web.responses.UserBoardResponseObject;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
@@ -31,39 +31,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/boards")
 public class BoardController extends BaseController {
 
-  private final BoardService boardService;
   private final UserFactory userFactory;
   private final LoginService loginService;
+  private final ApplicationBoardService applicationBoardService;
 
   @Autowired
-  public BoardController(BoardService boardService, UserFactory userFactory, LoginService loginService) {
-    this.boardService = boardService;
+  public BoardController(UserFactory userFactory,
+      LoginService loginService, ApplicationBoardService applicationBoardService) {
     this.userFactory = userFactory;
     this.loginService = loginService;
+    this.applicationBoardService = applicationBoardService;
   }
 
   @GetMapping
-  public List<Board> getUsersBoards(@RequestHeader(HttpHeaders.AUTHORIZATION) String token)
+  public List<UserBoardResponseObject> getUsersBoards(
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
-    return boardService.getUsersBoards(userFactory.create(token));
+    return applicationBoardService.getUserBoards(userFactory.create(token));
   }
 
   @GetMapping(value = "/{id}")
   public BoardResponseObject getBoard(@PathVariable Long id,
       @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
-    return boardService.getBoard(userFactory.create(token), id);
+    return applicationBoardService.getBoard(userFactory.create(token), id);
   }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Board postBoard(@RequestBody @Valid NewBoardRequestObject request, @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
+  public BoardResponseObject postBoard(@RequestBody @Valid NewBoardRequestObject request,
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String token)
       throws GeneralSecurityException, IOException {
     if (!loginService.isAuthorized(request.getUserEmail(), token)) {
       throw new UnauthorizedException();
     }
     request.setUser(userFactory.create(token));
-    return boardService.createBoard(request);
+    return applicationBoardService.createBoard(request);
   }
 
   @ExceptionHandler(BoardNotFoundException.class)

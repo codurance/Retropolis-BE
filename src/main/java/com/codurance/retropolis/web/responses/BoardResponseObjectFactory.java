@@ -1,4 +1,4 @@
-package com.codurance.retropolis.responses;
+package com.codurance.retropolis.web.responses;
 
 import static java.util.stream.Collectors.toList;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BoardResponseObjectFactory {
 
-  private UserService userService;
+  private final UserService userService;
 
   @Autowired
   public BoardResponseObjectFactory(UserService userService) {
@@ -38,5 +38,11 @@ public class BoardResponseObjectFactory {
     return card -> new CardResponseObject(card.getText(), card.getId(), card.getColumnId(),
         card.getVoters().contains(userId),
         card.getVoters().size(), userService.findById(card.getUserId()).username);
+  }
+
+  public List<UserBoardResponseObject> create(List<Board> boards) {
+    return boards.stream()
+        .map(board -> new UserBoardResponseObject(board.getId(), board.getTitle()))
+        .collect(toList());
   }
 }

@@ -1,4 +1,4 @@
-package com.codurance.retropolis.requests;
+package com.codurance.retropolis.web.requests;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

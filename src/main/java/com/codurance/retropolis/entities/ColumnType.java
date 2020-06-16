@@ -10,7 +10,7 @@ public enum ColumnType {
   CONTINUE("Continue");
 
   @JsonValue
-  private String title;
+  private final String title;
 
   private static final Map<String, ColumnType> map = new HashMap<>(values().length, 1);
 

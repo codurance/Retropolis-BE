@@ -1,4 +1,4 @@
-package com.codurance.retropolis.requests;
+package com.codurance.retropolis.web.requests;
 
 import com.codurance.retropolis.entities.User;
 import javax.validation.constraints.Email;

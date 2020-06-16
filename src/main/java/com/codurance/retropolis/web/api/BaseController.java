@@ -1,4 +1,4 @@
-package com.codurance.retropolis.controllers;
+package com.codurance.retropolis.web.api;
 
 import java.util.List;
 import java.util.stream.Collectors;

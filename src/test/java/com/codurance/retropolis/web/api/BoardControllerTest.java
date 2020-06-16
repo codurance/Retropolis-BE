@@ -1,27 +1,28 @@
-package com.codurance.retropolis.controllers;
+package com.codurance.retropolis.web.api;
 
 import static com.codurance.retropolis.utils.Convert.asJsonString;
 import static com.codurance.retropolis.utils.MockMvcWrapper.getAuthHeader;
-import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.codurance.retropolis.applicationservices.ApplicationBoardService;
 import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.ColumnType;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
 import com.codurance.retropolis.exceptions.UnauthorizedException;
 import com.codurance.retropolis.factories.UserFactory;
-import com.codurance.retropolis.requests.NewBoardRequestObject;
-import com.codurance.retropolis.responses.BoardResponseObject;
-import com.codurance.retropolis.responses.CardResponseObject;
-import com.codurance.retropolis.responses.ColumnResponseObject;
 import com.codurance.retropolis.services.BoardService;
 import com.codurance.retropolis.services.LoginService;
 import com.codurance.retropolis.utils.MockMvcWrapper;
+import com.codurance.retropolis.web.requests.NewBoardRequestObject;
+import com.codurance.retropolis.web.responses.BoardResponseObject;
+import com.codurance.retropolis.web.responses.CardResponseObject;
+import com.codurance.retropolis.web.responses.ColumnResponseObject;
+import com.codurance.retropolis.web.responses.UserBoardResponseObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
@@ -63,6 +64,9 @@ public class BoardControllerTest {
 
   private MockMvcWrapper mockMvcWrapper;
 
+  @MockBean
+  private ApplicationBoardService applicationBoardService;
+
   @BeforeEach
   void setUp() {
     mockMvcWrapper = new MockMvcWrapper(context);
@@ -82,7 +86,7 @@ public class BoardControllerTest {
     List<ColumnResponseObject> columns = List.of(columnResponse);
 
     when(userFactory.create(TOKEN)).thenReturn(USER);
-    when(boardService.getBoard(USER, BOARD_ID))
+    when(applicationBoardService.getBoard(USER, BOARD_ID))
         .thenReturn(new BoardResponseObject(BOARD_ID, BOARD_TITLE, columns));
 
     String jsonResponse = mockMvcWrapper
@@ -102,8 +106,7 @@ public class BoardControllerTest {
   @Test
   void returns_id_and_title_of_users_boards() throws Exception {
     when(userFactory.create(TOKEN)).thenReturn(USER);
-    when(boardService.getUsersBoards(USER))
-        .thenReturn(List.of(new Board(BOARD_ID, BOARD_TITLE, emptyList())));
+    when(applicationBoardService.getUserBoards(USER)).thenReturn(List.of(new UserBoardResponseObject(BOARD_ID, BOARD_TITLE)));
 
     String jsonResponse = mockMvcWrapper
         .getRequest(BOARDS_URL, status().isOk(), getAuthHeader(TOKEN));
@@ -118,7 +121,8 @@ public class BoardControllerTest {
   @Test
   public void returns_bad_request_when_board_does_not_exist() throws Exception {
     when(userFactory.create(TOKEN)).thenReturn(USER);
-    doThrow(new BoardNotFoundException()).when(boardService).getBoard(USER, NON_EXISTENT_BOARD_ID);
+    doThrow(new BoardNotFoundException()).when(applicationBoardService)
+        .getBoard(USER, NON_EXISTENT_BOARD_ID);
     String jsonResponse = mockMvcWrapper
         .getRequest(BOARDS_URL + "/" + NON_EXISTENT_BOARD_ID, status().isBadRequest(),
             getAuthHeader(TOKEN));
@@ -130,14 +134,13 @@ public class BoardControllerTest {
   void returns_a_new_board() throws Exception {
     when(loginService.isAuthorized(USER.email, TOKEN)).thenReturn(true);
     when(userFactory.create(TOKEN)).thenReturn(USER);
-    when(boardService.createBoard(any(NewBoardRequestObject.class)))
-        .thenReturn(new Board(BOARD_ID, BOARD_TITLE, Collections.emptyList()));
+    when(applicationBoardService.createBoard(any(NewBoardRequestObject.class)))
+        .thenReturn(new BoardResponseObject(BOARD_ID, BOARD_TITLE, Collections.emptyList()));
 
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE, USER.email);
     String jsonResponse = mockMvcWrapper
-        .postRequest(BOARDS_URL, asJsonString(requestObject), status().isCreated(),
-            getAuthHeader(TOKEN));
-    Board boardResponse = mockMvcWrapper.buildObject(jsonResponse, Board.class);
+        .postRequest(BOARDS_URL, asJsonString(requestObject), status().isCreated(), getAuthHeader(TOKEN));
+    BoardResponseObject boardResponse = mockMvcWrapper.buildObject(jsonResponse, BoardResponseObject.class);
 
     assertEquals(BOARD_TITLE, boardResponse.getTitle());
     assertEquals(BOARD_ID, boardResponse.getId());

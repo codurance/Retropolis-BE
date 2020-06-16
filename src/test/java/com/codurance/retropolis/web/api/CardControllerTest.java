@@ -1,28 +1,28 @@
-package com.codurance.retropolis.controllers;
+package com.codurance.retropolis.web.api;
 
 import static com.codurance.retropolis.utils.Convert.asJsonString;
 import static com.codurance.retropolis.utils.MockMvcWrapper.getAuthHeader;
-import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.codurance.retropolis.applicationservices.ApplicationCardService;
 import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
-import com.codurance.retropolis.requests.NewCardRequestObject;
-import com.codurance.retropolis.requests.UpVoteRequestObject;
-import com.codurance.retropolis.requests.UpdateCardRequestObject;
-import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
 import com.codurance.retropolis.utils.MockMvcWrapper;
+import com.codurance.retropolis.web.requests.NewCardRequestObject;
+import com.codurance.retropolis.web.requests.UpVoteRequestObject;
+import com.codurance.retropolis.web.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.web.responses.CardResponseObject;
+import com.codurance.retropolis.web.responses.CardUpdatedTextResponseObject;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(CardController.class)
@@ -56,6 +58,9 @@ public class CardControllerTest {
   @MockBean
   private LoginService loginService;
 
+  @MockBean
+  private ApplicationCardService applicationCardService;
+
   private MockMvcWrapper mockMvcWrapper;
 
   @BeforeEach
@@ -67,12 +72,17 @@ public class CardControllerTest {
   public void post_cards_should_return_back_cardResponseObject() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
     when(cardService.create(any(NewCardRequestObject.class)))
-        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USER.username));
+        .thenReturn(new Card(TEXT, COLUMN_ID, USER.getId(), Collections.emptyList()));
+
+    when(applicationCardService.create(any(NewCardRequestObject.class)))
+        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS,
+            USER.username));
     when(loginService.isAuthorized(USER.email, TOKEN)).thenReturn(true);
 
     String jsonResponse = mockMvcWrapper
         .postRequest(URL, asJsonString(requestObject), status().isCreated(), getAuthHeader(TOKEN));
-    CardResponseObject cardResponseObject = mockMvcWrapper.buildObject(jsonResponse, CardResponseObject.class);
+    CardResponseObject cardResponseObject = mockMvcWrapper
+        .buildObject(jsonResponse, CardResponseObject.class);
 
     assertEquals(TEXT, cardResponseObject.getText());
     assertEquals(CARD_ID, cardResponseObject.getId());
@@ -85,25 +95,26 @@ public class CardControllerTest {
   @Test
   public void delete_card_should_return_200_status_code() throws Exception {
     mockMvcWrapper.deleteRequest(URL + "/" + CARD_ID, status().isOk());
-    verify(cardService).delete(CARD_ID);
+    verify(applicationCardService).delete(CARD_ID);
   }
 
   @Test
   public void update_card_with_new_text_should_return_card_with_updated_text() throws Exception {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(TEXT);
-    when(cardService.updateText(any(), any(UpdateCardRequestObject.class)))
-        .thenReturn(new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList()));
+    when(applicationCardService.updateText(any(), any(UpdateCardRequestObject.class)))
+        .thenReturn(new CardUpdatedTextResponseObject(CARD_ID, TEXT, COLUMN_ID));
 
     String jsonResponse = mockMvcWrapper
         .patchRequest(URL + "/" + CARD_ID, asJsonString(requestObject), status().isOk());
-    Card cardResponse = mockMvcWrapper.buildObject(jsonResponse, Card.class);
+    CardUpdatedTextResponseObject cardResponse = mockMvcWrapper
+        .buildObject(jsonResponse, CardUpdatedTextResponseObject.class);
 
     assertEquals(TEXT, cardResponse.getText());
   }
 
   @Test
   public void returns_bad_request_on_delete_when_card_does_not_exist() throws Exception {
-    doThrow(new CardNotFoundException()).when(cardService).delete(NON_EXISTENT_CARD_ID);
+    doThrow(new CardNotFoundException()).when(applicationCardService).delete(NON_EXISTENT_CARD_ID);
     String jsonResponse = mockMvcWrapper.deleteRequest(URL + "/" + NON_EXISTENT_CARD_ID, status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Card Id is not valid", errorResponse.get(0));
@@ -112,7 +123,8 @@ public class CardControllerTest {
   @Test
   public void returns_bad_request_when_column_is_not_found() throws Exception {
     when(loginService.isAuthorized(USER.email, TOKEN)).thenReturn(true);
-    when(cardService.create(any(NewCardRequestObject.class))).thenThrow(new ColumnNotFoundException());
+    when(applicationCardService.create(any(NewCardRequestObject.class)))
+        .thenThrow(new ColumnNotFoundException());
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
 
     String jsonResponse = mockMvcWrapper
@@ -176,19 +188,10 @@ public class CardControllerTest {
   }
 
   @Test
-  void update_card_vote_with_email_and_add_vote_should_return_card_with_voter() throws Exception {
+  void update_card_vote_with_email_and_add_vote_should_return_status_ok() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, true);
-    Boolean haveVoted = true;
-    Integer expectedVoteCount = 1;
-    when(cardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class)))
-        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, haveVoted, expectedVoteCount, USER.username));
-
-    String jsonResponse = mockMvcWrapper
-        .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
-    CardResponseObject cardResponseObject = mockMvcWrapper.buildObject(jsonResponse, CardResponseObject.class);
-
-    assertEquals(expectedVoteCount, cardResponseObject.getTotalVoters());
-    assertTrue(cardResponseObject.getHaveVoted());
+    when(applicationCardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class))).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+    mockMvcWrapper.patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
   }
 
   @Test
@@ -216,16 +219,13 @@ public class CardControllerTest {
   }
 
   @Test
-  void remove_card_vote_with_voter_email_should_return_card_without_voter() throws Exception {
+  void remove_card_vote_with_voter_email_should_return_status_ok() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, false);
-    when(cardService.removeUpvote(any(Long.class), any(UpVoteRequestObject.class)))
-        .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS, USER.username));
 
-    String jsonResponse = mockMvcWrapper
-        .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
-    CardResponseObject cardResponseObject = mockMvcWrapper.buildObject(jsonResponse, CardResponseObject.class);
+    ResponseEntity<HttpStatus> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+    when(applicationCardService.removeUpvote(any(Long.class), any(UpVoteRequestObject.class)))
+        .thenReturn(responseEntity);
 
-    assertEquals(TOTAL_VOTERS, cardResponseObject.getTotalVoters());
-    assertFalse(cardResponseObject.getHaveVoted());
+    mockMvcWrapper.patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
   }
 }

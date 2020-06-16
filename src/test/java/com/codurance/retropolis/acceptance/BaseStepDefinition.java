@@ -18,7 +18,7 @@ public class BaseStepDefinition {
   private final String CLEAN_DB_SQL = "sql/cleanDb.sql";
   @Value("http://localhost:${server.port}")
   protected String url;
-  protected JdbcTemplate jdbcTemplate;
+  protected final JdbcTemplate jdbcTemplate;
 
   public BaseStepDefinition(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);

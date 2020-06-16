@@ -1,4 +1,4 @@
-package com.codurance.retropolis.config.web;
+package com.codurance.retropolis.web.config;
 
 import com.codurance.retropolis.config.Environment;
 import org.springframework.context.annotation.Profile;

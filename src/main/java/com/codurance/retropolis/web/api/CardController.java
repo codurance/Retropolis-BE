@@ -1,15 +1,15 @@
-package com.codurance.retropolis.controllers;
+package com.codurance.retropolis.web.api;
 
-import com.codurance.retropolis.entities.Card;
+import com.codurance.retropolis.applicationservices.ApplicationCardService;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
 import com.codurance.retropolis.exceptions.UnauthorizedException;
-import com.codurance.retropolis.requests.NewCardRequestObject;
-import com.codurance.retropolis.requests.UpVoteRequestObject;
-import com.codurance.retropolis.requests.UpdateCardRequestObject;
-import com.codurance.retropolis.responses.CardResponseObject;
-import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
+import com.codurance.retropolis.web.requests.NewCardRequestObject;
+import com.codurance.retropolis.web.requests.UpVoteRequestObject;
+import com.codurance.retropolis.web.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.web.responses.CardResponseObject;
+import com.codurance.retropolis.web.responses.CardUpdatedTextResponseObject;
 import java.util.Collections;
 import java.util.List;
 import javax.validation.Valid;
@@ -32,12 +32,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cards")
 public class CardController extends BaseController {
 
-  private final CardService cardService;
   private final LoginService loginService;
+  private final ApplicationCardService applicationCardService;
 
   @Autowired
-  public CardController(CardService cardService, LoginService loginService) {
-    this.cardService = cardService;
+  public CardController(ApplicationCardService applicationCardService,
+      LoginService loginService) {
+    this.applicationCardService = applicationCardService;
     this.loginService = loginService;
   }
 
@@ -49,25 +50,26 @@ public class CardController extends BaseController {
       throw new UnauthorizedException();
     }
 
-    return cardService.create(request);
+    return applicationCardService.create(request);
   }
 
   @DeleteMapping(value = "/{cardId}")
   public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long cardId) {
-    cardService.delete(cardId);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return applicationCardService.delete(cardId);
   }
 
   @PatchMapping(value = "/{cardId}")
-  public Card updateText(@PathVariable Long cardId, @RequestBody @Valid UpdateCardRequestObject request) {
-    return cardService.updateText(cardId, request);
+  public CardUpdatedTextResponseObject updateText(@PathVariable Long cardId,
+      @RequestBody @Valid UpdateCardRequestObject request) {
+    return applicationCardService.updateText(cardId, request);
   }
 
   @PatchMapping(value = "/{cardId}/vote")
-  public CardResponseObject updateVote(@PathVariable Long cardId, @RequestBody @Valid UpVoteRequestObject request) {
+  public ResponseEntity<HttpStatus> updateVote(@PathVariable Long cardId,
+      @RequestBody @Valid UpVoteRequestObject request) {
     return request.getAddVote() ?
-        cardService.addUpvote(cardId, request) :
-        cardService.removeUpvote(cardId, request);
+        applicationCardService.addUpvote(cardId, request) :
+        applicationCardService.removeUpvote(cardId, request);
   }
 
   @ExceptionHandler(ColumnNotFoundException.class)

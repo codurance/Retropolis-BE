@@ -1,4 +1,4 @@
-package com.codurance.retropolis.config.web;
+package com.codurance.retropolis.web.config;
 
 import com.codurance.retropolis.config.Environment;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;

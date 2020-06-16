@@ -1,4 +1,4 @@
-package com.codurance.retropolis.responses;
+package com.codurance.retropolis.web.responses;
 
 import java.util.List;
 

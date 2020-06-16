@@ -1,4 +1,4 @@
-package com.codurance.retropolis.config.web;
+package com.codurance.retropolis.web.config;
 
 import java.util.Collections;
 import java.util.List;

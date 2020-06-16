@@ -1,4 +1,4 @@
-package com.codurance.retropolis.config.web;
+package com.codurance.retropolis.web.config;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;

@@ -3,7 +3,7 @@ package com.codurance.retropolis.factories;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.codurance.retropolis.entities.Card;
-import com.codurance.retropolis.requests.NewCardRequestObject;
+import com.codurance.retropolis.web.requests.NewCardRequestObject;
 import org.junit.jupiter.api.Test;
 
 public class CardFactoryTest {

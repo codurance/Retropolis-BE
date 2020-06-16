@@ -7,9 +7,9 @@ import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
 import com.codurance.retropolis.entities.Card;
-import com.codurance.retropolis.requests.UpdateCardRequestObject;
-import com.codurance.retropolis.responses.CardResponseObject;
 import com.codurance.retropolis.utils.HttpWrapper;
+import com.codurance.retropolis.web.requests.UpdateCardRequestObject;
+import com.codurance.retropolis.web.responses.CardResponseObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,9 +29,8 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
   @When("the user updates the existing card with text {string}")
   public void theUserUpdatesTheExistingCardWithText(String newText)
       throws JsonProcessingException {
-    CardResponseObject cardResponseObject = new ObjectMapper()
-        .readValue(responseResult.getBody(), new TypeReference<>() {
-        });
+    CardResponseObject cardResponseObject = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    });
 
     executePatch(url + "/cards/" + cardResponseObject.getId(),
         new HttpEntity<>(new UpdateCardRequestObject(newText)));

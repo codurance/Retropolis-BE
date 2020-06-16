@@ -1,4 +1,4 @@
-package com.codurance.retropolis.config.web;
+package com.codurance.retropolis.web.config;
 
 import static java.util.Collections.singletonList;
 
@@ -8,45 +8,33 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
-@Profile(Environment.DEV)
-public class WebDevConfig {
+@EnableWebMvc
+@Profile(Environment.PROD)
+public class WebConfig {
 
   private final GoogleTokenAuthenticator googleTokenAuthenticator;
 
-  public WebDevConfig(GoogleTokenAuthenticator googleTokenAuthenticator) {
+  public WebConfig(GoogleTokenAuthenticator googleTokenAuthenticator) {
     this.googleTokenAuthenticator = googleTokenAuthenticator;
-  }
-
-  @Bean
-  public Docket api() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .select()
-        .apis(RequestHandlerSelectors.any())
-        .paths(PathSelectors.any())
-        .build();
   }
 
   @Configuration
   public class WebConfiguration implements WebMvcConfigurer {
 
-    @Bean
-    public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
-      return CorsFilterConfiguration.simpleCorsFilter(singletonList("http://localhost:3000"));
-    }
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
       registry.addInterceptor(googleTokenAuthenticator);
     }
+
+    @Bean
+    public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
+      return CorsFilterConfiguration.simpleCorsFilter(singletonList("http://retropolis-fe.s3-website.eu-west-2.amazonaws.com"));
+    }
+
   }
 }
