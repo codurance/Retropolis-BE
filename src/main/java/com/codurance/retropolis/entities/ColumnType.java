@@ -1,6 +1,5 @@
 package com.codurance.retropolis.entities;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ public enum ColumnType {
   STOP("Stop"),
   CONTINUE("Continue");
 
-  @JsonValue
   private final String title;
 
   private static final Map<String, ColumnType> map = new HashMap<>(values().length, 1);

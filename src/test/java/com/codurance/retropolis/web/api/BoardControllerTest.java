@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codurance.retropolis.applicationservices.ApplicationBoardService;
-import com.codurance.retropolis.entities.Board;
 import com.codurance.retropolis.entities.ColumnType;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.BoardNotFoundException;
@@ -107,7 +106,7 @@ public class BoardControllerTest {
 
     String jsonResponse = mockMvcWrapper
         .getRequest(BOARDS_URL, status().isOk(), getAuthHeader(TOKEN));
-    List<Board> boards = objectMapper.readValue(jsonResponse, new TypeReference<>() {
+    List<UserBoardResponseObject> boards = objectMapper.readValue(jsonResponse, new TypeReference<>() {
     });
 
     assertEquals(1, boards.size());

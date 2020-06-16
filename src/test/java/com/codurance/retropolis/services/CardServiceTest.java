@@ -138,7 +138,7 @@ public class CardServiceTest {
   public void throws_column_not_found_exception_on_create() {
     when(userService.findByEmail(USER.email))
         .thenReturn(new User(USER.getId(), USER.email, USER.username));
-    doThrow(new RuntimeException()).when(cardRepository).addCard(new Card());
+    doThrow(new RuntimeException()).when(cardRepository).addCard(new Card(TEXT, COLUMN_ID, USER.getId(), emptyList()));
     assertThrows(ColumnNotFoundException.class,
         () -> cardService.create(new NewCardRequestObject(TEXT, COLUMN_ID, USER.email)));
   }

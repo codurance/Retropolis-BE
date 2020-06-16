@@ -10,9 +10,6 @@ public class Card {
   private Long userId;
   private List<Long> voters;
 
-  public Card() {
-  }
-
   public Card(String text, Long columnId, Long userId, List<Long> voters) {
     this.text = text;
     this.columnId = columnId;
