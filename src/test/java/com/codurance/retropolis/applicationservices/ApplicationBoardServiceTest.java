@@ -26,9 +26,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class ApplicationBoardServiceTest {
 
-  private static final String BOARD_TITLE = "test board";
-  private final User USER = new User("john.doe@codurance.com", "John Doe");
   private final Long BOARD_ID = 1L;
+  private final String BOARD_TITLE = "test board";
+  private final User USER = new User("john.doe@codurance.com", "John Doe");
+
   @Mock
   private UserService userService;
   @Mock
@@ -47,7 +48,7 @@ public class ApplicationBoardServiceTest {
   @Test
   void returns_board_response_object() {
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE,
-        "john.doe@codurance.com");
+        USER.email);
     requestObject.setUser(USER);
     Board board = new Board(BOARD_ID, BOARD_TITLE, emptyList());
     when(userService.findByEmail(USER.email)).thenReturn(USER);
@@ -65,7 +66,7 @@ public class ApplicationBoardServiceTest {
   }
 
   @Test
-  public void should_throw_BoardNotFoundException_when_boardId_is_invalid() {
+  public void throws_board_not_found_exception_when_board_id_is_invalid() {
     doThrow(new RuntimeException()).when(boardService).getBoard(USER, BOARD_ID);
     assertThrows(BoardNotFoundException.class,
         () -> applicationBoardService.getBoard(USER, BOARD_ID));
@@ -91,7 +92,7 @@ public class ApplicationBoardServiceTest {
   @Test
   void creates_a_board() {
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE,
-        "john.doe@codurance.com");
+        USER.email);
     requestObject.setUser(USER);
     Board board = new Board(BOARD_ID, BOARD_TITLE);
     when(boardService.createBoard(requestObject)).thenReturn(board);

@@ -10,11 +10,9 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codurance.retropolis.applicationservices.ApplicationCardService;
-import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.exceptions.CardNotFoundException;
 import com.codurance.retropolis.exceptions.ColumnNotFoundException;
-import com.codurance.retropolis.services.CardService;
 import com.codurance.retropolis.services.LoginService;
 import com.codurance.retropolis.utils.MockMvcWrapper;
 import com.codurance.retropolis.web.requests.NewCardRequestObject;
@@ -22,7 +20,6 @@ import com.codurance.retropolis.web.requests.UpVoteRequestObject;
 import com.codurance.retropolis.web.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.web.responses.CardResponseObject;
 import com.codurance.retropolis.web.responses.CardUpdatedTextResponseObject;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,9 +46,6 @@ public class CardControllerTest {
   private final User USER = new User(3L, "john.doe@codurance.com", "John Doe");
   private final String VOTER_EMAIL = "jane.doe@codurance.com";
 
-  @MockBean
-  private CardService cardService;
-
   @Autowired
   private WebApplicationContext context;
 
@@ -69,10 +63,8 @@ public class CardControllerTest {
   }
 
   @Test
-  public void post_cards_should_return_back_cardResponseObject() throws Exception {
+  public void returns_card_response_object_when_card_is_created() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
-    when(cardService.create(any(NewCardRequestObject.class)))
-        .thenReturn(new Card(TEXT, COLUMN_ID, USER.getId(), Collections.emptyList()));
 
     when(applicationCardService.create(any(NewCardRequestObject.class)))
         .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS,
@@ -93,13 +85,13 @@ public class CardControllerTest {
   }
 
   @Test
-  public void delete_card_should_return_200_status_code() throws Exception {
+  public void returns_ok_response_when_card_is_deleted() throws Exception {
     mockMvcWrapper.deleteRequest(URL + "/" + CARD_ID, status().isOk());
     verify(applicationCardService).delete(CARD_ID);
   }
 
   @Test
-  public void update_card_with_new_text_should_return_card_with_updated_text() throws Exception {
+  public void returns_updated_card_response_when_card_is_updated_with_text() throws Exception {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(TEXT);
     when(applicationCardService.updateText(any(), any(UpdateCardRequestObject.class)))
         .thenReturn(new CardUpdatedTextResponseObject(CARD_ID, TEXT, COLUMN_ID));
@@ -135,18 +127,19 @@ public class CardControllerTest {
   }
 
   @Test
-  public void return_bad_request_when_text_is_empty_on_post_card() throws Exception {
+  public void returns_bad_request_when_text_is_empty_on_post_card() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject("", COLUMN_ID, USER.email);
     String content = asJsonString(requestObject);
 
-    String jsonResponse = mockMvcWrapper.postRequest(URL, content, status().isBadRequest(), EMPTY_HEADERS);
+    String jsonResponse = mockMvcWrapper
+        .postRequest(URL, content, status().isBadRequest(), EMPTY_HEADERS);
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
 
     assertEquals("Text must not be less than 1 character", errorResponse.get(0));
   }
 
   @Test
-  public void return_bad_request_when_columnId_is_null() throws Exception {
+  public void returns_bad_request_when_column_id_is_null() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, null, USER.email);
     String jsonResponse = mockMvcWrapper.postRequest(URL, asJsonString(requestObject),
         status().isBadRequest(), EMPTY_HEADERS);
@@ -155,23 +148,25 @@ public class CardControllerTest {
   }
 
   @Test
-  public void return_bad_request_when_no_text_is_sent_on_post_card() throws Exception {
+  public void returns_bad_request_when_no_text_is_sent_on_post_card() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(null, COLUMN_ID, USER.email);
-    String jsonResponse = mockMvcWrapper.postRequest(URL, asJsonString(requestObject), status().isBadRequest(), EMPTY_HEADERS);
+    String jsonResponse = mockMvcWrapper
+        .postRequest(URL, asJsonString(requestObject), status().isBadRequest(), EMPTY_HEADERS);
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Text cannot be empty", errorResponse.get(0));
   }
 
   @Test
-  public void return_bad_request_when_no_email_is_sent_on_create() throws Exception {
+  public void returns_bad_request_when_no_email_is_sent_on_create() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, null);
-    String jsonResponse = mockMvcWrapper.postRequest(URL, asJsonString(requestObject), status().isBadRequest(), EMPTY_HEADERS);
+    String jsonResponse = mockMvcWrapper
+        .postRequest(URL, asJsonString(requestObject), status().isBadRequest(), EMPTY_HEADERS);
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Email is required", errorResponse.get(0));
   }
 
   @Test
-  public void return_bad_request_when_text_is_empty_on_edit_text_card() throws Exception {
+  public void returns_bad_request_when_text_is_empty_on_edit_text_card() throws Exception {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject("");
     String content = asJsonString(requestObject);
     String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1", content, status().isBadRequest());
@@ -180,52 +175,77 @@ public class CardControllerTest {
   }
 
   @Test
-  public void return_bad_request_when_no_text_is_sent_on_updateText() throws Exception {
+  public void returns_bad_request_when_no_text_is_sent_on_update_text() throws Exception {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(null);
-    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1", asJsonString(requestObject), status().isBadRequest());
+    String jsonResponse = mockMvcWrapper
+        .patchRequest(URL + "/1", asJsonString(requestObject), status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Text cannot be empty", errorResponse.get(0));
   }
 
   @Test
-  void update_card_vote_with_email_and_add_vote_should_return_status_ok() throws Exception {
+  void returns_ok_response_when_upvote_sent_with_email_address() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, true);
-    when(applicationCardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class))).thenReturn(new ResponseEntity<>(HttpStatus.OK));
-    mockMvcWrapper.patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
+    when(applicationCardService.addUpvote(any(Long.class), any(UpVoteRequestObject.class)))
+        .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+    mockMvcWrapper
+        .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
   }
 
   @Test
-  public void return_bad_request_when_email_is_empty_on_upvote() throws Exception {
+  public void returns_bad_request_if_email_is_empty_when_adding_upvote() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(null, true);
-    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
+    String jsonResponse = mockMvcWrapper
+        .patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Email is required", errorResponse.get(0));
   }
 
   @Test
-  public void return_bad_request_when_email_is_invalid_on_upvote() throws Exception {
-    UpVoteRequestObject requestObject = new UpVoteRequestObject("invalid mail", true);
-    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
+  public void returns_bad_request_if_email_is_invalid_when_adding_upvote() throws Exception {
+    UpVoteRequestObject requestObject = new UpVoteRequestObject("invalid email", true);
+    String jsonResponse = mockMvcWrapper
+        .patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("Email is invalid", errorResponse.get(0));
   }
 
   @Test
-  public void return_bad_request_when_addVote_parameter_missing() throws Exception {
+  public void returns_bad_request_when_add_vote_parameter_missing() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, null);
-    String jsonResponse = mockMvcWrapper.patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
+    String jsonResponse = mockMvcWrapper
+        .patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
     List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
     assertEquals("AddVote parameter is required", errorResponse.get(0));
   }
 
   @Test
-  void remove_card_vote_with_voter_email_should_return_status_ok() throws Exception {
+  void returns_ok_response_when_upvote_removed_with_email_address() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, false);
 
     ResponseEntity<HttpStatus> responseEntity = new ResponseEntity<>(HttpStatus.OK);
     when(applicationCardService.removeUpvote(any(Long.class), any(UpVoteRequestObject.class)))
         .thenReturn(responseEntity);
 
-    mockMvcWrapper.patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
+    mockMvcWrapper
+        .patchRequest(URL + "/" + CARD_ID + "/vote", asJsonString(requestObject), status().isOk());
+  }
+
+  @Test
+  public void returns_bad_request_if_email_is_empty_when_removing_upvote() throws Exception {
+    UpVoteRequestObject requestObject = new UpVoteRequestObject(null, true);
+    String jsonResponse = mockMvcWrapper
+        .patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
+    List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
+    assertEquals("Email is required", errorResponse.get(0));
+  }
+
+  @Test
+  public void returns_bad_request_if_email_is_invalid_when_removing_upvote() throws Exception {
+    UpVoteRequestObject requestObject = new UpVoteRequestObject("invalid mail", true);
+    String jsonResponse = mockMvcWrapper
+        .patchRequest(URL + "/1/vote", asJsonString(requestObject), status().isBadRequest());
+    List<String> errorResponse = mockMvcWrapper.buildObject(jsonResponse);
+    assertEquals("Email is invalid", errorResponse.get(0));
   }
 }

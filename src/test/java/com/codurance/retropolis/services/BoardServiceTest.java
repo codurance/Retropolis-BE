@@ -23,6 +23,7 @@ public class BoardServiceTest {
   private final Long BOARD_ID = 1L;
   private final User USER = new User("john.doe@codurance.com", "John Doe");
   private final String BOARD_TITLE = "test board";
+  private final Board BOARD = new Board(BOARD_ID, BOARD_TITLE, emptyList());
 
   @Mock
   private BoardRepository boardRepository;
@@ -42,21 +43,20 @@ public class BoardServiceTest {
 
   @Test
   void returns_a_board() {
-    Board board = new Board(BOARD_ID, BOARD_TITLE, emptyList());
-    when(boardRepository.getBoard(BOARD_ID)).thenReturn(board);
+    when(boardRepository.getBoard(BOARD_ID)).thenReturn(BOARD);
+    Board board = boardService.getBoard(USER, BOARD_ID);
 
-    assertEquals(BOARD_ID, boardService.getBoard(USER, BOARD_ID).getId());
-    assertEquals(BOARD_TITLE, boardService.getBoard(USER, BOARD_ID).getTitle());
+    assertEquals(BOARD_ID, board.getId());
+    assertEquals(BOARD_TITLE, board.getTitle());
   }
 
   @Test
-  void creates_a_board() {
+  void creates_and_returns_a_board() {
     NewBoardRequestObject requestObject = new NewBoardRequestObject(BOARD_TITLE,
         "john.doe@codurance.com");
     requestObject.setUser(USER);
-    Board board = new Board(BOARD_ID, BOARD_TITLE, emptyList());
-    when(boardFactory.create(requestObject)).thenReturn(board);
-    when(boardRepository.insert(board)).thenReturn(board);
+    when(boardFactory.create(requestObject)).thenReturn(BOARD);
+    when(boardRepository.insert(BOARD)).thenReturn(BOARD);
 
     Board boardResponse = boardService.createBoard(requestObject);
 
@@ -66,7 +66,7 @@ public class BoardServiceTest {
   }
 
   @Test
-  void should_return_boards_for_a_user() {
+  void returns_boards_for_a_user() {
     when(userService.findOrCreateBy(USER))
         .thenReturn(new User(USER_ID, USER.email, USER.username));
     when(boardRepository.getUsersBoards(USER_ID)).thenReturn(List.of(

@@ -18,9 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class LoginServiceTest {
 
-  private static final String TOKEN = "TOKEN";
-  private static final String USER_EMAIL = "john.doe@codurance.com";
-  private static final String OTHER_USER_EMAIL = "jenny.doe@codurance.com";
+  private final String TOKEN = "TOKEN";
+  private final String USER_EMAIL = "john.doe@codurance.com";
+  private final String OTHER_USER_EMAIL = "jenny.doe@codurance.com";
 
   @Mock
   private GoogleTokenAuthenticator tokenAuthenticator;
@@ -39,7 +39,7 @@ class LoginServiceTest {
   }
 
   @Test
-  public void throws_UnauthorizedException_when_an_exception_is_thrown_on_token_validation()
+  public void throws_unauthorized_exception_when_email_cannot_be_found_from_token()
       throws GeneralSecurityException, IOException {
     when(tokenAuthenticator.getEmail(TOKEN)).thenThrow(GeneralSecurityException.class);
     assertThrows(UnauthorizedException.class, () -> loginService.isAuthorized(USER_EMAIL, TOKEN));

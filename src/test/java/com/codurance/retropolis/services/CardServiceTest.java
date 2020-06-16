@@ -29,9 +29,9 @@ public class CardServiceTest {
   private final Long NON_EXISTENT_CARD_ID = 999L;
   private final Long CARD_ID = 1L;
   private final Long COLUMN_ID = 2L;
-  private final User USER = new User(3L, "john.doe@codurance.com", "John Doe");
   private final String TEXT = "Hello";
   private final String NEW_TEXT = "updated hello";
+  private final User USER = new User(3L, "john.doe@codurance.com", "John Doe");
 
   @Mock
   private CardFactory cardFactory;
@@ -50,7 +50,7 @@ public class CardServiceTest {
   }
 
   @Test
-  public void should_create_and_return_new_card() {
+  public void creates_and_returns_new_card() {
     Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList());
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
     when(cardFactory.create(requestObject)).thenReturn(card);
@@ -62,22 +62,23 @@ public class CardServiceTest {
   }
 
   @Test
-  public void should_delete_card_from_the_repository() {
+  public void deletes_a_card_from_the_repository() {
     cardService.delete(CARD_ID);
     verify(cardRepository).delete(CARD_ID);
   }
 
   @Test
-  public void should_throw_CardNotFoundException_when_cardId_is_invalid_on_delete() {
+  public void throws_card_not_found_exception_when_card_id_is_invalid_on_delete() {
     doThrow(new RuntimeException()).when(cardRepository).delete(NON_EXISTENT_CARD_ID);
     assertThrows(CardNotFoundException.class, () -> cardService.delete(NON_EXISTENT_CARD_ID));
   }
 
   @Test
-  void should_change_card_text_and_return_edited_card() {
+  void changes_card_text_and_returns_edited_card() {
     UpdateCardRequestObject requestObject = new UpdateCardRequestObject(NEW_TEXT);
     Card editedCard = new Card(CARD_ID, NEW_TEXT, COLUMN_ID, USER.getId(), emptyList());
-    when(cardRepository.updateText(editedCard.getId(), requestObject.getNewText())).thenReturn(editedCard);
+    when(cardRepository.updateText(editedCard.getId(), requestObject.getNewText()))
+        .thenReturn(editedCard);
 
     Card card = cardService.updateText(editedCard.getId(), requestObject);
 
@@ -85,7 +86,7 @@ public class CardServiceTest {
   }
 
   @Test
-  void should_add_card_voter_and_return_card() {
+  void adds_card_voter_and_returns_card() {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
     when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
     cardService.addUpvote(CARD_ID, requestObject);
@@ -94,7 +95,7 @@ public class CardServiceTest {
   }
 
   @Test
-  public void should_throw_UserAlreadyUpvotedException_when_user_has_already_upvoted() {
+  public void throws_user_already_voted_exception_when_user_has_already_upvoted() {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
     when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
 
@@ -106,7 +107,7 @@ public class CardServiceTest {
   }
 
   @Test
-  public void should_throw_CardNotFoundException_on_upvote() {
+  public void throws_card_not_found_exception_on_upvote_when_invalid() {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
     when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
 
@@ -117,7 +118,7 @@ public class CardServiceTest {
   }
 
   @Test
-  void should_remove_card_voter_and_return_card() {
+  void removes_card_voter_and_return_card() {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, false);
     when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
 
@@ -127,17 +128,19 @@ public class CardServiceTest {
   }
 
   @Test
-  public void should_throw_CardNotFoundException_on_updateText() {
+  public void throws_card_not_found_exception_on_update_text() {
     doThrow(new RuntimeException()).when(cardRepository).updateText(NON_EXISTENT_CARD_ID, NEW_TEXT);
     assertThrows(CardNotFoundException.class,
         () -> cardService.updateText(NON_EXISTENT_CARD_ID, new UpdateCardRequestObject(NEW_TEXT)));
   }
 
   @Test
-  public void should_throw_ColumnNotFoundException_on_create() {
-    when(userService.findByEmail(USER.email)).thenReturn(new User(USER.getId(), USER.email, USER.username));
+  public void throws_column_not_found_exception_on_create() {
+    when(userService.findByEmail(USER.email))
+        .thenReturn(new User(USER.getId(), USER.email, USER.username));
     doThrow(new RuntimeException()).when(cardRepository).addCard(new Card());
-    assertThrows(ColumnNotFoundException.class, () -> cardService.create(new NewCardRequestObject(TEXT, COLUMN_ID, USER.email)));
+    assertThrows(ColumnNotFoundException.class,
+        () -> cardService.create(new NewCardRequestObject(TEXT, COLUMN_ID, USER.email)));
   }
 
 }
