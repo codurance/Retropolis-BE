@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController extends BaseController {
 
   private final LoginService loginService;
-  private ApplicationCardService applicationCardService;
+  private final ApplicationCardService applicationCardService;
 
   @Autowired
   public CardController(ApplicationCardService applicationCardService,

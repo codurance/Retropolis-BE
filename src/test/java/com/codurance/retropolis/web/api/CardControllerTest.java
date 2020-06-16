@@ -72,7 +72,7 @@ public class CardControllerTest {
   public void post_cards_should_return_back_cardResponseObject() throws Exception {
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
     when(cardService.create(any(NewCardRequestObject.class)))
-        .thenReturn(new Card(TEXT, COLUMN_ID, USER.getId(), Collections.EMPTY_LIST));
+        .thenReturn(new Card(TEXT, COLUMN_ID, USER.getId(), Collections.emptyList()));
 
     when(applicationCardService.create(any(NewCardRequestObject.class)))
         .thenReturn(new CardResponseObject(TEXT, CARD_ID, COLUMN_ID, HAVE_VOTED, TOTAL_VOTERS,

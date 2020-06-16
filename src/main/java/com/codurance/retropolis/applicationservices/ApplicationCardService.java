@@ -19,7 +19,7 @@ public class ApplicationCardService {
 
   private final UserService userService;
   private final CardService cardService;
-  private CardResponseObjectFactory cardResponseObjectFactory;
+  private final CardResponseObjectFactory cardResponseObjectFactory;
 
   public ApplicationCardService(UserService userService, CardService cardService,
       CardResponseObjectFactory cardResponseObjectFactory) {

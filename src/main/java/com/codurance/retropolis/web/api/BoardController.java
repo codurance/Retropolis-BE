@@ -33,7 +33,7 @@ public class BoardController extends BaseController {
 
   private final UserFactory userFactory;
   private final LoginService loginService;
-  private ApplicationBoardService applicationBoardService;
+  private final ApplicationBoardService applicationBoardService;
 
   @Autowired
   public BoardController(UserFactory userFactory,

@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
 
 public class AddCardStepDefsIntegrationTest extends BaseStepDefinition {
 
-  private Long columnId = 1L;
+  private final Long columnId = 1L;
 
   public AddCardStepDefsIntegrationTest(DataSource dataSource) {
     super(dataSource);

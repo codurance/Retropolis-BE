@@ -26,7 +26,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class CardServiceTest {
 
-  private final Boolean HAVE_VOTED = false;
   private final Long NON_EXISTENT_CARD_ID = 999L;
   private final Long CARD_ID = 1L;
   private final Long COLUMN_ID = 2L;
@@ -53,7 +52,6 @@ public class CardServiceTest {
   @Test
   public void should_create_and_return_new_card() {
     Card card = new Card(CARD_ID, TEXT, COLUMN_ID, USER.getId(), emptyList());
-    User author = new User(USER.getId(), USER.email, USER.username);
     NewCardRequestObject requestObject = new NewCardRequestObject(TEXT, COLUMN_ID, USER.email);
     when(cardFactory.create(requestObject)).thenReturn(card);
     when(cardRepository.addCard(card)).thenReturn(card);
@@ -103,9 +101,8 @@ public class CardServiceTest {
     doThrow(new UserAlreadyUpvotedException()).when(cardRepository)
         .addUpvote(CARD_ID, USER.getId());
 
-    assertThrows(UserAlreadyUpvotedException.class, () -> {
-      cardService.addUpvote(CARD_ID, requestObject);
-    });
+    assertThrows(UserAlreadyUpvotedException.class,
+        () -> cardService.addUpvote(CARD_ID, requestObject));
   }
 
   @Test
@@ -113,12 +110,10 @@ public class CardServiceTest {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(USER.email, true);
     when(userService.findByEmail(requestObject.getEmail())).thenReturn(USER);
 
-
     doThrow(new RuntimeException()).when(cardRepository)
         .addUpvote(NON_EXISTENT_CARD_ID, USER.getId());
-    assertThrows(CardNotFoundException.class, () -> {
-      cardService.addUpvote(NON_EXISTENT_CARD_ID, requestObject);
-    });
+    assertThrows(CardNotFoundException.class,
+        () -> cardService.addUpvote(NON_EXISTENT_CARD_ID, requestObject));
   }
 
   @Test

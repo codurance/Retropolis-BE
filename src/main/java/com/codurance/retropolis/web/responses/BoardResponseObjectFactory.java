@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BoardResponseObjectFactory {
 
-  private UserService userService;
+  private final UserService userService;
 
   @Autowired
   public BoardResponseObjectFactory(UserService userService) {

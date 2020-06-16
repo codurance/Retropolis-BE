@@ -58,19 +58,19 @@ public class PostgresCardRepository implements CardRepository {
   }
 
   @Override
-  public Card addUpvote(Long cardId, Long userId) {
+  public void addUpvote(Long cardId, Long userId) {
     Card card = getCard(cardId);
     if (card.getVoters().contains(userId)) {
       throw new UserAlreadyUpvotedException();
     }
 
     jdbcTemplate.update(ADD_VOTER, userId, cardId);
-    return getCard(cardId);
+    getCard(cardId);
   }
 
   @Override
-  public Card removeUpvote(Long cardId, Long userId) {
+  public void removeUpvote(Long cardId, Long userId) {
     jdbcTemplate.update(UPDATE_VOTERS, userId, cardId);
-    return getCard(cardId);
+    getCard(cardId);
   }
 }

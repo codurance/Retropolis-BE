@@ -9,7 +9,6 @@ import com.codurance.retropolis.entities.User;
 import com.codurance.retropolis.factories.BoardFactory;
 import com.codurance.retropolis.repositories.BoardRepository;
 import com.codurance.retropolis.web.requests.NewBoardRequestObject;
-import com.codurance.retropolis.web.responses.BoardResponseObjectFactory;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,9 +32,6 @@ public class BoardServiceTest {
 
   @Mock
   private UserService userService;
-
-  @Mock
-  private BoardResponseObjectFactory boardResponseFactory;
 
   private BoardService boardService;
 
