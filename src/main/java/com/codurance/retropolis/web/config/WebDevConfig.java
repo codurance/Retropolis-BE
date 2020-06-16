@@ -21,6 +21,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Profile(Environment.DEV)
 public class WebDevConfig {
 
+  private final GoogleTokenAuthenticator googleTokenAuthenticator;
+
+  public WebDevConfig(GoogleTokenAuthenticator googleTokenAuthenticator) {
+    this.googleTokenAuthenticator = googleTokenAuthenticator;
+  }
+
   @Bean
   public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2)
@@ -40,7 +46,7 @@ public class WebDevConfig {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-      registry.addInterceptor(new GoogleTokenAuthenticator());
+      registry.addInterceptor(googleTokenAuthenticator);
     }
   }
 }

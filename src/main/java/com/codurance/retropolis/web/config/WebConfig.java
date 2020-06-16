@@ -17,12 +17,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Profile(Environment.PROD)
 public class WebConfig {
 
+  private final GoogleTokenAuthenticator googleTokenAuthenticator;
+
+  public WebConfig(GoogleTokenAuthenticator googleTokenAuthenticator) {
+    this.googleTokenAuthenticator = googleTokenAuthenticator;
+  }
+
   @Configuration
   public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-      registry.addInterceptor(new GoogleTokenAuthenticator());
+      registry.addInterceptor(googleTokenAuthenticator);
     }
 
     @Bean
