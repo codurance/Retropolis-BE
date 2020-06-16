@@ -16,6 +16,7 @@ import com.codurance.retropolis.web.responses.CardResponseObject;
 import com.codurance.retropolis.web.responses.CardResponseObjectFactory;
 import com.codurance.retropolis.web.responses.CardUpdatedTextResponseObject;
 import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,7 +78,7 @@ public class ApplicationCardServiceTest {
   @Test
   void adds_upvote_to_card_response() {
     upvoteRequestObject = new UpVoteRequestObject(EMAIL, true);
-    ResponseEntity<HttpStatus> response = applicationCardService
+    ResponseEntity<Optional<Object>> response = applicationCardService
         .addUpvote(CARD_ID, upvoteRequestObject);
     assertEquals(HttpStatus.OK, response.getStatusCode());
   }
@@ -85,7 +86,7 @@ public class ApplicationCardServiceTest {
   @Test
   void removes_upvote_from_card_response() {
     upvoteRequestObject = new UpVoteRequestObject(EMAIL, false);
-    ResponseEntity<HttpStatus> response = applicationCardService
+    ResponseEntity<Optional<Object>> response = applicationCardService
         .removeUpvote(CARD_ID, upvoteRequestObject);
     assertEquals(HttpStatus.OK, response.getStatusCode());
   }

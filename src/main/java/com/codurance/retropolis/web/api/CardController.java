@@ -12,6 +12,7 @@ import com.codurance.retropolis.web.responses.CardResponseObject;
 import com.codurance.retropolis.web.responses.CardUpdatedTextResponseObject;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class CardController extends BaseController {
   }
 
   @PatchMapping(value = "/{cardId}/vote")
-  public ResponseEntity<HttpStatus> updateVote(@PathVariable Long cardId,
+  public ResponseEntity<Optional<Object>> updateVote(@PathVariable Long cardId,
       @RequestBody @Valid UpVoteRequestObject request) {
     return request.getAddVote() ?
         applicationCardService.addUpvote(cardId, request) :

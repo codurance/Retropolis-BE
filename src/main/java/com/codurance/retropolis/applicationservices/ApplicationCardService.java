@@ -10,6 +10,7 @@ import com.codurance.retropolis.web.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.web.responses.CardResponseObject;
 import com.codurance.retropolis.web.responses.CardResponseObjectFactory;
 import com.codurance.retropolis.web.responses.CardUpdatedTextResponseObject;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,14 +36,16 @@ public class ApplicationCardService {
     return createResponseFrom(card, user.getId());
   }
 
-  public ResponseEntity<HttpStatus> addUpvote(Long cardId, UpVoteRequestObject requestObject) {
+  public ResponseEntity<Optional<Object>> addUpvote(Long cardId,
+      UpVoteRequestObject requestObject) {
     cardService.addUpvote(cardId, requestObject);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return ResponseEntity.ok(Optional.empty());
   }
 
-  public ResponseEntity<HttpStatus> removeUpvote(Long cardId, UpVoteRequestObject requestObject) {
+  public ResponseEntity<Optional<Object>> removeUpvote(Long cardId,
+      UpVoteRequestObject requestObject) {
     cardService.removeUpvote(cardId, requestObject);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return ResponseEntity.ok(Optional.empty());
   }
 
   public ResponseEntity<HttpStatus> delete(Long cardId) {
