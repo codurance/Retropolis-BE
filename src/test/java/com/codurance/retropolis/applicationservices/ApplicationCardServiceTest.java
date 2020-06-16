@@ -35,11 +35,11 @@ public class ApplicationCardServiceTest {
   private final Long COLUMN_ID = 2L;
   private final String TEXT = "Hello";
   @Mock
-  UserService userService;
+  private UserService userService;
   @Mock
-  CardService cardService;
+  private CardService cardService;
   @Mock
-  CardResponseObjectFactory cardResponseObjectFactory;
+  private CardResponseObjectFactory cardResponseObjectFactory;
   private ApplicationCardService applicationCardService;
   private NewCardRequestObject newCardRequestObject;
   private UpVoteRequestObject upvoteRequestObject;
