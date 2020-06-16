@@ -6,10 +6,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.codurance.retropolis.acceptance.BaseStepDefinition;
-import com.codurance.retropolis.entities.Card;
 import com.codurance.retropolis.utils.HttpWrapper;
 import com.codurance.retropolis.web.requests.UpdateCardRequestObject;
 import com.codurance.retropolis.web.responses.CardResponseObject;
+import com.codurance.retropolis.web.responses.CardUpdatedTextResponseObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,7 +38,7 @@ public class UpdateCardStepDefinitionIntegrationTest extends BaseStepDefinition 
 
   @Then("the user receives the card with the text:{string}")
   public void theUserReceivesTheCardWithTheText(String newText) throws JsonProcessingException {
-    Card card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
+    CardUpdatedTextResponseObject card = new ObjectMapper().readValue(responseResult.getBody(), new TypeReference<>() {
     });
 
     assertThat(HttpWrapper.responseResult.getResponseCode(), is(HttpStatus.OK.value()));
