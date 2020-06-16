@@ -24,7 +24,6 @@ import com.codurance.retropolis.web.responses.CardResponseObject;
 import com.codurance.retropolis.web.responses.CardUpdatedTextResponseObject;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -223,7 +222,7 @@ public class CardControllerTest {
   void remove_card_vote_with_voter_email_should_return_status_ok() throws Exception {
     UpVoteRequestObject requestObject = new UpVoteRequestObject(VOTER_EMAIL, false);
 
-    ResponseEntity<Optional<Object>> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+    ResponseEntity<HttpStatus> responseEntity = new ResponseEntity<>(HttpStatus.OK);
     when(applicationCardService.removeUpvote(any(Long.class), any(UpVoteRequestObject.class)))
         .thenReturn(responseEntity);
 
