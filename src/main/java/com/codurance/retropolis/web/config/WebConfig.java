@@ -1,7 +1,5 @@
 package com.codurance.retropolis.web.config;
 
-import static java.util.Collections.singletonList;
-
 import com.codurance.retropolis.config.Environment;
 import java.util.List;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
