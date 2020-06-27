@@ -43,7 +43,7 @@ jobs:
 
       - run:
           name: Deploying
-          command: eb deploy RetropolisBe-env --debug
+          command: eb deploy RetropolisApiBackend-env --debug
 
 
 workflows:
